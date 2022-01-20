@@ -34,11 +34,14 @@ public class Activity {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "activity_id", nullable = false)
     private String id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String image; // aca tengo una consulta... no tendria que relacionarse con una clase imagen que se sube dinamicamente a base de datos?
     @Column(name = "fecha_de_creacion", nullable = false)
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate fechaCreacion;
+    @Column(nullable = false)
     private boolean deleted = Boolean.FALSE;
     
 }
