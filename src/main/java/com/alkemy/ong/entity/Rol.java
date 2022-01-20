@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "roles")
 @Setter
 @Getter
-public class RolEntity {
+public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -24,6 +24,7 @@ public class RolEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
-    private LocalDateTime date;
+    @Column(name = "timestamps")
+    private LocalDateTime timestamps;
 
 }
