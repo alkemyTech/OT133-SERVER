@@ -6,8 +6,8 @@ CREATE TABLE users(
     password VARCHAR(100) NOT NULL,
     photo VARCHAR(100) NULL,
     role_id INTEGER,
-    date TIMESTAMP,
-    is_deleted BIT NOT NULL DEFAULT 0,
+    timestamps TIMESTAMP,
+    deleted BIT NOT NULL DEFAULT 0,
     CONSTRAINT pk_users PRIMARY KEY(id),
 	CONSTRAINT fk_user_role FOREIGN KEY(role_id) REFERENCES Roles(id)
 );
