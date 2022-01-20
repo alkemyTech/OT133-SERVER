@@ -4,5 +4,5 @@ name VARCHAR(255) NOT NULL,
 content TEXT NOT NULL,
 image VARCHAR(255) NOT NULL,
 date TIMESTAMP,
-soft_deleted BIT(1) NOT NULL
+deleted BIT(1) NOT NULL
 );
