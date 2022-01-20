@@ -2,8 +2,10 @@ package com.alkemy.ong.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -12,10 +14,12 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class Rol {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "id_rol")
+    private String idRol;
 
     @Column(name = "name")
     @NotNull
