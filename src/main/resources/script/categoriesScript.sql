@@ -4,6 +4,6 @@ CREATE TABLE `categories` (
   `description` varchar(250) DEFAULT NULL,
   `image` varchar(250) DEFAULT NULL,
   `deleted` bit(1) NOT NULL DEFAULT b'0',
-  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `timestamps` timestamp(6) NOT NULL,
   PRIMARY KEY (`category_id`)
 );

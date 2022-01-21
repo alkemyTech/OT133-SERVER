@@ -29,8 +29,11 @@ public class Category {
     private String name;
     private String description;
     private String image;
-    private boolean deleted = false;
-    private LocalDateTime date = LocalDateTime.now();
+
+    @Column(name = "deleted")
+    private boolean softDelete = false;
+
+    private LocalDateTime timestamps;
 
     @OneToMany(mappedBy = "categories", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<News> news = new ArrayList<>();
