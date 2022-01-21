@@ -14,12 +14,22 @@ import org.hibernate.annotations.SQLDelete;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Table(name = "organization")
+@Table(name = "organizations")
 @SQLDelete(sql = "UPDATE organization SET softDelete=true WHERE id = ?")
+/**
+ * FilterDef: define los requerimientos, los cuales son usados por Filter
+ * @author Mauro*/
 @FilterDef(
 		name = "softDeleteFilter",
 		parameters = @ParamDef(name = "isDeleted", type = "boolean")
 		)
+/**
+ * Usa las definiciones de FilterDef, usando el nombre del parámetro definido.
+ * name: el nombre que se definio en FilterDef
+ * condition: condición para aplicar el filtro en función del parámetro
+ * La idea de añadir el Filter y FilterDef es que en nuestro controller se añada
+ * la notación Filter al método findAll(), para filtrar.
+ * @author Mauro*/
 @Filter(
 		name = "softDeleteFilter",
 		condition = "softDelete = :isDeleted"
@@ -49,10 +59,10 @@ public class Organization implements Serializable{
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 	
-	@Column(name = "welcome", nullable = false, length = 250)
+	@Column(name = "welcomeText", nullable = false, length = 250)
 	private String welcomeText;
 	
-	@Column(name = "about_us", nullable = true, length = 250)
+	@Column(name = "aboutUsText", nullable = true, length = 250)
 	private String aboutUsText;
 	
 	@Column(name = "timestamps")
