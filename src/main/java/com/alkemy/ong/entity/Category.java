@@ -29,10 +29,7 @@ public class Category {
     private String name;
     private String description;
     private String image;
-
-    @Column(name = "deleted")
     private boolean softDelete = false;
-
     private LocalDateTime timestamps;
 
     @OneToMany(mappedBy = "categories", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
