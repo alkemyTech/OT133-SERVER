@@ -39,10 +39,10 @@ public class News {
     @NotNull
     private String image;
     
-//    @ManyToOne
-//    @JoinColumn(name = "categoryId", referencedColumnName = "category_id")
-//    @NotNull
-//    private Category categoryId;
+    @ManyToOne
+    @JoinColumn(name = "categoryId", referencedColumnName = "category_id")
+    @NotNull
+    private Category categoryId;
     
     private LocalDateTime timestamps;
     
