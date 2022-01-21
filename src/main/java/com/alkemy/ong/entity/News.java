@@ -19,16 +19,16 @@ import org.hibernate.annotations.SQLDelete;
 @Entity
 @Data
 @Table(name = "news")
-@SQLDelete(sql = "UPDATE table_product SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE table_product SET softDelete = true WHERE id=?")
 @FilterDef(name = "deletedProductFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
-@Filter(name = "deletedProductFilter", condition = "deleted = :isDeleted")
+@Filter(name = "deletedProductFilter", condition = "softDelete = :isDeleted")
 public class News {
     
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "new_id")
-    private Integer newId;
+    private String newId;
     
     @NotNull
     private String name;
@@ -39,12 +39,13 @@ public class News {
     @NotNull
     private String image;
     
-    @ManyToOne
-    @JoinColumn(name = "categoryId", referencedColumnName = "category_id")
-    private Category category;
+//    @ManyToOne
+//    @JoinColumn(name = "categoryId", referencedColumnName = "category_id")
+//    @NotNull
+//    private Category categoryId;
     
-    private LocalDateTime date;
+    private LocalDateTime timestamps;
     
-    private boolean deleted = Boolean.FALSE;
+    private boolean softDelete = Boolean.FALSE;
            
 }
