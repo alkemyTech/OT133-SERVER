@@ -6,14 +6,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.lang.Nullable;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,12 +24,14 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "users")
+@SQLDelete(sql = "UPDATE users SET softDelete = true WHERE id = ?")
+@Where(clause = "deleted = false")
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY,generator = "uuid")
+	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid",strategy = "uuid2")
-	private Integer id;
+	private String id;
 	
 	@Column(name = "first_name",nullable = false)
 	private String firstName;
@@ -37,7 +39,7 @@ public class User {
 	@Column(name = "last_name",nullable = false)
 	private String lastName;
 	
-	@Column(nullable = false)
+	@Column(nullable = false,unique = true)
 	private String email;
 	
 	@Column(nullable = false)
@@ -53,6 +55,6 @@ public class User {
 	@Column(name="timestamps")
 	private LocalDateTime timeStamps;
 	
-	@Column(name="deleted")
+	@Column(name="softDelete")
 	private Boolean softDelete = Boolean.FALSE;
 }
