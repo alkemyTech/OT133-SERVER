@@ -7,5 +7,6 @@ import com.alkemy.ong.entity.Organization;
 
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, String>{
-
+	
+	boolean existsByEmail(String email);
 }
