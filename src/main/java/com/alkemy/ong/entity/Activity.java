@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.alkemy.ong.entity;
 
 import java.time.LocalDate;
@@ -18,10 +13,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
-/**
- *
- * @author Rodrigo Caro
- */
+
 @Entity
 @Table(name = "activities")
 @Getter
@@ -34,14 +26,21 @@ public class Activity {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "activity_id", nullable = false)
     private String id;
-    @Column(nullable = false)
+    
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(nullable = false)
-    private String image; // aca tengo una consulta... no tendria que relacionarse con una clase imagen que se sube dinamicamente a base de datos?
-    @Column(name = "fecha_de_creacion", nullable = false)
+    
+    @Column(name = "content", nullable = false)
+    private String content; 
+    
+    @Column(name = "image", nullable = false)
+    private String image; 
+    
+    @Column(name = "timestamps", nullable = false)
     @DateTimeFormat(pattern = "yyyy/MM/dd")
-    private LocalDate fechaCreacion;
-    @Column(nullable = false)
-    private boolean deleted = Boolean.FALSE;
+    private LocalDate timestamps;
+    
+    @Column(name = "softDelete",nullable = false)
+    private boolean softDelete = Boolean.FALSE;
     
 }
