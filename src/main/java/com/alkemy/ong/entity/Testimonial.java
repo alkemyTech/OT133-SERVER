@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @Table(name = "testimonials")
-@SQLDelete(sql = "UPDATE testimonials SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE testimonials SET softDelete = true WHERE id=?")
 @Where(clause = "deleted=false")
 public class Testimonial {
 
@@ -36,13 +36,13 @@ public class Testimonial {
 
     private String content;
 
-    private boolean deleted = Boolean.FALSE;
+    private boolean softDelete = Boolean.FALSE;
 
 
     @DateTimeFormat(
             pattern = "yyyy/MM/dd"
     )
-    private LocalDate date = LocalDate.now();
+    private LocalDate timestamps = LocalDate.now();
 
 
 
