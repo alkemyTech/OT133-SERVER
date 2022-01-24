@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `organizations` (
-	`idOrganization` int(11) NOT NULL AUTO_INCREMENT,
+	`organizationId` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(20) NOT NULL,
 	`image` varchar(45) NOT NULL,
 	`address` varchar(20) DEFAULT NULL,

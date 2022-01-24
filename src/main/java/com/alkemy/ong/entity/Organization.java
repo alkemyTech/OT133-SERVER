@@ -41,8 +41,8 @@ public class Organization implements Serializable{
 	@Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-	@Column(name = "id_organization", nullable = false, unique = true)
-	private String idOrganization;
+	@Column(name = "organizationId", nullable = false, unique = true)
+	private String organizationId;
 	
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
@@ -91,12 +91,12 @@ public class Organization implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public String getIdOrganization() {
-		return idOrganization;
+	public String getOrganizationId() {
+		return organizationId;
 	}
 
-	public void setIdOrganization(String idOrganization) {
-		this.idOrganization = idOrganization;
+	public void setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
 	}
 
 	public String getName() {
@@ -169,6 +169,10 @@ public class Organization implements Serializable{
 
 	public void setSoftDelete(boolean softDelete) {
 		this.softDelete = softDelete;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 }
