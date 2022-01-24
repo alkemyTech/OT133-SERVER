@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS `organizations` (
 	`aboutUsText` text(50) DEFAULT NULL,
 	`timestamps` date,
 	`softDelete` bit,
-	PRIMARY KEY (`idOrganization`)
+	PRIMARY KEY (`organizationId`)
 )
