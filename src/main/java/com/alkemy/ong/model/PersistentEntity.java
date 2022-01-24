@@ -24,5 +24,5 @@ public abstract class PersistentEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    String id;
+    private String id;
 }
