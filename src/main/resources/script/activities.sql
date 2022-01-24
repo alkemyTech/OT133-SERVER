@@ -1,8 +1,8 @@
 CREATE TABLE activities (
-new_id VARCHAR(255) NOT NULL,
-name VARCHAR(255) NOT NULL,
-content TEXT NOT NULL,
-image VARCHAR(255) NOT NULL,
-date TIMESTAMP,
-soft_deleted BIT(1) NOT NULL
+`activity_id` VARCHAR(255) NOT NULL,
+`name` VARCHAR(255) NOT NULL,
+`content` TEXT NOT NULL,
+`image` VARCHAR(255) NOT NULL,
+`timestamps` date,
+`softDelete` BIT(1) NOT NULL
 );
