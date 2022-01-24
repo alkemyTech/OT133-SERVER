@@ -1,4 +1,4 @@
-package com.alkemy.ong.model;
+package com.alkemy.ong.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

@@ -1,10 +1,10 @@
-package com.alkemy.ong.model.member;
+package com.alkemy.ong.entity.member;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import com.alkemy.ong.model.PersistentEntity;
+import com.alkemy.ong.entity.PersistentEntity;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
