@@ -1,6 +1,8 @@
 package com.alkemy.ong.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -25,4 +27,9 @@ public abstract class PersistentEntity implements Serializable {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
+    // ? Encontré esta solucion para MySQL, pero creo que podría implementarse de otro modo
+    @Column(insertable = false, updatable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private LocalDateTime timestamps;
+    private boolean softDelete = Boolean.FALSE;
 }
