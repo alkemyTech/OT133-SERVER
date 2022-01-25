@@ -14,19 +14,19 @@ public class Slide {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "id_Slide")
-    private Integer idSlide;
+    @Column(name = "slide_id")
+    private Integer slideId;
 
-    @Column(name = "id_Slide")
+    @Column(name = "image_url")
     private String imageUrl;
 
     @Column(name = "text")
     private String text;
 
-    @Column(name = "order")
-    private Integer order;
+    @Column(name = "order_number")
+    private Integer orderNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_Organization")
-    private Organization idOrganization;
+    @JoinColumn(name = "organization_id")
+    private Organization organizationId;
 }
