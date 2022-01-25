@@ -1,7 +1,5 @@
 package com.alkemy.ong.entity;
 
-import com.alkemy.ong.entity.News;
-
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -32,13 +30,8 @@ public class Category {
     private boolean softDelete = false;
     private LocalDateTime timestamps;
 
-    @OneToMany(mappedBy = "categories", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "categoryId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<News> news = new ArrayList<>();
-
-    public void agregarNew(News new1){  
-        this.news.add(new1);
-        new1.setCategory(this);
-    } 
 
     public String getId(){
         return categoryId;
@@ -75,7 +68,6 @@ public class Category {
     public void setNews(List<News> newsList){
         this.news = newsList;
     } 
-
     
 
 }
