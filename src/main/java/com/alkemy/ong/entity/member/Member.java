@@ -5,19 +5,20 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import com.alkemy.ong.entity.PersistentEntity;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "members")
-@SQLDelete(sql = "UPDATE members SET softDelete = true WHERE id=?")
-@Where(clause = "softDelete=false")
-// @FilterDef(name = "deletedMemberFilter",
-// parameters = @ParamDef(name = "isDeleted", type = "boolean"))
-// @Filter(name = "deletedMemberFilter", condition = "softDelete = :isDeleted")
+@SQLDelete(sql = "UPDATE members SET soft_delete = true WHERE id=?")
+@FilterDef(name = "deletedMemberFilter",
+        parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedMemberFilter", condition = "soft_delete = :isDeleted")
 @Getter
 @Setter
 @NoArgsConstructor
