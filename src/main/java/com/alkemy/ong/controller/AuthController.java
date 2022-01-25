@@ -25,13 +25,13 @@ import com.alkemy.ong.security.UserDetailServiceImpl;
 public class AuthController {
 
 	@Autowired
-	private AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;  
 	
 	@Autowired
-	private UserDetailServiceImpl userDetails;
+	private UserDetailServiceImpl userDetails;   
 	
 	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+	private BCryptPasswordEncoder passwordEncoder; 
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> loginUser(@RequestParam String email,@RequestParam String password){
@@ -49,12 +49,14 @@ public class AuthController {
 					return new ResponseEntity<>(response,HttpStatus.OK);
 				}
 			}else {
-				response.put("ok", Boolean.FALSE);
+				response.put("Forbidden", HttpStatus.FORBIDDEN);
+				return ResponseEntity.badRequest().body(response);
 			}
-			
 		}catch(BadCredentialsException e) {
-			response.put("ok", Boolean.FALSE);
+			response.put("Forbidden", HttpStatus.FORBIDDEN);
+			return ResponseEntity.badRequest().body(response);
 		}
-		return new ResponseEntity<>(response,HttpStatus.FORBIDDEN);
+		response.put("ok", Boolean.FALSE);
+		return ResponseEntity.badRequest().body(response);
 	}
 }
