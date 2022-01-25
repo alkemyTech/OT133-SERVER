@@ -48,10 +48,12 @@ public class AuthController {
 					return new ResponseEntity<>(response,HttpStatus.OK);
 				}
 			}else {
-				return ResponseEntity.badRequest().body(HttpStatus.FORBIDDEN);
+				response.put("Forbidden", HttpStatus.FORBIDDEN);
+				return ResponseEntity.badRequest().body(response);
 			}
 		}catch(BadCredentialsException e) {
-			return ResponseEntity.badRequest().body(HttpStatus.FORBIDDEN);
+			response.put("Forbidden", HttpStatus.FORBIDDEN);
+			return ResponseEntity.badRequest().body(response);
 		}
 		response.put("ok", Boolean.FALSE);
 		return ResponseEntity.badRequest().body(response);
