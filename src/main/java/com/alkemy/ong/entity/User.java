@@ -2,6 +2,7 @@ package com.alkemy.ong.entity;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,8 +25,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "users")
-@SQLDelete(sql = "UPDATE users SET softDelete = true WHERE id = ?")
-@Where(clause = "deleted = false")
+@SQLDelete(sql = "UPDATE users SET soft_delete = true WHERE id = ?")
+@Where(clause = "soft_delete = false")
 public class User {
 
 	@Id
@@ -48,9 +49,9 @@ public class User {
 	@Column(nullable = true)
 	private String photo;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "role_id")
-	private Integer roleId;
+	@ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.REFRESH})
+	@JoinColumn(name = "role_id",referencedColumnName = "id_rol")
+	private Rol roleId;
 	
 	@Column(name="timestamps")
 	private LocalDateTime timeStamps;
