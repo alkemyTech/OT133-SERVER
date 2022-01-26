@@ -22,17 +22,19 @@ public class OngApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		if(rolRepository.findAll().isEmpty()){
-			//Creacion rol Admin
+
+		if (rolRepository.count() == 0) {
+			// Creacion rol Admin
 			Rol rolAdmin = new Rol();
 			rolAdmin.setName(Roles.ROL_ADMIN);
-			rolAdmin.setDescription("Creacion de rol de admin");
+			rolAdmin.setDescription("Usuario con privilegios de Administrador");
 			rolRepository.save(rolAdmin);
-			//Creacion de rol User
+			// Creacion de rol User
 			Rol rolUser = new Rol();
 			rolUser.setName(Roles.ROL_USER);
-			rolUser.setDescription("Creacion de rol de usuario");
+			rolUser.setDescription("Usuario sin ningun privilegio");
 			rolRepository.save(rolUser);
 		}
+
 	}
 }
