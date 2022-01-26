@@ -1,5 +1,6 @@
 package com.alkemy.ong.repository;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.alkemy.ong.entity.member.Member;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,9 +31,15 @@ public class MemberRepositoryTest {
     @Test
     void whenMemberIsDeleted_isSoftDeleted() throws Exception {
         member = memberRepository.save(member);
-        memberRepository.deleteSoftById(member.getId());
-        member = memberRepository.findById(member.getId()).orElse(new Member());
-        assertTrue(member.isSoftDelete());
+        memberRepository.deleteById(member.getId());
+        assertTrue(memberRepository.findAll().stream()
+                .anyMatch(m -> m.getId().equals(member.getId()) && m.isSoftDelete()));
+    }
+
+    @Test
+    void whenMemberIsSaved_isTimeStamped() throws Exception {
+        member = memberRepository.save(member);
+        assertNull(member.getTimestamps());
     }
 
 }
