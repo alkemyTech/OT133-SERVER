@@ -15,7 +15,8 @@ public class Slide {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "slide_id")
-    private Integer slideId;
+    private String slideId;
+    //Cambie el tipo de la variable por que generaba conflicto para ejecutar el proyecto.
 
     @Column(name = "image_url")
     private String imageUrl;

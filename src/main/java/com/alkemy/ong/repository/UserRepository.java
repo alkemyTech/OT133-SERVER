@@ -11,4 +11,5 @@ import com.alkemy.ong.entity.User;
 public interface UserRepository extends JpaRepository<User, String>{
 
 	Optional<User> findByEmail(String email);
+	Boolean existsByEmail(String email);
 }
