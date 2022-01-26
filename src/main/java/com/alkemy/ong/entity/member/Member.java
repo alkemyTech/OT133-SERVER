@@ -24,14 +24,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Member extends PersistentEntity {
 
+    @Column(name = "name", nullable = false)
     @NotNull(message = "El nombre no puede ser nulo")
-    @Column(nullable = false)
     private String name;
+    @Column(name = "facebook_url")
     private String facebookUrl;
+    @Column(name = "instagram_url")
     private String instagramUrl;
+    @Column(name = "linkedin_url")
     private String linkedinUrl;
+    @Column(name = "image", nullable = false)
     @NotNull(message = "La imagen no puede ser nula")
-    @Column(nullable = false)
     private String image;
+    @Column(name = "description")
     private String description;
+
 }
