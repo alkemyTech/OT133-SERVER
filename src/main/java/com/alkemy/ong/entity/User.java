@@ -40,7 +40,7 @@ public class User extends PersistentEntity {
 	private String photo;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinColumn(name = "role_id", referencedColumnName = "id_rol")
+	@JoinColumn(name = "role_id", referencedColumnName = "id")
 	private Rol roleId;
 
 }
