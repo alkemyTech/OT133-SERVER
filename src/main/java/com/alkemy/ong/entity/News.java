@@ -31,11 +31,11 @@ public class News extends PersistentEntity {
     @NotNull
     private String name;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "content", nullable = false)
     @NotNull
     private String content;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "image", nullable = false)
     @NotNull
     private String image;
 
