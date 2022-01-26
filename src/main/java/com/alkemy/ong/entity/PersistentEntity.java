@@ -30,7 +30,7 @@ public abstract class PersistentEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "id")
+    @Column(name = "id", updatable = false, nullable = false)
     private String id;
     @CreatedDate
     @Column(name = "timestamps", columnDefinition = "TIMESTAMP")
