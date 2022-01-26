@@ -1,36 +1,31 @@
 package com.alkemy.ong.entity;
 
-import com.alkemy.ong.enums.Roles;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import com.alkemy.ong.enums.Roles;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "roles")
-@Setter
-@Getter
-public class Rol {
+@Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+public class Rol extends PersistentEntity {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "id_rol")
-    private String idRol;
-
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     @NotNull
     @Enumerated(EnumType.STRING)
     private Roles name;
 
     @Column(name = "description", nullable = false)
     private String description;
-
-    @Column(name = "timestamps")
-    private LocalDateTime timestamps;
 
 }
