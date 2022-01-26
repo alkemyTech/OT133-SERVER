@@ -54,7 +54,7 @@ public class User {
 	private Rol roleId;
 	
 	@Column(name="timestamps")
-	private LocalDateTime timeStamps;
+	private LocalDateTime timeStamps = LocalDateTime.now();
 	
 	@Column(name="softDelete")
 	private Boolean softDelete = Boolean.FALSE;
