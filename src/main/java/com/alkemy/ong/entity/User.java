@@ -1,15 +1,10 @@
 package com.alkemy.ong.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
@@ -48,13 +43,20 @@ public class User {
 	@Column(nullable = true)
 	private String photo;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "role_id")
-	private Integer roleId;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name ="user_roles",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "id_rol")
+	)
+	private Set<Rol> roles = new HashSet<>();
 	
 	@Column(name="timestamps")
 	private LocalDateTime timeStamps;
 	
 	@Column(name="softDelete")
 	private Boolean softDelete = Boolean.FALSE;
+
+	public User(String username, String lastname, String email, String encode) {
+	}
 }

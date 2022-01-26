@@ -29,7 +29,7 @@ public class UserDetailServiceImpl implements UserDetailsService{
 	}
 	
 	@Bean
-	public PasswordEncoder encoder() {
+	public BCryptPasswordEncoder encoder() {
 	    return new BCryptPasswordEncoder();
 	}
 

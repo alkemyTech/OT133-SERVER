@@ -1,5 +1,6 @@
 package com.alkemy.ong.entity;
 
+import com.alkemy.ong.enums.ERole;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -23,7 +24,8 @@ public class Rol {
 
     @Column(name = "name")
     @NotNull
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private ERole name;
 
     @Column(name = "description", nullable = false)
     private String description;
