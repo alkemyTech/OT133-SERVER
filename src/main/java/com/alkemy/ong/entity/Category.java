@@ -1,13 +1,7 @@
 package com.alkemy.ong.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
@@ -41,8 +35,8 @@ public class Category extends PersistentEntity {
     private String image;
 
     // ! Esto tiene que existir? porque también lo mapea news. medio quilombo bidireccionales
-    @OneToMany(mappedBy = "categoryId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "new_id")
-    private List<News> news = new ArrayList<>();
+    // @OneToMany(mappedBy = "categoryId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // @JoinColumn(name = "new_id")
+    // private List<News> news = new ArrayList<>();
 
 }
