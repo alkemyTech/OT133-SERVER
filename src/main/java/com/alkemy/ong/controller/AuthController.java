@@ -1,10 +1,16 @@
 package com.alkemy.ong.controller;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import com.alkemy.ong.entity.User;
+import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.security.UserDetailServiceImpl;
+import com.alkemy.ong.service.UserDAO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,9 +38,15 @@ public class AuthController {
 
 	@Autowired
 	private UserDetailServiceImpl userDetails;
+	
+	@Autowired
+	private UserMapper userMapper;
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private UserDAO userDAO;
 
 	@PostMapping("/login")
 	public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password) {
@@ -65,7 +78,17 @@ public class AuthController {
 	
 	
 	@PatchMapping("/users/{id}")
-	public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable Integer id){
+	public ResponseEntity<?> updateUser(@RequestBody Map<Object,Object> fields, @PathVariable UUID id){
+		Map<String, Object> response = new HashMap<>();
+		Optional<User> userOptional = this.userDAO.update(fields, id);
+		
+		if(!userOptional.isPresent()) {
+			response.put("Error", String.format("User with ID %s not found.", id));
+			return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+		}else {
+			response.put("ok",this.userMapper.toUserDTO(userOptional.get()));
+			return ResponseEntity.ok(response);
+		}
 		
 	}
 
