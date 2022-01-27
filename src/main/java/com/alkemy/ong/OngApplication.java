@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -24,6 +25,7 @@ public class OngApplication implements CommandLineRunner {
 
 	@Autowired
 	private UserRepository userRepository;
+
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -45,7 +47,7 @@ public class OngApplication implements CommandLineRunner {
 		if (userRepository.count() == 0) {
 			User admin = new User();
 			admin.setEmail("admin@alkemy.org");
-			admin.setPassword("admin");
+			admin.setPassword(new BCryptPasswordEncoder().encode("admin"));
 			admin.setFirstName("Admin");
 			admin.setLastName("Admin");
 			userRepository.save(admin);
