@@ -1,6 +1,5 @@
 package com.alkemy.ong.controller;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +18,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,7 +70,7 @@ public class AuthController {
 			response.put("Forbidden", HttpStatus.FORBIDDEN);
 			return ResponseEntity.badRequest().body(response);
 		}
-		response.put("ok", Boolean.FALSE);
+		response.put("Not Found", HttpStatus.NOT_FOUND);
 		return ResponseEntity.badRequest().body(response);
 	}
 	
@@ -92,28 +90,5 @@ public class AuthController {
 		
 	}
 
-	// @PostMapping("/register")
-	// public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest){
-
-	// //verificacion del mail
-	// if(userRepository.existsByEmail(signupRequest.getEmail())){
-	// return ResponseEntity
-	// .badRequest()
-	// .body("Error: Email is already in use!");
-	// }
-
-	// //Creacion de nuevo usuario
-	// User user = new User();
-	// user.setFirstName(signupRequest.getFirstname());
-	// user.setLastName(signupRequest.getLastname());
-	// user.setEmail(signupRequest.getEmail());
-	// user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-
-	// Rol userRole = rolRepository.findByName(Roles.ROL_USER);
-	// user.setRoleId(userRole);
-	// userRepository.save(user);
-
-	// return new ResponseEntity<String>("User registered successfully", HttpStatus.OK);
-	// }
 
 }
