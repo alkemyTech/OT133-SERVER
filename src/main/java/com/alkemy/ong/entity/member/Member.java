@@ -9,9 +9,10 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "members")
@@ -19,9 +20,10 @@ import lombok.Setter;
 @FilterDef(name = "deletedMemberFilter",
         parameters = @ParamDef(name = "isDeleted", type = "boolean"))
 @Filter(name = "deletedMemberFilter", condition = "soft_delete = :isDeleted")
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
+@AllArgsConstructor
 public class Member extends PersistentEntity {
 
     @Column(name = "name", nullable = false)

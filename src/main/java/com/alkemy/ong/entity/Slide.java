@@ -1,22 +1,23 @@
 package com.alkemy.ong.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-
-@Setter
-@Getter
 @Entity
 @Table(name = "slides")
-public class Slide {
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "slide_id")
-    private String slideId;
-    //Cambie el tipo de la variable por que generaba conflicto para ejecutar el proyecto.
+@Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+public class Slide extends PersistentEntity {
 
     @Column(name = "image_url")
     private String imageUrl;
@@ -28,6 +29,6 @@ public class Slide {
     private Integer orderNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id")
-    private Organization organizationId;
+    @JoinColumn(name = "organization_id", referencedColumnName = "id")
+    private Organization organization;
 }
