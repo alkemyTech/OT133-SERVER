@@ -1,6 +1,7 @@
 package com.alkemy.ong.security.filter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.FilterChain;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.alkemy.ong.security.token.TokenValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -64,4 +66,18 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     new ObjectMapper().writeValue(response.getOutputStream(), tokens);
   }
+
+  @Override
+  protected void unsuccessfulAuthentication(HttpServletRequest request,
+      HttpServletResponse response, AuthenticationException failed)
+      throws IOException, ServletException {
+
+    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+    response.setHeader("Content-Type", "application/json");
+    Map<String, Object> data = new HashMap<>();
+    data.put("timestamp", LocalDateTime.now().toString());
+    data.put("error", failed.getMessage());
+    new ObjectMapper().writeValue(response.getOutputStream(), data);
+  }
+
 }
