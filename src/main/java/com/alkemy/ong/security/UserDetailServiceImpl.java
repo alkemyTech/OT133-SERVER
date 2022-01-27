@@ -25,6 +25,8 @@ public class UserDetailServiceImpl implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = this.userDAO.getByEmail(username).get();
+		
+		//Se agregan los roles del usuario.
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRoleId().getName().name().toString());
 	
