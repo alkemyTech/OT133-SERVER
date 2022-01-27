@@ -24,46 +24,44 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private static final int TEN_MINUTES = 10 * 60 * 1_000;
+  private static final int TEN_MINUTES = 10 * 60 * 1_000;
 
-    private final AuthenticationManager authenticationManager;
+  private final AuthenticationManager authenticationManager;
 
-    public TokenAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
+  public TokenAuthenticationFilter(AuthenticationManager authenticationManager) {
+    this.authenticationManager = authenticationManager;
+  }
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
-            HttpServletResponse response) throws AuthenticationException {
+  @Override
+  public Authentication attemptAuthentication(HttpServletRequest request,
+      HttpServletResponse response) throws AuthenticationException {
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                request.getParameter("email"), request.getParameter("password"));
-
-        return authenticationManager.authenticate(token);
-    }
-
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-            HttpServletResponse response, FilterChain chain, Authentication authentication)
-            throws IOException, ServletException {
-
-        org.springframework.security.core.userdetails.User user =
-                (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-        String issuer = request.getRequestURL().toString();
-        TokenValidator tokenValidator = new TokenValidator();
-
-        // Generating Tokens
-        String accesToken =
-                tokenValidator.generateTokenForUser(user, TEN_MINUTES * 3, issuer, true);
-        String refreshToken =
-                tokenValidator.generateTokenForUser(user, TEN_MINUTES * 6, issuer, false);
+    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+        request.getParameter("email"), request.getParameter("password"));
 
 
-        Map<String, String> tokens = new HashMap<String, String>();
-        tokens.put("access_token", accesToken);
-        tokens.put("refresh_token", refreshToken);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    return authenticationManager.authenticate(token);
+  }
 
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-    }
+  @Override
+  protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+      FilterChain chain, Authentication authentication) throws IOException, ServletException {
+
+    org.springframework.security.core.userdetails.User user =
+        (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+    String issuer = request.getRequestURL().toString();
+    TokenValidator tokenValidator = new TokenValidator();
+
+    // Generating Tokens
+    String accesToken = tokenValidator.generateTokenForUser(user, TEN_MINUTES * 3, issuer, true);
+    String refreshToken = tokenValidator.generateTokenForUser(user, TEN_MINUTES * 6, issuer, false);
+
+
+    Map<String, String> tokens = new HashMap<String, String>();
+    tokens.put("access_token", accesToken);
+    tokens.put("refresh_token", refreshToken);
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+    new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+  }
 }
