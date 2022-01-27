@@ -1,8 +1,10 @@
 package com.alkemy.ong;
 
 import com.alkemy.ong.entity.Rol;
+import com.alkemy.ong.entity.User;
 import com.alkemy.ong.enums.Roles;
 import com.alkemy.ong.repository.RolRepository;
+import com.alkemy.ong.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,6 +22,9 @@ public class OngApplication implements CommandLineRunner {
 	@Autowired
 	private RolRepository rolRepository;
 
+	@Autowired
+	private UserRepository userRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
 
@@ -34,7 +39,16 @@ public class OngApplication implements CommandLineRunner {
 			rolUser.setName(Roles.ROL_USER);
 			rolUser.setDescription("Usuario sin ningun privilegio");
 			rolRepository.save(rolUser);
+
 		}
 
+		if (userRepository.count() == 0) {
+			User admin = new User();
+			admin.setEmail("admin@alkemy.org");
+			admin.setPassword("admin");
+			admin.setFirstName("Admin");
+			admin.setLastName("Admin");
+			userRepository.save(admin);
+		}
 	}
 }
