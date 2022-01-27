@@ -2,6 +2,8 @@ package com.alkemy.ong.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.alkemy.ong.entity.User;
 import com.alkemy.ong.security.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +13,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,6 +61,12 @@ public class AuthController {
 		}
 		response.put("ok", Boolean.FALSE);
 		return ResponseEntity.badRequest().body(response);
+	}
+	
+	
+	@PatchMapping("/users/{id}")
+	public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable Integer id){
+		
 	}
 
 	// @PostMapping("/register")
