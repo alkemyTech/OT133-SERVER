@@ -24,101 +24,101 @@ import org.springframework.security.core.userdetails.User;
  */
 public class TokenValidator {
 
-    private static final String SECRET = "n8*<*H^gUdSa@?>R_";
-    private static final String TOKEN_BREARER_PREFIX = "Bearer ";
-    private Algorithm algorithm;
-    private JWTVerifier verifier;
+  private static final String TOKEN_BREARER_PREFIX = "Bearer ";
 
-    public TokenValidator() {
-        algorithm = Algorithm.HMAC256(SECRET.getBytes());
-        verifier = JWT.require(algorithm).build();
-    }
+  private Algorithm algorithm;
+  private JWTVerifier verifier;
 
-    /**
-     * Obtains an User Authentication Token from a header
-     * 
-     * @param authHeader the authentication header
-     * @return the user-password-authentication token object.
-     */
-    public UsernamePasswordAuthenticationToken retrieveUserAuthTokenFromHeader(String authHeader) {
-        return obtainUserAuthToken(decodeToken(obtainTokenFromHeader(authHeader)));
-    }
+  public TokenValidator(String tokenSecret) {
+    algorithm = Algorithm.HMAC256(tokenSecret.getBytes());
+    verifier = JWT.require(algorithm).build();
+  }
 
-    /**
-     * Generates an authentication token for an User.
-     * 
-     * @param user from springboot userdetails
-     * @param expirationInMinutes the expiration time in minutes
-     * @param issuer the issuer value
-     * @param withClaims wheter to sign with claims
-     * @return a generated token
-     */
-    public String generateTokenForUser(User user, int expirationInMinutes, String issuer,
-            boolean withClaims) {
+  /**
+   * Obtains an User Authentication Token from a header
+   * 
+   * @param authHeader the authentication header
+   * @return the user-password-authentication token object.
+   */
+  public UsernamePasswordAuthenticationToken retrieveUserAuthTokenFromHeader(String authHeader) {
+    return obtainUserAuthToken(decodeToken(obtainTokenFromHeader(authHeader)));
+  }
 
-        Builder jwtBuilder = JWT.create().withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + expirationInMinutes))
-                .withIssuer(issuer);
+  /**
+   * Generates an authentication token for an User.
+   * 
+   * @param user from springboot userdetails
+   * @param expirationInMinutes the expiration time in minutes
+   * @param issuer the issuer value
+   * @param withClaims wheter to sign with claims
+   * @return a generated token
+   */
+  public String generateTokenForUser(User user, int expirationInMinutes, String issuer,
+      boolean withClaims) {
 
-        return withClaims ? jwtBuilder.withClaim("roles", obtainAuthorities(user)).sign(algorithm)
-                : jwtBuilder.sign(algorithm);
-    }
+    Builder jwtBuilder = JWT.create().withSubject(user.getUsername())
+        .withExpiresAt(new Date(System.currentTimeMillis() + expirationInMinutes))
+        .withIssuer(issuer);
 
-    /**
-     * Obtains a tokeken from the authentication header
-     * 
-     * @param authHeader the authentication header
-     * @return the token withouth the prefix 'BEARER '
-     */
-    private String obtainTokenFromHeader(String authHeader) {
-        return authHeader.substring(TOKEN_BREARER_PREFIX.length());
-    }
+    return withClaims ? jwtBuilder.withClaim("roles", obtainAuthorities(user)).sign(algorithm)
+        : jwtBuilder.sign(algorithm);
+  }
 
-    /**
-     * Verifies a token.
-     * 
-     * @param token to be verified by the validator Algorithm
-     * @return a Decoded Jason Web Token
-     */
-    private DecodedJWT decodeToken(String token) {
-        return verifier.verify(token);
-    }
+  /**
+   * Obtains a tokeken from the authentication header
+   * 
+   * @param authHeader the authentication header
+   * @return the token withouth the prefix 'BEARER '
+   */
+  private String obtainTokenFromHeader(String authHeader) {
+    return authHeader.substring(TOKEN_BREARER_PREFIX.length());
+  }
+
+  /**
+   * Verifies a token.
+   * 
+   * @param token to be verified by the validator Algorithm
+   * @return a Decoded Jason Web Token
+   */
+  private DecodedJWT decodeToken(String token) {
+    return verifier.verify(token);
+  }
 
 
-    /**
-     * Obtains the user auth token from a decoded Jason Web Token.
-     * 
-     * @param decodedJwt a decoded JSON web Token
-     * @return
-     */
-    private static UsernamePasswordAuthenticationToken obtainUserAuthToken(DecodedJWT decodedJwt) {
+  /**
+   * Obtains the user auth token from a decoded Jason Web Token.
+   * 
+   * @param decodedJwt a decoded JSON web Token
+   * @return
+   */
+  private static UsernamePasswordAuthenticationToken obtainUserAuthToken(DecodedJWT decodedJwt) {
 
-        String username = decodedJwt.getSubject();
-        String[] roles = decodedJwt.getClaim("roles").asArray(String.class);
+    String username = decodedJwt.getSubject();
+    String[] roles = decodedJwt.getClaim("roles").asArray(String.class);
 
-        return new UsernamePasswordAuthenticationToken(username, null, listAuthorities(roles));
-    }
+    return new UsernamePasswordAuthenticationToken(username, null, listAuthorities(roles));
+  }
 
-    /**
-     * List all authorities decoded.
-     * 
-     * @param roles decoded roles.
-     * @return a collection of Granted Authorities
-     */
-    private static Collection<SimpleGrantedAuthority> listAuthorities(String[] roles) {
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        Arrays.stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
-        return authorities;
-    }
+  /**
+   * List all authorities decoded.
+   * 
+   * @param roles decoded roles.
+   * @return a collection of Granted Authorities
+   */
+  private static Collection<SimpleGrantedAuthority> listAuthorities(String[] roles) {
+    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+    Arrays.stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+    return authorities;
+  }
 
-    /**
-     * Obtains an user authorities list.
-     * 
-     * @param user to authorize
-     * @return a list of authorities.
-     */
-    private List<String> obtainAuthorities(User user) {
-        return user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-    }
+  /**
+   * Obtains an user authorities list.
+   * 
+   * @param user to authorize
+   * @return a list of authorities.
+   */
+  private List<String> obtainAuthorities(User user) {
+    return user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toList());
+  }
 }

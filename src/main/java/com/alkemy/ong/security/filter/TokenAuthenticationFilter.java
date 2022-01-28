@@ -30,8 +30,12 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
   private final AuthenticationManager authenticationManager;
 
-  public TokenAuthenticationFilter(AuthenticationManager authenticationManager) {
+  private final TokenValidator tokenValidator;
+
+  public TokenAuthenticationFilter(AuthenticationManager authenticationManager,
+      TokenValidator tokenValidator) {
     this.authenticationManager = authenticationManager;
+    this.tokenValidator = tokenValidator;
   }
 
   @Override
@@ -52,7 +56,6 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
     org.springframework.security.core.userdetails.User user =
         (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
     String issuer = request.getRequestURL().toString();
-    TokenValidator tokenValidator = new TokenValidator();
 
     // Generating Tokens
     String accesToken = tokenValidator.generateTokenForUser(user, TEN_MINUTES * 3, issuer, true);
