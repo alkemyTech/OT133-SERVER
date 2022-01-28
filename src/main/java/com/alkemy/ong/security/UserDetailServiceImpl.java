@@ -35,13 +35,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
 		boolean accountNonExpired = true;
 		boolean credentialsNonExpired = true;
 		boolean accountNonLocked = true;
-
-		//User user = this.userDAO.getByEmail(username).get();
 		
 		//Se agregan los roles del usuario.
-		/*List<GrantedAuthority> authorities = new ArrayList<>();
-		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRoleId().getName().name().toString());
-		authorities.add(authority);*/
 		List<GrantedAuthority> authorities = user.getRoleId()
 				.stream()
 				.map(rol -> new SimpleGrantedAuthority(rol.getName().name()))
