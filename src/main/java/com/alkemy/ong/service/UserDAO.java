@@ -52,8 +52,7 @@ public class UserDAO {
 		Rol rol = rolRepository.findByName(Roles.ROL_USER);
 
 		user.setPassword(pwEncoder.encode(user.getPassword()));
-		user.setRoleId(rol);
-
+		user.getRoleId().add(rol);
 		User created = userRepository.save(user);
 
 		return created;
@@ -67,11 +66,6 @@ public class UserDAO {
 		return userRepository.findByEmail(email).isPresent();
 	}
 
-	
-	@Transactional(readOnly=true)
-	public Optional<User> getByEmail(String email){
-		return this.userRepository.findByEmail(email);
-	}
 	
 	@Transactional(readOnly=true)
 	public Optional<User> getById(UUID id){
