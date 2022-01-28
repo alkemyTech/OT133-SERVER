@@ -17,6 +17,7 @@ public class NewController {
     NewService newService;
 
     @PostMapping
+    @PreAuthorize("ROL_ADMIN")
     public ResponseEntity<NewDTO> save(NewDTO dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(newService.save(dto));
     }
