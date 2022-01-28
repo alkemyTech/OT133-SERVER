@@ -24,6 +24,12 @@ public class TokenAuthorizationFilter extends OncePerRequestFilter {
 
   private static final String TOKEN_PREFIX = "Bearer ";
 
+  private final TokenValidator tokenValidator;
+
+  public TokenAuthorizationFilter(TokenValidator tokenValidator) {
+    this.tokenValidator = tokenValidator;
+  }
+
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
@@ -36,7 +42,7 @@ public class TokenAuthorizationFilter extends OncePerRequestFilter {
       if (authHeader != null && authHeader.startsWith(TOKEN_PREFIX)) {
         try {
           SecurityContextHolder.getContext()
-              .setAuthentication(new TokenValidator().retrieveUserAuthTokenFromHeader(authHeader));
+              .setAuthentication(tokenValidator.retrieveUserAuthTokenFromHeader(authHeader));
           filterChain.doFilter(request, response);
         } catch (Exception e) {
 
