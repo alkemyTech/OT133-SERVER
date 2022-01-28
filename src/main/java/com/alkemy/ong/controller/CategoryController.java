@@ -22,7 +22,7 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         categoryService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
