@@ -48,10 +48,10 @@ public class User extends PersistentEntity {
 	private String photo;
 
 	//@JoinTable is used to map Join table in database
-	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	/*@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "role_id", referencedColumnName = "id")*/
-	@ManyToMany
+	//@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
     		name="users_roles", 
     		joinColumns=@JoinColumn(name="user_id"),
