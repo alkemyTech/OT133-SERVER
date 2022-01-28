@@ -1,8 +1,21 @@
 package com.alkemy.ong.controller;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import com.alkemy.ong.security.exception.UserAlreadyExistsException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import java.util.Optional;
+import java.util.UUID;
+
+import com.alkemy.ong.entity.User;
+import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.security.UserDetailServiceImpl;
+import com.alkemy.ong.service.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,76 +23,61 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 @RestController
-@RequestMapping("/auth")
-public class AuthController {
+@RequestMapping("auth")
+public class AuthController extends BaseController {
 
 	@Autowired
-	private AuthenticationManager authenticationManager;
+	private UserDAO userService;
+  
+	@PostMapping(path = "register", produces = "application/json")
+	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequest signupRequest)
+			throws UserAlreadyExistsException {
+		// Creacion de nuevo usuario
+		User user = new User();
+		user.setFirstName(signupRequest.getFirstname());
+		user.setLastName(signupRequest.getLastname());
+		user.setEmail(signupRequest.getEmail());
+		user.setPassword(signupRequest.getPassword());
 
-	@Autowired
-	private UserDetailServiceImpl userDetails;
-
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
-
-	@PostMapping("/login")
-	public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password) {
+		// Creacion de la URI
+		URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("/auth/register").toUriString());
+  
+		return ResponseEntity.created(uri).body(userService.create(user));
+	}
+	
+	
+	@PatchMapping("/users/{id}")
+	public ResponseEntity<?> updateUser(@RequestBody Map<Object,Object> fields, @PathVariable UUID id){
 		Map<String, Object> response = new HashMap<>();
-		boolean authenticated = false;
-
-		try {
-			this.authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-			UserDetails userDetails = this.userDetails.loadUserByUsername(email);
-
-			if (userDetails != null) {
-				authenticated = this.passwordEncoder.matches(password, userDetails.getPassword());
-				if (authenticated) {
-					response.put("ok", userDetails);
-					return new ResponseEntity<>(response, HttpStatus.OK);
-				}
-			} else {
-				response.put("Forbidden", HttpStatus.FORBIDDEN);
-				return ResponseEntity.badRequest().body(response);
-			}
-		} catch (BadCredentialsException e) {
-			response.put("Forbidden", HttpStatus.FORBIDDEN);
-			return ResponseEntity.badRequest().body(response);
+		Optional<User> userOptional = this.userDAO.update(fields, id);
+		
+		if(!userOptional.isPresent()) {
+			response.put("Error", String.format("User with ID %s not found.", id));
+			return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+		}else {
+			response.put("ok",this.userMapper.toUserDTO(userOptional.get()));
+			return ResponseEntity.ok(response);
 		}
-		response.put("ok", Boolean.FALSE);
-		return ResponseEntity.badRequest().body(response);
+		
 	}
 
-	// @PostMapping("/register")
-	// public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest){
-
-	// //verificacion del mail
-	// if(userRepository.existsByEmail(signupRequest.getEmail())){
-	// return ResponseEntity
-	// .badRequest()
-	// .body("Error: Email is already in use!");
-	// }
-
-	// //Creacion de nuevo usuario
-	// User user = new User();
-	// user.setFirstName(signupRequest.getFirstname());
-	// user.setLastName(signupRequest.getLastname());
-	// user.setEmail(signupRequest.getEmail());
-	// user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-
-	// Rol userRole = rolRepository.findByName(Roles.ROL_USER);
-	// user.setRoleId(userRole);
-	// userRepository.save(user);
-
-	// return new ResponseEntity<String>("User registered successfully", HttpStatus.OK);
-	// }
-
+	@ResponseStatus(HttpStatus.CONFLICT)
+	@ExceptionHandler(UserAlreadyExistsException.class)
+	public Map<String, String> handleUserExistExceptions() {
+		Map<String, String> errors = new HashMap<>();
+		errors.put("mail", "The indicated email address is already in use");
+		return errors;
+	}
 }

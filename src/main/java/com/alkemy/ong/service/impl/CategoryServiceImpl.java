@@ -8,29 +8,22 @@ import com.alkemy.ong.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class CategoryServiceImpl implements CategoryService {
-
     @Autowired
-    CategoryRepository categoryRepository;
-
+    private CategoryRepository categoryRepository;
     @Autowired
-    CategoryMapper categoryMapper;
+    private CategoryMapper categoryMapper;
 
-    public void delete(String id){
-        categoryRepository.deleteById(id);
-    }
-
-    public CategoryDTO findById(String id){
-        Optional<Category> request = categoryRepository.findById(id);
-        if (request.isPresent()){
-            Category category = request.get();
-            CategoryDTO dto = categoryMapper.entity2categoryDTO(category);
-            return dto;
+    @Override
+    public CategoryDTO findCategoryById(String id){
+        try {
+            Category foundCategory = categoryRepository.findById(id).get();
+            return categoryMapper.categoryEntity2DTO(foundCategory);
+        }catch (Exception e) {
+            System.out.println("No encontrado");
         }
         return null;
-    }
 
+    }
 }

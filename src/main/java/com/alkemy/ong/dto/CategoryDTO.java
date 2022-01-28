@@ -1,14 +1,21 @@
 package com.alkemy.ong.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.time.LocalDateTime;
-
-@Data
+@Getter
+@Setter
+@ToString
 public class CategoryDTO {
-    private String id;
+
     private String name;
+
     private String description;
+
     private String image;
-    private LocalDateTime timestamps;
+
+    private boolean softDelete;
+
+    private String timestamps;
 }
