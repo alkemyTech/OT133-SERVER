@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ public class AmazonS3Uploader implements ImageUploader {
   // Autowireds
   // --------------------------------------------------------------------------------------------
 
+  @Autowired
   private AmazonS3 s3;
 
   // --------------------------------------------------------------------------------------------
