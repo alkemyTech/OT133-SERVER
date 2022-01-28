@@ -66,7 +66,7 @@ public class OngApplication implements CommandLineRunner {
 
     LocalDateTime timeFromDateTime = LocalDateTime.now();
     category.setTimestamps(timeFromDateTime);
-    categoryRepository.save(category);
+    
 	}
 
 }
