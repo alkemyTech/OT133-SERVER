@@ -1,10 +1,15 @@
 package com.alkemy.ong.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.SQLDelete;
@@ -42,9 +47,16 @@ public class User extends PersistentEntity {
 	@Column(nullable = true)
 	private String photo;
 
+	//@JoinTable is used to map Join table in database
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinColumn(name = "role_id", referencedColumnName = "id")
-	private Rol roleId;
+	/*@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "role_id", referencedColumnName = "id")*/
+	@ManyToMany
+    @JoinTable(
+    		name="users_roles", 
+    		joinColumns=@JoinColumn(name="user_id"),
+    		inverseJoinColumns=@JoinColumn(name="rol_id")
+    )
+	private List<Rol> roleId = new ArrayList<>();
 
 }
