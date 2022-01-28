@@ -38,11 +38,27 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public void deleteUser(User user){
-        userRepository.delete(user);
+    public void deleteUser(String email){
+        User u = findByEmail(email);
+        userRepository.delete(u);
     }
 
-    public Optional<User> findByUserId(String id) throws FileNotFoundException{
-        return userRepository.findById(id);
+    public User findByUserId(String id){
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()) 
+            return user.get();
+        return null;
+    }
+
+    public User findByEmail(String email){
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isPresent()) 
+            return user.get();
+        return null;
+    }
+
+    public String traerEmail(String id){
+        User u = findByUserId(id);
+        return u.getEmail();
     }
 }

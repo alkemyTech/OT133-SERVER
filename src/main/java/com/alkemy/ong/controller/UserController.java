@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.alkemy.ong.dto.UserDTO;
+
 @RestController
 public class UserController {
 
@@ -21,12 +23,10 @@ public class UserController {
     @DeleteMapping("/user/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable String id){
         Map<String, Object> response = new HashMap<>();
-        
         try{
-            Optional<User> user = service.findByUserId(id);
-            if(user.isPresent()) {
-                User userPresent = user.get();
-                service.deleteUser(userPresent);
+            UserDTO u = new UserDTO (null, null, service.traerEmail(id));
+            if(u.email != null) {
+                service.deleteUser(u.email);
                 response.put("User eliminado", "Id: " + id);
                 return ResponseEntity.ok(response);
             }
