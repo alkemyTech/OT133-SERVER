@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import com.alkemy.ong.security.exception.UserAlreadyExistsException;
+import com.alkemy.ong.security.payload.SignupRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +41,9 @@ public class AuthController extends BaseController {
 
 	@Autowired
 	private UserDAO userService;
+	
+	@Autowired
+	private UserMapper userMapper;
   
 	@PostMapping(path = "register", produces = "application/json")
 	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequest signupRequest)
@@ -61,7 +66,7 @@ public class AuthController extends BaseController {
 	@PatchMapping("/users/{id}")
 	public ResponseEntity<?> updateUser(@RequestBody Map<Object,Object> fields, @PathVariable UUID id){
 		Map<String, Object> response = new HashMap<>();
-		Optional<User> userOptional = this.userDAO.update(fields, id);
+		Optional<User> userOptional = this.userService.update(fields, id);
 		
 		if(!userOptional.isPresent()) {
 			response.put("Error", String.format("User with ID %s not found.", id));
