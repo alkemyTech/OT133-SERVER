@@ -11,16 +11,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.scheduling.annotation.EnableAsync;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+
 
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableAsync
 public class OngApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
@@ -31,8 +28,6 @@ public class OngApplication implements CommandLineRunner {
     private RolRepository rolRepository;
     @Autowired
     private CategoryRepository categoryRepository;
-    @Autowired
-    private CategoryMapper categoryMapper;
 
     @Override
     public void run(String... args) throws Exception {
@@ -56,7 +51,6 @@ public class OngApplication implements CommandLineRunner {
         LocalDateTime timeFromDateTime = LocalDateTime.now();
         category.setTimestamps(timeFromDateTime);
         categoryRepository.save(category);
-
 
     }
 }
