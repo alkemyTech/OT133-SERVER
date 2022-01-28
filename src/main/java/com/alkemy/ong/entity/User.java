@@ -47,10 +47,6 @@ public class User extends PersistentEntity {
 	@Column(nullable = true)
 	private String photo;
 
-	//@JoinTable is used to map Join table in database
-	/*@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinColumn(name = "role_id", referencedColumnName = "id")*/
-	//@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
     		name="users_roles", 
