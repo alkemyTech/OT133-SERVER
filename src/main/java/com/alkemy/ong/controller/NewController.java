@@ -5,6 +5,7 @@ import com.alkemy.ong.service.NewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("news")
 public class NewController {
 
-    @Autowired
-    NewService newService;
+  @Autowired
+  NewService newService;
 
-    @PostMapping
-    @PreAuthorize("ROL_ADMIN")
-    public ResponseEntity<NewDTO> save(NewDTO dto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(newService.save(dto));
-    }
+  @PostMapping
+  @PreAuthorize("ROL_ADMIN")
+  public ResponseEntity<NewDTO> save(NewDTO dto) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(newService.save(dto));
+  }
 }
