@@ -1,15 +1,12 @@
 package com.alkemy.ong.entity;
 
-import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
@@ -22,15 +19,13 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "organizations")
-@SQLDelete(sql = "UPDATE organizations SET soft_delete = true WHERE organizationId=?")
+@SQLDelete(sql = "UPDATE organizations SET soft_delete = true WHERE id=?")
 @Where(clause = "soft_delete=false")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Organization extends PersistentEntity implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+public class Organization extends PersistentEntity {
 
 	@Column(name = "name", nullable = false, length = 100)
 	@NotEmpty(message = "el nombre no puede estar vacío")
