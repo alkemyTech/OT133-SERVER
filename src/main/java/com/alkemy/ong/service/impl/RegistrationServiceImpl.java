@@ -1,6 +1,6 @@
-package com.alkemy.ong.service.impl;
+package com.alkemy.ong.repository.service.impl;
 
-import com.alkemy.ong.service.Registration;
+import com.alkemy.ong.repository.service.Registration;
 import org.springframework.stereotype.Service;
 
 @Service
