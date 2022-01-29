@@ -25,7 +25,6 @@ public class OrganizationController {
 	@Autowired
 	private OrganizationService organizationService;
 	
-	
 	@GetMapping("/public")
 	public ResponseEntity<List<Organization>> readAllDefined(){
 		    List<Organization> organization = StreamSupport
@@ -36,7 +35,7 @@ public class OrganizationController {
 	}
 	
 	@PostMapping("/public")
-	//@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<?> create(@Valid @RequestBody Organization organization){
 		if(organizationService.existsByEmail(organization.getEmail())) {
 			return new ResponseEntity("el email ya existe",HttpStatus.BAD_REQUEST);
