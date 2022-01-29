@@ -1,6 +1,6 @@
-package com.alkemy.ong.repository.service.impl;
+package com.alkemy.ong.service.impl;
 
-import com.alkemy.ong.repository.service.MailService;
+import com.alkemy.ong.service.MailService;
 
 import java.io.IOException;
 

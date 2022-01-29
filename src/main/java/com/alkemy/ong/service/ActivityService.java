@@ -1,7 +1,8 @@
-package com.alkemy.ong.repository.service;
+package com.alkemy.ong.service;
 
 import com.alkemy.ong.dto.ActivityDTO;
 
 public interface ActivityService {
-    ActivityDTO createActivity(ActivityDTO activityDTO);
+    ActivityDTO createActivity(ActivityDTO activityDTO)throws Exception;
+    public void verifyActivity(ActivityDTO activityDTO) throws Exception;
 }

@@ -34,7 +34,7 @@ public abstract class PersistentEntity implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
 
-    @CreatedDate
+    //@CreatedDate
     @Column(name = "timestamps", columnDefinition = "TIMESTAMP")
     private LocalDateTime timestamps;
 

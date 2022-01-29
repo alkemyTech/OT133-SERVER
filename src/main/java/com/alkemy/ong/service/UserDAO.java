@@ -1,4 +1,4 @@
-package com.alkemy.ong.repository.service;
+package com.alkemy.ong.service;
 
 import java.util.Optional;
 
