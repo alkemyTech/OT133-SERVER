@@ -1,9 +1,9 @@
 package com.alkemy.ong.mapper;
 
-import java.time.LocalDateTime;
 import com.alkemy.ong.dto.NewDTO;
 import com.alkemy.ong.entity.News;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class NewMapper {
@@ -12,7 +12,7 @@ public class NewMapper {
     news.setName(dto.getName());
     news.setContent(dto.getContent());
     news.setImage(dto.getImage());
-    news.setTimestamps(LocalDateTime.now());
+    news.setCategoryId(dto.getCategoryId());
     return news;
   }
 
@@ -22,8 +22,8 @@ public class NewMapper {
     dto.setName(news.getName());
     dto.setContent(news.getContent());
     dto.setImage(news.getImage());
-    dto.setCategoryId(news.getCategory().getId());
-    dto.setTimestamps(LocalDateTime.now());
+    dto.setCategoryId(news.getCategoryId());
+    dto.setTimestamps(news.getTimestamps());
     return dto;
   }
 }

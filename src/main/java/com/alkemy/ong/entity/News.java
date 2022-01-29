@@ -1,12 +1,7 @@
 package com.alkemy.ong.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import com.sun.istack.NotNull;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
@@ -44,4 +39,8 @@ public class News extends PersistentEntity {
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "category_id", insertable = false, updatable = false)
   private Category category;
+
+  @Column(name = "category_id")
+  private String categoryId;
+
 }
