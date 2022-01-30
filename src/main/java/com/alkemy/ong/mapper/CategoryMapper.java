@@ -15,13 +15,11 @@ import java.time.LocalTime;
 @Component
 public class CategoryMapper {
 
-    public Category categoryDTO2Entity(CategoryDTO dto) {
-        Category category = new Category();
+    public Category categoryDTO2Entity(CategoryDTO dto,Category category) {
         category.setName(dto.getName());
         category.setDescription(dto.getDescription());
         category.setSoftDelete(dto.isSoftDelete());
-        category.setTimestamps(string2LocalDate(dto.getTimestamps()));
-        category.setImage(dto.getImage());
+        
         return category;
     }
 
