@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 import com.alkemy.ong.entity.User;
-import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.security.exception.UserAlreadyExistsException;
 import com.alkemy.ong.security.payload.SignupRequest;
 
@@ -29,8 +26,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,8 +42,7 @@ public class AuthController extends BaseController {
 
   @Autowired
   private UserDAO userService;
-  @Autowired
-  private UserMapper userMapper;
+  
   @Autowired
   private MailService mailService;
   @Autowired
@@ -110,21 +104,6 @@ public class AuthController extends BaseController {
   }
 
 
-  @PatchMapping("/users/{id}")
-  public ResponseEntity<?> updateUser(@RequestBody Map<Object, Object> fields,
-      @PathVariable UUID id) {
-    Map<String, Object> response = new HashMap<>();
-    Optional<User> userOptional = this.userService.update(fields, id);
-
-    if (!userOptional.isPresent()) {
-      response.put("Error", String.format("User with ID %s not found.", id));
-      return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    } else {
-      response.put("ok", this.userMapper.toUserDTO(userOptional.get()));
-      return ResponseEntity.ok(response);
-    }
-
-  }
 
   @ResponseStatus(HttpStatus.CONFLICT)
   @ExceptionHandler(UserAlreadyExistsException.class)
