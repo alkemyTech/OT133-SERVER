@@ -1,6 +1,6 @@
 package com.alkemy.ong.repository;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.alkemy.ong.entity.member.Member;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +39,7 @@ public class MemberRepositoryTest {
     @Test
     void whenMemberIsSaved_isTimeStamped() throws Exception {
         member = memberRepository.save(member);
-        assertNull(member.getTimestamps());
+        assertNotNull(member.getTimestamps());
     }
 
 }
