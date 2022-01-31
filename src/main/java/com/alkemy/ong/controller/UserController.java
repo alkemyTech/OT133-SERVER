@@ -17,7 +17,7 @@ import com.alkemy.ong.exception.UserException;
 import com.alkemy.ong.service.UserService;
 
 @RestController
-@RequestMapping("/auth/users")
+@RequestMapping("/users")
 public class UserController {
 	
 	@Autowired
@@ -37,7 +37,7 @@ public class UserController {
 		}
 	}
 
-	@DeleteMapping("/user/{id}")	
+	@DeleteMapping("/{id}")	
     public ResponseEntity<?> deleteUser(@PathVariable String id) throws UserException, IOException{
         Map<String, Object> response = new HashMap<>();
         if(userService.userExists(id)) {
