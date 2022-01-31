@@ -1,13 +1,12 @@
 package com.alkemy.ong.security;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.alkemy.ong.entity.User;
 import com.alkemy.ong.service.UserDAO;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,17 +18,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 
-	@Autowired
-	private UserDAO userDAO;
+  @Autowired
+  private UserDAO userDAO;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    
-		User user = this.userDAO.getByEmail(username).orElse(null);
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		if (Objects.isNull(user)) {
-			throw new UsernameNotFoundException("No user found with username: " + username);
-		}
+    User user = this.userDAO.getByEmail(username).orElse(null);
 
 		boolean enabled = true;
 		boolean accountNonExpired = true;

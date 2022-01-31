@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "news")
 @SQLDelete(sql = "UPDATE table_product SET soft_delete = true WHERE id=?")
 @FilterDef(name = "deletedProductFilter",
-        parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+    parameters = @ParamDef(name = "isDeleted", type = "boolean"))
 @Filter(name = "deletedProductFilter", condition = "soft_delete = :isDeleted")
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -24,23 +24,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class News extends PersistentEntity {
 
-    @Column(name = "name", nullable = false)
-    @NotNull
-    private String name;
+  @Column(name = "name", nullable = false)
+  @NotNull
+  private String name;
 
-    @Column(name = "content", nullable = false)
-    @NotNull
-    private String content;
+  @Column(name = "content", nullable = false)
+  @NotNull
+  private String content;
 
-    @Column(name = "image", nullable = false)
-    @NotNull
-    private String image;
+  @Column(name = "image", nullable = false)
+  @NotNull
+  private String image;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id", insertable = false, updatable = false)
-    private Category category;
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "category_id", insertable = false, updatable = false)
+  private Category category;
 
-    @JoinColumn(name = "category_id")
-    private String categoryId;
+  @Column(name = "category_id")
+  private String categoryId;
 
 }
