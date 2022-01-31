@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
 import com.alkemy.ong.entity.User;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.security.exception.UserAlreadyExistsException;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
+
+
 @RestController
 @RequestMapping("auth")
 public class AuthController extends BaseController {
@@ -33,6 +36,7 @@ public class AuthController extends BaseController {
   private UserDAO userService;
   @Autowired
   private UserMapper userMapper;
+
 
   @PostMapping(path = "register", produces = "application/json")
   public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequest signupRequest)
@@ -74,5 +78,6 @@ public class AuthController extends BaseController {
     Map<String, String> errors = new HashMap<>();
     errors.put("mail", "The indicated email address is already in use");
     return errors;
-  }
+  }  
+  
 }

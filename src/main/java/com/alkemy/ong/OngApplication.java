@@ -7,11 +7,14 @@ import com.alkemy.ong.enums.Roles;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.RolRepository;
 import com.alkemy.ong.repository.UserRepository;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
@@ -50,9 +53,9 @@ public class OngApplication implements CommandLineRunner {
       rolRepository.save(rolUser);
 
     }
-
+  
     if (userRepository.count() == 0) {
-      User admin = new User();
+    	  User admin = new User();
       admin.setEmail("admin@alkemy.org");
       admin.setPassword(new BCryptPasswordEncoder().encode("admin"));
       admin.setFirstName("Admin");
@@ -66,7 +69,6 @@ public class OngApplication implements CommandLineRunner {
       category.setName("categoria");
       categoryRepository.save(category);
     }
-
 
   }
 
