@@ -1,12 +1,22 @@
 package com.alkemy.ong.entity;
 
+import java.io.Serializable;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
@@ -25,7 +35,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Organization extends PersistentEntity {
+public class Organization extends PersistentEntity implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	@Column(name = "name", nullable = false, length = 100)
 	@NotEmpty(message = "el nombre no puede estar vacío")

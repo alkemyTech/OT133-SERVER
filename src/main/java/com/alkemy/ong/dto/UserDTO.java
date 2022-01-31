@@ -1,5 +1,9 @@
 package com.alkemy.ong.dto;
 
+
+public class UserDTO {
+
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
