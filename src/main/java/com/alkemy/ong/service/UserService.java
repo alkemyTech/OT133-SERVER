@@ -8,4 +8,8 @@ public interface UserService {
 	Iterable<User> listAll();
 	
 	UserDTO save(UserDTO dto);
+
+	void deleteUser(String id); 
+
+	boolean userExists(String id);
 }

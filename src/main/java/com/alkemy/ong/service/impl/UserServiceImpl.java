@@ -3,6 +3,8 @@ package com.alkemy.ong.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.entity.User;
 import com.alkemy.ong.mapper.UserMapper;
@@ -29,6 +31,21 @@ public class UserServiceImpl implements UserService{
         User userSave = userRepository.save(user);
         UserDTO result = userMapper.entity2userDTO(userSave);
         return result;
+	}
+
+	public void deleteUser(String id){
+        Optional<User> u = userRepository.findById(id);
+		if(u.isPresent()) {
+			User user = u.get();
+        	userRepository.delete(user);
+		}
+    }
+
+	public boolean userExists(String id){
+		Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()) 
+			return true;
+		return false;
 	}
 
 }
