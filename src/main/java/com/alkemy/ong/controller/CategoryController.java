@@ -39,7 +39,7 @@ public class CategoryController {
         if (categoryService.findCategoryById(id) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        categoryService.delete(id);
+        //categoryService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -54,7 +54,6 @@ public class CategoryController {
     
     
     
-   
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROL_ADMIN')")
     public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO,
