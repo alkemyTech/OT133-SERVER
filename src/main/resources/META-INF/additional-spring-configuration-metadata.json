@@ -1,9 +1,0 @@
-{
-  "properties": [
-    {
-      "name": "security.token.validator-secret",
-      "type": "java.lang.String",
-      "description": "Token Secret for using in verifying used in the JWT algorithm"
-    }
-  ]
-}

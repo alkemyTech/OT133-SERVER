@@ -16,12 +16,14 @@ public class TestController {
     }
 
     @GetMapping("/user")
+    // @Secured("ROL_USER")
     @PreAuthorize("hasRole('ROL_USER')")
     public String userAccess() {
         return "User";
     }
 
     @GetMapping("/admin")
+    // @Secured("ROL_ADMON")
     @PreAuthorize("hasRole('ROL_ADMIN')")
     public String adminAccess() {
         return "Admin";
