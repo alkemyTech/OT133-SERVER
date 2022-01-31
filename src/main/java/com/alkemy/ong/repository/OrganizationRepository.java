@@ -11,4 +11,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Stri
 	
 	@Query("SELECT p.name, p.image, p.phone, p.address FROM Organization p")
 	public Iterable<Organization> readAllDefined();
+	
+	public boolean existsByEmail(String email);
 }
