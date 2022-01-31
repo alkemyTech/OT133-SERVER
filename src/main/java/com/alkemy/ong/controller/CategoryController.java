@@ -55,7 +55,7 @@ public class CategoryController {
     
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROL_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO,
     										BindingResult result, 
     										@PathVariable UUID id){
