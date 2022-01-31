@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("news")
 public class NewController {
 
-    @Autowired
-    NewService newService;
+  @Autowired
+  NewService newService;
 
-    @PostMapping
-    @PreAuthorize("ROL_ADMIN")
-    public ResponseEntity<NewDTO> save(NewDTO dto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(newService.save(dto));
-    }
+  @PostMapping
+  @PreAuthorize("ROL_ADMIN")
+  public ResponseEntity<NewDTO> save(NewDTO dto) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(newService.save(dto));
+  }
 }

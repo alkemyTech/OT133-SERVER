@@ -14,9 +14,11 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,6 +32,16 @@ public class CategoryController {
 
     @Autowired
     CategoryService categoryService;
+
+    @PreAuthorize("ROL_ADMIN")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        if (categoryService.findCategoryById(id) == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        categoryService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> getCategoryDetails(@PathVariable String id) {
