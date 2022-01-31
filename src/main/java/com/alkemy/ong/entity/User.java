@@ -3,6 +3,7 @@ package com.alkemy.ong.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +31,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends PersistentEntity {
+public class User extends PersistentEntity{
+
+	private static final long serialVersionUID = 6192381031881499804L;
 
 	@Column(name = "first_name", nullable = false)
 	private String firstName;
@@ -38,13 +41,13 @@ public class User extends PersistentEntity {
 	@Column(name = "last_name", nullable = false)
 	private String lastName;
 
-	@Column(nullable = false, unique = true)
+	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-	@Column(nullable = false)
+	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(nullable = true)
+	@Column(name = "photo", nullable = true)
 	private String photo;
 
 	@ManyToMany(fetch = FetchType.EAGER)
