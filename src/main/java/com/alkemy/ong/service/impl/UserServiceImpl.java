@@ -33,19 +33,5 @@ public class UserServiceImpl implements UserService{
         return result;
 	}
 
-	public void deleteUser(String id){
-        Optional<User> u = userRepository.findById(id);
-		if(u.isPresent()) {
-			User user = u.get();
-        	userRepository.delete(user);
-		}
-    }
-
-	public boolean userExists(String id){
-		Optional<User> user = userRepository.findById(id);
-        if(user.isPresent()) 
-			return true;
-		return false;
-	}
 
 }

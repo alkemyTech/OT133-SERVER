@@ -36,25 +36,5 @@ public class UserController {
 			return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
-
-	@DeleteMapping("/{id}")	
-    public ResponseEntity<?> deleteUser(@PathVariable String id) throws UserException, IOException{
-        Map<String, Object> response = new HashMap<>();
-        if(userService.userExists(id)) {
-            userService.deleteUser(id);
-            response.put("User eliminado", "Id: " + id);
-            return ResponseEntity.ok(response);
-        }
-		response.put("Problem to ejecute process", HttpStatus.CONFLICT);
-		return ResponseEntity.ok().body(response);
-    }
-
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ExceptionHandler(UserException.class)
-	public Map<String, String> handleUserNotFoundExceptions() {
-    Map<String, String> error = new HashMap<>();
-    error.put( "Ok: " + Boolean.FALSE , "Could not find user by the given ID");
-    return error;
-  }
 	
 }

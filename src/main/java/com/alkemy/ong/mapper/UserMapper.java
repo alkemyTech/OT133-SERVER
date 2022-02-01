@@ -1,5 +1,8 @@
 package com.alkemy.ong.mapper;
 
+public class UserMapper {
+
+
 import org.springframework.stereotype.Component;
 
 import com.alkemy.ong.dto.UserDTO;

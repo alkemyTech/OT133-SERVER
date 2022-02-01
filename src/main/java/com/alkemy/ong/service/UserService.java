@@ -9,7 +9,4 @@ public interface UserService {
 	
 	UserDTO save(UserDTO dto);
 
-	void deleteUser(String id); 
-
-	boolean userExists(String id);
 }
