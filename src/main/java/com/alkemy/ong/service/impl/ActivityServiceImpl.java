@@ -1,5 +1,7 @@
 package com.alkemy.ong.service.impl;
 
+import java.util.Optional;
+
 import com.alkemy.ong.dto.ActivityDTO;
 import com.alkemy.ong.entity.Activity;
 import com.alkemy.ong.exception.ActivityException;
@@ -28,7 +30,21 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	public void verifyActivity(ActivityDTO activityDTO) throws ActivityException {
-		
+
+		validateActivityForUpdate(activityDTO);
+		if (activityDTO.getTimestamps() == null||activityDTO.getName().isEmpty()) {
+			throw new ActivityException("Timestamps null or empty");
+		}
+
+	}
+
+	public boolean activityExists(String id){
+		Optional<Activity> activity = activityRepository.findById(id);
+		return activity.isPresent();
+	}
+
+	public void validateActivityForUpdate(ActivityDTO activityDTO) throws ActivityException {
+
 		if (activityDTO.getName() == null ||activityDTO.getName().isEmpty()) {
 			throw new ActivityException("Name null or empty");
 		}
@@ -38,10 +54,19 @@ public class ActivityServiceImpl implements ActivityService {
 		if (activityDTO.getImage() == null||activityDTO.getName().isEmpty()) {
 			throw new ActivityException("Image null or empty");
 		}
-		if (activityDTO.getTimestamps() == null||activityDTO.getName().isEmpty()) {
-			throw new ActivityException("Timestamps null or empty");
-		}
 
+	}
+
+    public ActivityDTO updateActivity(String id, ActivityDTO activityToUpdate){
+		Optional<Activity> activityOptional = activityRepository.findById(id);
+		if(activityOptional.isPresent()){
+			Activity activity = activityOptional.get();
+			activity.setName(activityToUpdate.getName());
+			activity.setContent(activityToUpdate.getContent());
+			activity.setImage(activityToUpdate.getImage());
+			activityRepository.save(activity);
+			return activityMapper.activityEntity2DTO(activity);
+		} return null;
 	}
 
 }

@@ -8,4 +8,6 @@ public interface UserService {
 	Iterable<User> listAll();
 	
 	UserDTO save(UserDTO dto);
+
+  UserDTO getUserDetails(String authorizationHeader);
 }
