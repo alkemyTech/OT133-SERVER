@@ -31,7 +31,7 @@ public class NewController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(newService.save(dto));
 	}
 
-	@PreAuthorize("permitAll()")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getById(@PathVariable UUID id) {
 		Map<String, Object> response = new HashMap<>();

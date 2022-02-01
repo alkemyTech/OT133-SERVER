@@ -39,7 +39,7 @@ public class CategoryController {
         if (categoryService.findCategoryById(id) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        //categoryService.delete(id);
+        categoryService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
