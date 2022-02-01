@@ -12,12 +12,13 @@ import com.alkemy.ong.service.MailService;
 import com.alkemy.ong.service.Registration;
 import com.alkemy.ong.service.UserDAO;
 
+import com.alkemy.ong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.alkemy.ong.security.UserDetailServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -56,6 +58,9 @@ public class AuthController extends BaseController {
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	 @Autowired
+	  private UserService service;
 	
 	//Este método debe estar según la OT133-25
 		@PostMapping("/login")
@@ -112,4 +117,10 @@ public class AuthController extends BaseController {
     errors.put("mail", "The indicated email address is already in use");
     return errors;
   }
+
+  @GetMapping("/me")
+  public ResponseEntity<?> getAuthenticatedUserDetails(@RequestHeader(value = "Authorization") String authorizationHeader){
+    return new ResponseEntity<>(service.getUserDetails(authorizationHeader),HttpStatus.OK);
+  }
+  
 }

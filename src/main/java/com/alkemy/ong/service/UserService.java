@@ -16,4 +16,6 @@ public interface UserService {
 	Optional<User> update(Map<Object, Object> fields, UUID id);
 	
 	Optional<User> getByEmail(String email);
+
+	UserDTO getUserDetails(String authorizationHeader);
 }
