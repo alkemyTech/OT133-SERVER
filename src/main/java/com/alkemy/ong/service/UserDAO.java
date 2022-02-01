@@ -51,7 +51,7 @@ public class UserDAO {
     Rol rol = rolRepository.findByName(Roles.ROL_USER);
 
     user.setPassword(pwEncoder.encode(user.getPassword()));
-    user.setRoleId(rol);
+    user.getRoleId().add(rol);
 
     User created = userRepository.save(user);
 
@@ -61,7 +61,6 @@ public class UserDAO {
   // --------------------------------------------------------------------------------------------
   // Internal Methods
   // --------------------------------------------------------------------------------------------
-
 
 
   @Transactional(readOnly = true)

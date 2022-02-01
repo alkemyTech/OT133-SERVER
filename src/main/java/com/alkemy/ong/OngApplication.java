@@ -7,6 +7,9 @@ import com.alkemy.ong.enums.Roles;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.RolRepository;
 import com.alkemy.ong.repository.UserRepository;
+
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -60,14 +63,18 @@ public class OngApplication implements CommandLineRunner {
       userRepository.save(admin);
     }
 
+
     if (categoryRepository.count() == 0) {
       // Creacion de categoria
       Category category = new Category();
       category.setName("categoria");
       categoryRepository.save(category);
+      LocalDateTime timeFromDateTime = LocalDateTime.now();
+      category.setTimestamps(timeFromDateTime);
     }
 
 
   }
+
 
 }
