@@ -51,7 +51,7 @@ public class UserDAO {
     Rol rol = rolRepository.findByName(Roles.ROL_USER);
 
     user.setPassword(pwEncoder.encode(user.getPassword()));
-    user.setRoleId(rol);
+    user.getRoleId().add(rol);
 
     User created = userRepository.save(user);
 
@@ -63,35 +63,8 @@ public class UserDAO {
   // --------------------------------------------------------------------------------------------
 
 
-
-  @Transactional(readOnly = true)
-  public Optional<User> getByEmail(String email) {
-    return this.userRepository.findByEmail(email);
-  }
-
-  @Transactional(readOnly = true)
-  public Optional<User> getById(UUID id) {
-    return this.userRepository.findById(id.toString());
-  }
-
   public User save(User user) {
     return this.userRepository.save(user);
   }
 
-
-  public Optional<User> update(Map<Object, Object> fields, UUID id) {
-    Optional<User> userOptional = this.getById(id);
-
-    if (!userOptional.isPresent()) {
-      return Optional.empty();
-    } else {
-      fields.forEach((key, value) -> {
-        Field field = ReflectionUtils.findField(User.class, (String) key);
-        field.setAccessible(true);
-        ReflectionUtils.setField(field, userOptional.get(), value);
-      });
-      return Optional.of(this.save(userOptional.get()));
-    }
-
-  }
 }

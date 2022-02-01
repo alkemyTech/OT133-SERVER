@@ -16,8 +16,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
-
 @SpringBootApplication
 @EnableJpaAuditing
 public class OngApplication implements CommandLineRunner {
@@ -63,7 +61,7 @@ public class OngApplication implements CommandLineRunner {
       admin.setPassword(new BCryptPasswordEncoder().encode("admin"));
       admin.setFirstName("Admin");
       admin.setLastName("Admin");
-      admin.setRoles(Arrays.asList(rolRepository.findByName(Roles.ROL_ADMIN)));
+      admin.setRoleId(Arrays.asList(rolRepository.findByName(Roles.ROL_ADMIN)));
       userRepository.save(admin);
     }
 
@@ -86,5 +84,6 @@ public class OngApplication implements CommandLineRunner {
 
     return rol;
   }
+
 
 }
