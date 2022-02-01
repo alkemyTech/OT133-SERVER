@@ -14,19 +14,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class NewServiceImpl implements NewService {
 
-  @Autowired
-  NewMapper newMapper;
+	@Autowired
+	NewMapper newMapper;
 
-  @Autowired
-  NewsRepository newsRepository;
+	@Autowired
+	NewsRepository newsRepository;
 
-  public NewDTO save(NewDTO dto) {
-    News news = newMapper.newDTO2Entity(dto);
-    News newSave = newsRepository.save(news);
-    NewDTO result = newMapper.entity2newDTO(newSave);
-    return result;
-
-  }
+	public NewDTO save(NewDTO dto) {
+		News news = newMapper.newDTO2Entity(dto);
+		News newSave = newsRepository.save(news);
+		NewDTO result = newMapper.entity2newDTO(newSave);
+		return result;
+	}
 
 	@Override
 	public boolean existsById(String id) {
@@ -42,5 +41,5 @@ public class NewServiceImpl implements NewService {
 	public void delete(String id) {
 		newsRepository.deleteById(id);
 	}
-	
+
 }

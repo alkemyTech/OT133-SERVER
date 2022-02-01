@@ -117,20 +117,6 @@ public class AuthController extends BaseController {
 		return ResponseEntity.created(uri).body(userService.create(user));
 	}
 
-	@PatchMapping("/users/{id}")
-	public ResponseEntity<?> updateUser(@RequestBody Map<Object, Object> fields, @PathVariable UUID id) {
-		Map<String, Object> response = new HashMap<>();
-		Optional<User> userOptional = this.service.update(fields, id);
-
-		if (!userOptional.isPresent()) {
-			response.put("Error", String.format("User with ID %s not found.", id));
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-		} else {
-			response.put("ok", this.userMapper.toUserDTO(userOptional.get()));
-			return ResponseEntity.ok(response);
-		}
-
-	}
 
 	@ResponseStatus(HttpStatus.CONFLICT)
 	@ExceptionHandler(UserAlreadyExistsException.class)
