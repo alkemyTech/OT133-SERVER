@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
 import com.alkemy.ong.entity.User;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.security.exception.UserAlreadyExistsException;
@@ -14,6 +15,7 @@ import com.alkemy.ong.security.payload.SignupRequest;
 import com.alkemy.ong.service.MailService;
 import com.alkemy.ong.service.Registration;
 import com.alkemy.ong.service.UserDAO;
+
 import com.alkemy.ong.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import org.springframework.validation.annotation.Validated;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.alkemy.ong.security.UserDetailServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,8 +35,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -48,10 +50,13 @@ public class AuthController extends BaseController {
 
 	@Autowired
 	private UserDAO userService;
+	
 	@Autowired
 	private UserMapper userMapper;
+	
 	@Autowired
 	private MailService mailService;
+	
 	@Autowired
 	private Registration registration;
 
@@ -90,6 +95,7 @@ public class AuthController extends BaseController {
 		} catch (BadCredentialsException e) {
 			response.put("Forbidden", HttpStatus.FORBIDDEN);
 		}
+
 		return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 	}
 
@@ -114,7 +120,7 @@ public class AuthController extends BaseController {
 	@PatchMapping("/users/{id}")
 	public ResponseEntity<?> updateUser(@RequestBody Map<Object, Object> fields, @PathVariable UUID id) {
 		Map<String, Object> response = new HashMap<>();
-		Optional<User> userOptional = this.userService.update(fields, id);
+		Optional<User> userOptional = this.service.update(fields, id);
 
 		if (!userOptional.isPresent()) {
 			response.put("Error", String.format("User with ID %s not found.", id));
