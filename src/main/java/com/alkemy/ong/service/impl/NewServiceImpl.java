@@ -25,16 +25,21 @@ public class NewServiceImpl implements NewService {
 		News newSave = newsRepository.save(news);
 		NewDTO result = newMapper.entity2newDTO(newSave);
 		return result;
-
 	}
 
 	@Override
-	public Optional<NewDTO> getById(String id) {
-		Optional<News> optNew = this.newsRepository.findById(id);
-		if(!optNew.isPresent()) {
-			return Optional.empty();
-		}else {
-			return Optional.of(this.newMapper.entity2newDTO(optNew.get()));
-		}
+	public boolean existsById(String id) {
+		return newsRepository.existsById(id);
 	}
+
+	@Override
+	public News getById(String id) {
+		return newsRepository.getById(id);
+	}
+
+	@Override
+	public void delete(String id) {
+		newsRepository.deleteById(id);
+	}
+
 }

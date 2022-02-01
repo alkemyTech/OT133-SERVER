@@ -1,11 +1,15 @@
 package com.alkemy.ong.service;
 
-import java.util.Optional;
-
 import com.alkemy.ong.dto.NewDTO;
+import com.alkemy.ong.entity.News;
 
 public interface NewService {
+	
     NewDTO save(NewDTO dto);
+
+    boolean existsById(String id);
     
-    Optional<NewDTO> getById(String id);
+    News getById(String id);
+    
+    void delete(String id);
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.alkemy.ong.security.token.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
 
 	@Override
 	public Iterable<User> listAll() {
@@ -64,5 +68,14 @@ public class UserServiceImpl implements UserService {
 		}
 
 	}
+	
+	@Override
+	  public UserDTO getUserDetails(String authorizationHeader) {
+	    String username = jwtUtil.extractUsername(authorizationHeader);
+	    User user = userRepository.findByEmail(username).get();
+	    UserDTO result = userMapper.entity2userDTO(user);
+	    return result;
+	  }
+
 
 }
