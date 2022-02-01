@@ -1,5 +1,7 @@
 package com.alkemy.ong;
 
+import java.util.Arrays;
+import javax.transaction.Transactional;
 import com.alkemy.ong.entity.Category;
 import com.alkemy.ong.entity.Rol;
 import com.alkemy.ong.entity.User;
@@ -37,28 +39,9 @@ public class OngApplication implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
-    if (rolRepository.count() == 0) {
-      // Creacion rol Admin
-      Rol rolAdmin = new Rol();
-      rolAdmin.setName(Roles.ROL_ADMIN);
-      rolAdmin.setDescription("Usuario con privilegios de Administrador");
-      rolRepository.save(rolAdmin);
-      // Creacion de rol User
-      Rol rolUser = new Rol();
-      rolUser.setName(Roles.ROL_USER);
-      rolUser.setDescription("Usuario sin ningun privilegio");
-      rolRepository.save(rolUser);
-
-    }
-
-    if (userRepository.count() == 0) {
-      User admin = new User();
-      admin.setEmail("admin@alkemy.org");
-      admin.setPassword(new BCryptPasswordEncoder().encode("admin"));
-      admin.setFirstName("Admin");
-      admin.setLastName("Admin");
-      userRepository.save(admin);
-    }
+    createRolIfNotExists(Roles.ROL_ADMIN, "User with admin privileges");
+    createRolIfNotExists(Roles.ROL_USER, "User with no privileges");
+    createUserIfNotExists();
 
     if (categoryRepository.count() == 0) {
       // Creacion de categoria
@@ -68,6 +51,40 @@ public class OngApplication implements CommandLineRunner {
     }
 
 
+  }
+
+  @Transactional
+  private User createUserIfNotExists() {
+    User admin = userRepository.findByEmail("admin@alkemy.org").orElse(null);
+
+    if (admin == null) {
+      admin = new User();
+      admin.setEmail("admin@alkemy.org");
+      admin.setPassword(new BCryptPasswordEncoder().encode("admin"));
+      admin.setFirstName("Admin");
+      admin.setLastName("Admin");
+      admin.setRoles(Arrays.asList(rolRepository.findByName(Roles.ROL_ADMIN)));
+      userRepository.save(admin);
+    }
+
+    return admin;
+  }
+
+
+  @Transactional
+  private Rol createRolIfNotExists(Roles rolName, String description) {
+
+    Rol rol = rolRepository.findByName(rolName);
+
+    if (rol == null) {
+      // Creacion rol Admin
+      rol = new Rol();
+      rol.setName(rolName);
+      rol.setDescription(description);
+      rolRepository.save(rol);
+    }
+
+    return rol;
   }
 
 }
