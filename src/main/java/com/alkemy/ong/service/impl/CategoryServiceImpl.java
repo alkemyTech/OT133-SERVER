@@ -1,16 +1,21 @@
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.CategoryDTO;
+import com.alkemy.ong.dto.CategoryDTOList;
 import com.alkemy.ong.entity.Category;
 import com.alkemy.ong.entity.User;
+import com.alkemy.ong.exceptions.CategoryServiceException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.CategoryService;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.modelmapper.ModelMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +27,8 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private CategoryMapper categoryMapper;
+     @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public CategoryDTO findCategoryById(String id){
@@ -46,5 +53,15 @@ public class CategoryServiceImpl implements CategoryService {
     		
     		return Optional.of(this.categoryMapper.categoryEntity2DTO(this.categoryRepository.save(categoryUpdate)));
     	}
+    }
+
+  public List<CategoryDTOList> getAllName() throws CategoryServiceException {
+        Iterable<Object[]> categories = categoryRepository.getAllName();
+        List<CategoryDTOList> result = new ArrayList<CategoryDTOList>();
+        for (Object[] category : categories) {
+            CategoryDTOList categoryListRequestDTO = modelMapper.map(category, CategoryDTOList.class);
+            result.add(categoryListRequestDTO);
+        }
+        return result;
     }
 }

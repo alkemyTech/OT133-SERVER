@@ -1,9 +1,11 @@
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.CategoryDTO;
+import com.alkemy.ong.dto.CategoryDTOList;
 import com.alkemy.ong.service.CategoryService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale.Category;
 import java.util.Map;
 import java.util.Optional;
@@ -36,10 +38,10 @@ public class CategoryController {
     @PreAuthorize("ROL_ADMIN")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
-        if (categoryService.findCategoryById(id) == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        categoryService.delete(id);
+       // if (categoryService.findCategoryById(id) == null) {
+       //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        //}
+        //categoryService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -78,6 +80,16 @@ public class CategoryController {
     		response.put("ok", optCategoryDTO);
     		return ResponseEntity.ok(response);
     	}
+    }
+    
+     @Autowired
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+    
+    @GetMapping()
+    public List<CategoryDTOList> getAllName(){
+        return categoryService.getAllName();
     }
 
 }
