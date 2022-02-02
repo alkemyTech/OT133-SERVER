@@ -34,4 +34,9 @@ public class Category extends PersistentEntity {
     @Column(name = "image")
     private String image;
 
+    // ! Esto tiene que existir? porque también lo mapea news. medio quilombo bidireccionales
+    // @OneToMany(mappedBy = "categoryId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // @JoinColumn(name = "new_id")
+    // private List<News> news = new ArrayList<>();
+
 }

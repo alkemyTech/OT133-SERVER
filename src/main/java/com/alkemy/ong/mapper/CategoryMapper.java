@@ -10,14 +10,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class CategoryMapper {
 
-    public Category categoryDTO2Entity(CategoryDTO dto,Category category) {
-        category.setName(dto.getName());
-        category.setDescription(dto.getDescription());
-        category.setSoftDelete(dto.isSoftDelete());
-        
-        return category;
-    }
-
+  public Category categoryDTO2Entity(CategoryDTO dto) {
+    Category category = new Category();
+    category.setName(dto.getName());
+    category.setDescription(dto.getDescription());
+    category.setSoftDelete(dto.isSoftDelete());
+    category.setTimestamps(string2LocalDate(dto.getTimestamps()));
+    category.setImage(dto.getImage());
+    return category;
+  }
 
   public CategoryDTO categoryEntity2DTO(Category entity) {
     CategoryDTO categoryDTO = new CategoryDTO();
