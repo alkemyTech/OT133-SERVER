@@ -26,4 +26,16 @@ public class CategoryServiceImpl implements CategoryService {
         return null;
 
     }
+
+	@Override
+	public CategoryDTO findById(String id) {
+		Category category = categoryRepository.findById(id).get();
+		return categoryMapper.categoryEntity2DTO(category);
+	}
+
+	@Override
+	public void delete(String id) {
+		Category category = categoryRepository.findById(id).get();
+		categoryRepository.delete(category);
+	}
 }
