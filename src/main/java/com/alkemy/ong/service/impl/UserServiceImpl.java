@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 				field.setAccessible(true);
 				ReflectionUtils.setField(field, userOptional.get(), value);
 			});
-			return Optional.of(this.save(userOptional.get()));
+			return Optional.of(this.userRepository.save(userOptional.get()));
 		}
 
 	}

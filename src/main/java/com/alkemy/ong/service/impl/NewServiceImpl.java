@@ -24,4 +24,9 @@ public class NewServiceImpl implements NewService {
     return result;
 
   }
+  
+  @Override
+	public News getById(String id) {
+		return newsRepository.getById(id);
+	}
 }
