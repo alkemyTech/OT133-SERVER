@@ -56,6 +56,6 @@ public class User extends PersistentEntity{
     		joinColumns=@JoinColumn(name="user_id"),
     		inverseJoinColumns=@JoinColumn(name="rol_id")
     )
-	private List<Rol> roleId = new ArrayList<>();
+	private List<Rol> roles = new ArrayList<>();
 
 }
