@@ -62,7 +62,7 @@ public class UserController {
   	}
 	
 	
-	 @PatchMapping("/users/{id}")
+	 @PatchMapping("/{id}")
 	  public ResponseEntity<?> updateUser(@RequestBody Map<Object, Object> fields,
 	      @PathVariable UUID id) {
 	    Map<String, Object> response = new HashMap<>();

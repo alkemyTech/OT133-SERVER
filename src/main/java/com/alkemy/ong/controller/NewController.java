@@ -35,7 +35,7 @@ public class NewController {
   }
   
   
-  @PreAuthorize("permitAll()")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getById(@PathVariable UUID id) {
 		Map<String, Object> response = new HashMap<>();

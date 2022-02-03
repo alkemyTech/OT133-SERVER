@@ -7,4 +7,6 @@ public interface NewService {
     NewDTO save(NewDTO dto);
 
 	News getById(String id);
+	
+	boolean existsById(String id);
 }
