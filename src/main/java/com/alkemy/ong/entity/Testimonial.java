@@ -20,13 +20,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Testimonial extends PersistentEntity {
 
-    @Column(name = "name", nullable = false)
-    private String name;
+  @Column(name = "name", nullable = false)
+  private String name;
 
-    @Column(name = "image")
-    private String image;
+  @Column(name = "image")
+  private String image;
 
-    @Column(name = "content")
-    private String content;
+  @Column(name = "content", nullable = false)
+  private String content;
 
 }
