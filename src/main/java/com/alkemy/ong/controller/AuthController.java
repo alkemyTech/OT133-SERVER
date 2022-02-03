@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 import com.alkemy.ong.entity.User;
 import com.alkemy.ong.mapper.UserMapper;
+import com.alkemy.ong.security.UserDetailServiceImpl;
 import com.alkemy.ong.security.exception.UserAlreadyExistsException;
 import com.alkemy.ong.security.payload.SignupRequest;
 import com.alkemy.ong.service.MailService;
@@ -16,9 +17,11 @@ import com.alkemy.ong.service.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -44,6 +47,16 @@ public class AuthController extends BaseController {
   private MailService mailService;
   @Autowired
   private Registration registration;
+  
+  @Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private UserDetailServiceImpl userDetails;
+
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+
 
   @PostMapping(path = "register", produces = "application/json")
   public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequest signupRequest)
