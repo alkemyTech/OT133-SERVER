@@ -51,7 +51,7 @@ public class UserDAO {
     Rol rol = rolRepository.findByName(Roles.ROL_USER);
 
     user.setPassword(pwEncoder.encode(user.getPassword()));
-    user.getRoleId().add(rol);
+    user.getRoles().add(rol);
 
     User created = userRepository.save(user);
 

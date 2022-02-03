@@ -38,7 +38,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     boolean accountNonLocked = true;
 
     // Se agregan los roles del usuario.
-    List<GrantedAuthority> authorities = user.getRoleId()
+    List<GrantedAuthority> authorities = user.getRoles()
 			.stream()
 			.map(rol -> new SimpleGrantedAuthority(rol.getName().name()))
 			.collect(Collectors.toList());
