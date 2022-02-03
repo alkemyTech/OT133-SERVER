@@ -14,11 +14,15 @@ import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
 import com.alkemy.ong.entity.User;
 import com.alkemy.ong.exception.UserException;
+import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.service.UserService;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
+	
+	@Autowired
+	private UserMapper userMapper;
 	
 	@Autowired
 	private UserService userService;
@@ -57,4 +61,20 @@ public class UserController {
     return error;
   	}
 	
+	
+	 @PatchMapping("/users/{id}")
+	  public ResponseEntity<?> updateUser(@RequestBody Map<Object, Object> fields,
+	      @PathVariable UUID id) {
+	    Map<String, Object> response = new HashMap<>();
+	    Optional<User> userOptional = this.userService.update(fields, id);
+
+	    if (!userOptional.isPresent()) {
+	      response.put("Error", String.format("User with ID %s not found.", id));
+	      return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+	    } else {
+	      response.put("ok", this.userMapper.toUserDTO(userOptional.get()));
+	      return ResponseEntity.ok(response);
+	    }
+
+	  }
 }
