@@ -1,5 +1,6 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.UserDTOAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import com.alkemy.ong.entity.User;
 import com.alkemy.ong.mapper.UserMapper;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.service.UserService;
-
+import com.alkemy.ong.security.token.JwtUtil;
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -24,7 +25,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
-
+  
+  @Autowired
+  private JwtUtil jwtUtil;
 	@Override
 	public Iterable<User> listAll() {
 		return userRepository.findAll();
@@ -74,4 +77,13 @@ public class UserServiceImpl implements UserService {
 		}
 
 	}
+  @Override
+  public UserDTOAll getUserDetails(String authorizationHeader) {
+    String username = jwtUtil.extractUsername(authorizationHeader);
+    User asass=userRepository.findByEmail(username).get();
+    System.out.println(asass.toString());
+    UserDTOAll result = userMapper.entity2userDTO(asass);
+    return result;
+  }
+  
 }
