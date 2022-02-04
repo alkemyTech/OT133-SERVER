@@ -13,22 +13,13 @@ import com.alkemy.ong.mapper.SlideMapper;
 
 @Service
 public class SlideServiceImpl implements SlideService {
-
+    
 	@Autowired
 	private SlideMapper slideMapper;
-
-	@Autowired
-	private SlideRepository slideRepository;
-
-	@Override
-	public void deleteSlide(String id) throws Exception {
-		Optional<Slide> slideOptional = slideRepository.findById(id);
-		if (slideOptional.isPresent()) {
-			Slide slide = slideOptional.get();
-			slideRepository.delete(slide);
-		} else
-			throw new Exception("The specified slide does not exist");
-	}
+	
+    @Autowired
+    private SlideRepository slideRepository;
+    
 
 	@Override
 	public Optional<Slide> getbyId(String id) {
@@ -37,6 +28,16 @@ public class SlideServiceImpl implements SlideService {
 			return Optional.empty();
 		}
 		return optSlide;
+	}
+	
+	@Override
+	public void deleteSlide(String id) throws Exception {
+		Optional<Slide> slideOptional = slideRepository.findById(id);
+		if (slideOptional.isPresent()) {
+			Slide slide = slideOptional.get();
+			slideRepository.delete(slide);
+		} else
+			throw new Exception("The specified slide does not exist");
 	}
 
 	@Override

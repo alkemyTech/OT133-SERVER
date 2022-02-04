@@ -1,6 +1,5 @@
 package com.alkemy.ong.controller;
 
-
 import com.alkemy.ong.dto.SlideDTO;
 import com.alkemy.ong.service.SlideService;
 
@@ -17,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +43,7 @@ public class SlideController {
             return ResponseEntity.ok(response);
         }
     }
+
     
     @PreAuthorize("hasAuthority('ROL_ADMIN')")
     @PutMapping("/{id}")
@@ -57,6 +58,5 @@ public class SlideController {
     	}
     	response.put("ok", slideUpdateDTO.get());
 		return ResponseEntity.ok(response);
-
     }
 }
