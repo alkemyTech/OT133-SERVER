@@ -3,8 +3,10 @@ package com.alkemy.ong;
 import com.alkemy.ong.entity.Category;
 import com.alkemy.ong.entity.Rol;
 import com.alkemy.ong.entity.User;
+import com.alkemy.ong.entity.member.Member;
 import com.alkemy.ong.enums.Roles;
 import com.alkemy.ong.repository.CategoryRepository;
+import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.repository.RolRepository;
 import com.alkemy.ong.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,8 @@ public class OngApplication implements CommandLineRunner {
 
   @Autowired
   private CategoryRepository categoryRepository;
+  @Autowired
+  private MemberRepository memberRepository;
 
 
   @Override
@@ -65,6 +69,18 @@ public class OngApplication implements CommandLineRunner {
       Category category = new Category();
       category.setName("categoria");
       categoryRepository.save(category);
+    }
+    if (memberRepository.count() == 0) {
+      // Creacion de member
+      Member member = new Member();
+      member.setName("member");
+      member.setImage("member.jpg");
+      memberRepository.save(member);
+      
+      Member member1 = new Member();
+      member1.setName("member1");
+      member1.setImage("member1.jpg");
+      memberRepository.save(member1);
     }
 
 
