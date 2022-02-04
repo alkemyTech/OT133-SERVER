@@ -33,13 +33,19 @@ public class CategoryController {
     CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO category) throws CategoryException{
+    public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO category) throws Exception {
         if (category.getName().isEmpty() || category.getName() == null) {
-            throw new CategoryException("You must enter the name of the activity");
+            return new ResponseEntity("You must enter the name of the activity",HttpStatus.BAD_REQUEST);
         }
-        
-        CategoryDTO categorySaved = categoryService.create(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body(categorySaved);
+        try {
+            categoryService.verifyCategory(category);
+            CategoryDTO categorySaved = categoryService.create(category);
+            return ResponseEntity.status(HttpStatus.CREATED).body(categorySaved);
+        } catch (Exception e) {
+        System.out.println(e);
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
+        }
+
     }
     
     @PreAuthorize("ROL_ADMIN")

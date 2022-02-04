@@ -1,7 +1,10 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.ActivityDTO;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.entity.Category;
+import com.alkemy.ong.exception.ActivityException;
+import com.alkemy.ong.exception.CategoryException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.CategoryService;
@@ -58,10 +61,19 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO create(CategoryDTO categoryDTO) {
+    public CategoryDTO create(CategoryDTO categoryDTO) throws Exception{
+        verifyCategory(categoryDTO);
        Category category = categoryMapper.categoryDTO2Entity2(categoryDTO);
        Category categorySaved = categoryRepository.save(category);
        CategoryDTO result = categoryMapper.categoryEntity2DTO(categorySaved);
        return result;
     }
+    
+    public void verifyCategory(CategoryDTO category) throws CategoryException {
+		
+		if (category.getName() == null ||category.getName().isEmpty()) {
+			throw new CategoryException("Name null or empty");
+		}
+
+	}
 }
