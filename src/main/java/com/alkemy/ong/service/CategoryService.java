@@ -7,6 +7,8 @@ import com.alkemy.ong.dto.CategoryDTO;
 
 public interface CategoryService {
 	
+    CategoryDTO create(CategoryDTO categoryDTO);
+    
     CategoryDTO findCategoryById(String id);
     
     CategoryDTO findById(String id);

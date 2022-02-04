@@ -56,4 +56,12 @@ public class CategoryServiceImpl implements CategoryService {
     		return Optional.of(this.categoryMapper.categoryEntity2DTO(this.categoryRepository.save(categoryUpdate)));
     	}
     }
+
+    @Override
+    public CategoryDTO create(CategoryDTO categoryDTO) {
+       Category category = categoryMapper.categoryDTO2Entity2(categoryDTO);
+       Category categorySaved = categoryRepository.save(category);
+       CategoryDTO result = categoryMapper.categoryEntity2DTO(categorySaved);
+       return result;
+    }
 }
