@@ -44,4 +44,8 @@ public class News extends PersistentEntity {
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "category_id", insertable = false, updatable = false)
   private Category category;
+  
+  @Column(name = "category_id")
+  private String categoryId;
+  
 }
