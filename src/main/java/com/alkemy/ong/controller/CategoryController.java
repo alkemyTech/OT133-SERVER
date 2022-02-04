@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,18 +53,10 @@ public class CategoryController {
     
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROL_ADMIN')")
-    public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO,
-    										BindingResult result, 
+    public ResponseEntity<?> updateCategory(@Validated @RequestBody CategoryDTO categoryDTO,
     										@PathVariable UUID id){
     	
     	Map<String, Object> response = new HashMap<>();
-    	Map<String, Object> validations = new HashMap<>();
-    	
-    	if(result.hasErrors()) {
-			result.getFieldErrors().forEach(error -> validations.put(error.getField(), error.getDefaultMessage()));
-			response.put("message", validations);
-			return ResponseEntity.badRequest().body(response);
-		}
     	
     	Optional<CategoryDTO> optCategoryDTO = this.categoryService.updateCategory(categoryDTO, id);
 
