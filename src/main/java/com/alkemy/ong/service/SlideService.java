@@ -4,7 +4,6 @@ import java.util.Optional;
 import com.alkemy.ong.entity.Slide;
 
 import com.alkemy.ong.dto.SlideDTO;
-import com.alkemy.ong.entity.Slide;
 
 public interface SlideService {
     

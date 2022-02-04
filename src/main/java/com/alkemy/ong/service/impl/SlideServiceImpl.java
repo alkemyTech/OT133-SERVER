@@ -9,15 +9,7 @@ import com.alkemy.ong.service.SlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alkemy.ong.dto.SlideDTO;
-import com.alkemy.ong.entity.Slide;
 import com.alkemy.ong.mapper.SlideMapper;
-import com.alkemy.ong.repository.SlideRepository;
-import com.alkemy.ong.service.SlideService;
-
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class SlideServiceImpl implements SlideService {
@@ -28,6 +20,7 @@ public class SlideServiceImpl implements SlideService {
 	@Autowired
 	private SlideRepository slideRepository;
 
+	@Override
 	public void deleteSlide(String id) throws Exception {
 		Optional<Slide> slideOptional = slideRepository.findById(id);
 		if (slideOptional.isPresent()) {
