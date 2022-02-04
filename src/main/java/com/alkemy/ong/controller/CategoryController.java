@@ -34,12 +34,9 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO category) throws Exception {
-        if (category.getName().isEmpty() || category.getName() == null) {
-            return new ResponseEntity("You must enter the name of the activity",HttpStatus.BAD_REQUEST);
-        }
+       
         try {
-            
-            CategoryDTO categorySaved = categoryService.(category);
+            CategoryDTO categorySaved = categoryService.create(category);
             return ResponseEntity.status(HttpStatus.CREATED).body(categorySaved);
         } catch (Exception e) {
         System.out.println(e);
