@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.alkemy.ong.dto.UserDTO;
+import com.alkemy.ong.dto.UserDTOAll;
 import com.alkemy.ong.entity.User;
 
 public interface UserService {
@@ -20,4 +21,6 @@ public interface UserService {
 	Optional<User> update(Map<Object, Object> fields, UUID id);
 	
 	Optional<User> getByEmail(String email);
+
+  UserDTOAll getUserDetails(String authorizationHeader);
 }

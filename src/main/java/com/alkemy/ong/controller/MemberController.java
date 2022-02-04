@@ -7,8 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 @RequestMapping("/members")
@@ -35,4 +38,15 @@ public class MemberController {
     }
     return ResponseEntity.status(HttpStatus.OK).body(memberService.update(id, dto));
   }
+  
+  @Autowired
+  MemberService memberService;
+ 
+  @GetMapping
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
+  public ResponseEntity<List<MemberDTO>> listAll(){
+    List<MemberDTO> memberList = memberService.listAllMember();
+    return ResponseEntity.status(HttpStatus.OK).body(memberList);
+  }
+  
 }

@@ -16,6 +16,15 @@ public class CategoryMapper {
 
 		return category;
 	}
+        
+        public Category categoryDTO2Entity2(CategoryDTO dto) {
+                Category category = new Category();
+		category.setName(dto.getName());
+		category.setDescription(dto.getDescription());
+		category.setSoftDelete(dto.isSoftDelete());
+
+		return category;
+	}
 
 	public CategoryDTO categoryEntity2DTO(Category entity) {
 		CategoryDTO categoryDTO = new CategoryDTO();

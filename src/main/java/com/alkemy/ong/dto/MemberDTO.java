@@ -2,16 +2,24 @@ package com.alkemy.ong.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import javax.validation.constraints.NotBlank;
 
 @Data
 @AllArgsConstructor
 public class MemberDTO {
   
+  @NotBlank(message = "El nombre es obligatorio")
   private String name;
+
   private String facebookUrl;
+
   private String instagramUrl;
+
   private String linkedinUrl;
+
+  @NotBlank(message = "La imagen es obligatoria")
   private String image;
+
   private String description;
 
 }
