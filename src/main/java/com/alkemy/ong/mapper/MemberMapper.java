@@ -13,7 +13,7 @@ public class MemberMapper {
   }
 
   public MemberDTO toDTO(Member member) {
-    return new MemberDTO(member.getId(), member.getName(), member.getFacebookUrl(), member.getInstagramUrl(),
+    return new MemberDTO(member.getName(), member.getFacebookUrl(), member.getInstagramUrl(),
       member.getLinkedinUrl(), member.getImage(), member.getDescription());
   }
 

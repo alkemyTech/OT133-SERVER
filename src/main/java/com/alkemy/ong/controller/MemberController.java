@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/members")
 public class MemberController {
@@ -27,10 +29,10 @@ public class MemberController {
 
   @PreAuthorize("hasAuthority('ROL_USER')")
   @PutMapping("/{id}")
-  public ResponseEntity<MemberDTO> update(@PathVariable String id) {
+  public ResponseEntity<MemberDTO> update(@PathVariable String id, @Valid @RequestBody MemberDTO dto) {
     if (memberService.findById(id) == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-    return ResponseEntity.status(HttpStatus.OK).body(memberService.update(id));
+    return ResponseEntity.status(HttpStatus.OK).body(memberService.update(id, dto));
   }
 }
