@@ -28,7 +28,7 @@ public class Slide extends PersistentEntity {
     @Column(name = "order_number")
     private Integer orderNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organization_id", referencedColumnName = "id")
     private Organization organization;
 }
