@@ -2,12 +2,12 @@ package com.alkemy.ong.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Data
 public class MemberDTO {
-  @NotEmpty(message = "El nombre es obligatorio")
+  @NotBlank(message = "El nombre es obligatorio")
   private String name;
 
   private String facebookUrl;
@@ -16,7 +16,7 @@ public class MemberDTO {
 
   private String linkedinUrl;
 
-  @NotEmpty(message = "La imagen es obligatoria")
+  @NotBlank(message = "La imagen es obligatoria")
   private String image;
 
   private String description;
