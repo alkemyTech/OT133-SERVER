@@ -1,10 +1,16 @@
 package com.alkemy.ong.entity;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.SQLDelete;
@@ -25,7 +31,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends PersistentEntity {
+public class User extends PersistentEntity{
+
+	private static final long serialVersionUID = 6192381031881499804L;
 
 	@Column(name = "first_name", nullable = false)
 	private String firstName;
@@ -33,18 +41,21 @@ public class User extends PersistentEntity {
 	@Column(name = "last_name", nullable = false)
 	private String lastName;
 
-	@Column(nullable = false, unique = true)
+	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-	@Column(nullable = false)
+	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(nullable = true)
+	@Column(name = "photo", nullable = true)
 	private String photo;
 
-	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinColumn(name = "role_id", referencedColumnName = "id")
-	private Rol roleId;
+	@ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+    		name="users_roles", 
+    		joinColumns=@JoinColumn(name="user_id"),
+    		inverseJoinColumns=@JoinColumn(name="rol_id")
+    )
+	private List<Rol> roles = new ArrayList<>();
 
 }

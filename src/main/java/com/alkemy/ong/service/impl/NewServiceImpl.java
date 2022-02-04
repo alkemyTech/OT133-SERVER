@@ -11,17 +11,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class NewServiceImpl implements NewService {
 
-  @Autowired
-  NewMapper newMapper;
+	@Autowired
+	NewMapper newMapper;
 
-  @Autowired
-  NewsRepository newsRepository;
+	@Autowired
+	NewsRepository newsRepository;
 
-  public NewDTO save(NewDTO dto) {
-    News news = newMapper.newDTO2Entity(dto);
-    News newSave = newsRepository.save(news);
-    NewDTO result = newMapper.entity2newDTO(newSave);
-    return result;
+	public NewDTO save(NewDTO dto) {
+		News news = newMapper.newDTO2Entity(dto);
+		News newSave = newsRepository.save(news);
+		NewDTO result = newMapper.entity2newDTO(newSave);
+		return result;
 
-  }
+	}
+
+	@Override
+	public News getById(String id) {
+		return newsRepository.getById(id);
+	}
+
+	@Override
+	public boolean existsById(String id) {
+		return newsRepository.existsById(id);
+	}
 }
