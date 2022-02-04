@@ -38,8 +38,8 @@ public class CategoryController {
             return new ResponseEntity("You must enter the name of the activity",HttpStatus.BAD_REQUEST);
         }
         try {
-            categoryService.verifyCategory(category);
-            CategoryDTO categorySaved = categoryService.create(category);
+            
+            CategoryDTO categorySaved = categoryService.(category);
             return ResponseEntity.status(HttpStatus.CREATED).body(categorySaved);
         } catch (Exception e) {
         System.out.println(e);
