@@ -29,6 +29,7 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityMapper.activityEntity2DTO(savedActivity);
 	}
 
+	@Override
 	public void verifyActivity(ActivityDTO activityDTO) throws ActivityException {
 		
 		validateActivityForUpdate(activityDTO);
@@ -38,6 +39,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 	}
 
+	@Override
 	public void validateActivityForUpdate(ActivityDTO activityDTO) throws ActivityException{
 		if (activityDTO.getName() == null ||activityDTO.getName().isEmpty()) {
 			throw new ActivityException("Name null or empty");
@@ -50,11 +52,13 @@ public class ActivityServiceImpl implements ActivityService {
 		}
 	}
 
+	@Override
 	public boolean activityExists(String id){
 		Optional<Activity> activity = activityRepository.findById(id);
 		return activity.isPresent();
 	}
 
+	@Override
 	public ActivityDTO updateActivity(String id, ActivityDTO activityToUpdate){
 		Optional<Activity> activityOptional = activityRepository.findById(id);
 		if(activityOptional.isPresent()){
