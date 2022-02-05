@@ -28,7 +28,12 @@ public class MemberServiceImpl implements MemberService {
   // Create
   // --------------------------------------------------------------------------------------------
   
-
+  @Override
+  public MemberDTO save(MemberDTO memberDTO){
+      //MemberDTO memberResponse = new MemberDTO();
+      //return memberResponse;
+      return memberDTO;
+  }
   // --------------------------------------------------------------------------------------------
   // Read
   // --------------------------------------------------------------------------------------------
