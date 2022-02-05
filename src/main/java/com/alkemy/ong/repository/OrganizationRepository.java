@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import com.alkemy.ong.entity.Organization;
 
+import java.util.List;
+
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, String>{
 	
@@ -13,4 +15,8 @@ public interface OrganizationRepository extends JpaRepository<Organization, Stri
 	public Iterable<Organization> readAllDefined();
 	
 	public boolean existsByEmail(String email);
+  
+  @Query("SELECT o FROM Organization o ORDER BY o.id DESC")
+  List<Organization> findTopById();
+
 }

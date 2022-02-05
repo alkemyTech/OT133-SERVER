@@ -1,14 +1,9 @@
 package com.alkemy.ong;
 
-import com.alkemy.ong.entity.Category;
-import com.alkemy.ong.entity.Rol;
-import com.alkemy.ong.entity.User;
+import com.alkemy.ong.entity.*;
 import com.alkemy.ong.entity.member.Member;
 import com.alkemy.ong.enums.Roles;
-import com.alkemy.ong.repository.CategoryRepository;
-import com.alkemy.ong.repository.MemberRepository;
-import com.alkemy.ong.repository.RolRepository;
-import com.alkemy.ong.repository.UserRepository;
+import com.alkemy.ong.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -36,7 +31,10 @@ public class OngApplication implements CommandLineRunner {
   private CategoryRepository categoryRepository;
   @Autowired
   private MemberRepository memberRepository;
-
+  @Autowired
+  private OrganizationRepository organizationRepository;
+  @Autowired
+  private SlideRepository slideRepository;
 
   @Override
   public void run(String... args) throws Exception {
@@ -76,12 +74,73 @@ public class OngApplication implements CommandLineRunner {
       member.setName("member");
       member.setImage("member.jpg");
       memberRepository.save(member);
-      
+
       Member member1 = new Member();
       member1.setName("member1");
       member1.setImage("member1.jpg");
       memberRepository.save(member1);
     }
+    if (organizationRepository.count() == 0) {
+      // Creacion de organization
+      Organization organization = new Organization();
+      organization.setName("organizacionA");
+      organization.setWelcomeText("Bienvenido A");
+      organization.setEmail("organizacionA@gmail");
+      organization.setImage("organizacionA.png");
+      organizationRepository.save(organization);
+
+      Organization organization1 = new Organization();
+      organization1.setName("organizacionB");
+      organization1.setWelcomeText("Bienvenido A");
+      organization1.setEmail("organizacionB@gmail");
+      organization1.setImage("organizacionb.png");
+      organizationRepository.save(organization1);
+      
+    }
+
+    if (slideRepository.count() == 0) {
+      String id1="5d3c4f71-7b67-4d3f-a483-428e26e79435";
+      String id2="ceac4762-ea75-4b3d-834d-efd55e083e23";
+      // Creacion de Slide
+      Slide slide = new Slide();
+      slide.setImageUrl("slide1.png");
+      slide.setOrderNumber(1);
+      slide.setOrganization(organizationRepository.findById(id1).get());
+      slide.setText("Texto de slide 1");
+      slideRepository.save(slide);
+
+      // Creacion de Slide
+      Slide slide5 = new Slide();
+      slide5.setImageUrl("slide2.png");
+      slide5.setOrderNumber(2);
+      slide5.setOrganization(organizationRepository.findById(id1).get());
+      slide5.setText("Texto de slide 2");
+      slideRepository.save(slide5);
+      
+///////////////////////////////////////////////////////////////
+      Slide slide1 = new Slide();
+      slide1.setImageUrl("slide4.png");
+      slide1.setOrderNumber(7);
+      slide1.setOrganization(organizationRepository.findById(id2).get());
+      slide1.setText("Texto de slide 4");
+      slideRepository.save(slide1);
+      
+      Slide slide2 = new Slide();
+      slide2.setImageUrl("slide5.png");
+      slide2.setOrderNumber(42);
+      slide2.setOrganization(organizationRepository.findById(id2).get());
+      slide2.setText("Texto de slide 5");
+      slideRepository.save(slide2);
+
+      Slide slide3 = new Slide();
+      slide3.setImageUrl("slide6.png");
+      slide3.setOrderNumber(1);
+      slide3.setOrganization(organizationRepository.findById(id2).get());
+      slide3.setText("Texto de slide 6");
+      slideRepository.save(slide3);
+
+    }
+    
 
 
   }
