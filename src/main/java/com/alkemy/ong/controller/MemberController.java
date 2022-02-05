@@ -43,9 +43,6 @@ public class MemberController {
     return ResponseEntity.status(HttpStatus.OK).body(memberService.update(id, dto));
   }
   
-  @Autowired
-  MemberService memberService;
- 
   @GetMapping
   @PreAuthorize("hasAuthority('ROL_ADMIN')")
   public ResponseEntity<List<MemberDTO>> listAll(){
