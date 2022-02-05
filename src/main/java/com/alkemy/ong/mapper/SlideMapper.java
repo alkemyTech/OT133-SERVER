@@ -1,9 +1,14 @@
 package com.alkemy.ong.mapper;
 
+
+import com.alkemy.ong.dto.SlidePublicDTO;
 import org.springframework.stereotype.Component;
 
 import com.alkemy.ong.dto.SlideDTO;
 import com.alkemy.ong.entity.Slide;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class SlideMapper {
@@ -18,5 +23,26 @@ public class SlideMapper {
 		slide.setOrderNumber(slideDTO.getOrderNumber());
 		return slide;
 	}
+  
+  public SlidePublicDTO slidetoSlidePublicDTO(Slide slide) {
+
+    SlidePublicDTO slideDTO=new SlidePublicDTO();
+    slideDTO.setOrderNumber(slide.getOrderNumber());
+    slideDTO.setText(slide.getText());
+    slideDTO.setImageUrl(slide.getImageUrl());
+    
+
+    return slideDTO;
+  }
+  
+  
+  public List<SlidePublicDTO> sliteList2Dto(List<Slide> slideList) {
+    List<SlidePublicDTO> slideDTOS=new ArrayList<>();
+    for (Slide slide: slideList) {
+      SlidePublicDTO slideDTO=slidetoSlidePublicDTO(slide);
+      slideDTOS.add(slideDTO);
+    }
+    return slideDTOS;
+  }
 	
 }

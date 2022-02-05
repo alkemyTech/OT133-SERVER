@@ -1,11 +1,10 @@
 package com.alkemy.ong.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
 
+import com.alkemy.ong.dto.OrganizationPublicDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,23 +19,19 @@ import com.alkemy.ong.entity.Organization;
 import com.alkemy.ong.service.OrganizationService;
 
 @RestController
-@RequestMapping("/auth/organization")
+@RequestMapping("organization")
 public class OrganizationController {
 	@Autowired
 	private OrganizationService organizationService;
 	
 	@GetMapping("/public")
-	public ResponseEntity<List<Organization>> readAllDefined(){
-		    List<Organization> organization = StreamSupport
-		    		.stream(organizationService.readAllDefined().spliterator(), false)
-		    		.collect(Collectors.toList());
-		    
-		    return new ResponseEntity<>(organization, HttpStatus.OK);
+	public ResponseEntity<List<OrganizationPublicDTO>> readAllDefined(){
+    List<OrganizationPublicDTO>organizationPublicDTOS=organizationService.readAllDefined();
+    return new ResponseEntity<>(organizationPublicDTOS, HttpStatus.OK);
 	}
 	
 	@PostMapping("/public")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-
 	public ResponseEntity<?> create(@Valid @RequestBody Organization organization){
 		if(organizationService.existsByEmail(organization.getEmail())) {
 			return new ResponseEntity("el email ya existe",HttpStatus.BAD_REQUEST);
