@@ -1,12 +1,13 @@
 package com.alkemy.ong.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
 public class MemberDTO {
+  
   @NotBlank(message = "El nombre es obligatorio")
   private String name;
 
@@ -20,7 +21,5 @@ public class MemberDTO {
   private String image;
 
   private String description;
-  
-  private LocalDateTime timestamps;
 
 }
