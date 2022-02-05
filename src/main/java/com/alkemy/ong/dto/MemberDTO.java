@@ -1,11 +1,10 @@
 package com.alkemy.ong.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 
 @Data
-@AllArgsConstructor
 public class MemberDTO {
   
   @NotBlank(message = "El nombre es obligatorio")
