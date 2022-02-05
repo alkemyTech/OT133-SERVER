@@ -67,6 +67,7 @@ public class SlideController {
     }
     
     @GetMapping()
+    @PreAuthorize("hasAuthority('ROL_ADMIN')")
     public ResponseEntity<List<Slide>> findAllDefined(){
     	try {
 	    	List<Slide> listImage = StreamSupport
