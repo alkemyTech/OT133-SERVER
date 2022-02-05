@@ -30,9 +30,10 @@ public class MemberServiceImpl implements MemberService {
   
   @Override
   public MemberDTO save(MemberDTO memberDTO){
-      //MemberDTO memberResponse = new MemberDTO();
-      //return memberResponse;
-      return memberDTO;
+      Member member = memberMapper.memberDTO2Entity(memberDTO);
+      memberRepository.save(member);
+      MemberDTO memberResponse = memberMapper.menberEntity2DTO(member);
+      return memberResponse;
   }
   // --------------------------------------------------------------------------------------------
   // Read
