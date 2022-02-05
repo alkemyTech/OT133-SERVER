@@ -72,7 +72,6 @@ public class SlideController {
 	    	List<Slide> listImage = StreamSupport
 	    			.stream(slideService.findAllDefined().spliterator(), false)
 	    			.collect(Collectors.toList());
-    	
 	    	return new ResponseEntity(listImage, HttpStatus.OK);
 		} catch (BadRequestException ex) {
 			return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
