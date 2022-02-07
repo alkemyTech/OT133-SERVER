@@ -99,8 +99,8 @@ public class OngApplication implements CommandLineRunner {
     }
 
     if (slideRepository.count() == 0) {
-      String id1="5d3c4f71-7b67-4d3f-a483-428e26e79435";
-      String id2="ceac4762-ea75-4b3d-834d-efd55e083e23";
+      String id1="552bb2e2-a17e-4ae4-9964-e0272479107d";
+      String id2="ebea63aa-b556-481f-82d9-64ec3e949fa1";
       // Creacion de Slide
       Slide slide = new Slide();
       slide.setImageUrl("slide1.png");
@@ -140,8 +140,6 @@ public class OngApplication implements CommandLineRunner {
       slideRepository.save(slide3);
 
     }
-    
-
 
   }
 

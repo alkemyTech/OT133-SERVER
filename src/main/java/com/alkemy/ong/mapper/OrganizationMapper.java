@@ -49,19 +49,25 @@ public class OrganizationMapper {
     return org;
   }
 
-  public OrganizationPublicDTO organizationEntity2DTO(Organization member,
+  public OrganizationPublicDTO organizationEntity2DTO(Organization org,
       List<SlidePublicDTO> slideDTOS) {
-    OrganizationPublicDTO memberDTO = new OrganizationPublicDTO();
+    OrganizationPublicDTO orgDTO = new OrganizationPublicDTO();
 
-    memberDTO.setName(member.getName());
-    memberDTO.setImage(member.getImage());
-    memberDTO.setAddress(member.getAddress());
-    memberDTO.setPhone(member.getPhone());
+    orgDTO.setName(org.getName());
+    orgDTO.setImage(org.getImage());
+    orgDTO.setAddress(org.getAddress());
+    orgDTO.setPhone(org.getPhone());
+
+     Contact contact = org.getContact();
+    orgDTO.setFacebookUrl(contact.getFacebookUrl());
+    orgDTO.setLinkedinUrl(contact.getLinkedinUrl());
+    orgDTO.setInstagramUrl(contact.getInstagramUrl());
     for (SlidePublicDTO slideDTO : slideDTOS) {
-      memberDTO.addSlides(slideDTO);
+
+      orgDTO.addSlides(slideDTO);
     }
 
-    return memberDTO;
+    return orgDTO;
   }
 
 }
