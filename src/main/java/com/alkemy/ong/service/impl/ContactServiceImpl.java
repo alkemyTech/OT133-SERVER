@@ -30,8 +30,8 @@ public class ContactServiceImpl implements ContactService{
         return contactResponse;
     }
     
-    
-    @Override
+
+	@Override
 	public Optional<List<ContactDTO>> getAll() {
 		List<Contact> contactList = this.repository.findAll();
 		if(contactList.isEmpty()) {

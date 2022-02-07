@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/contacts")
 public class ContactController {
+	
     
     @Autowired
     private ContactService contactService;
@@ -39,8 +40,8 @@ public class ContactController {
     return error;
   	}
     
-	
-	@PreAuthorize("hasAuthority('ROL_ADMIN')")
+    
+    @PreAuthorize("hasAuthority('ROL_ADMIN')")
 	@GetMapping
 	public ResponseEntity<?> getAll(){
 		Map<String, Object> response = new HashMap<>();
@@ -55,4 +56,5 @@ public class ContactController {
 		response.put("ok", contactsDTO.get());
 		return ResponseEntity.ok(response);
 	}
+	
 }
