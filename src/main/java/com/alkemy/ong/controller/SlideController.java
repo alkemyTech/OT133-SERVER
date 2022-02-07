@@ -85,6 +85,6 @@ public class SlideController {
         if (slideService.findById(id) == null) {
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-      return ResponseEntity.status(HttpStatus.OK).body(slideService.findById(id));
+      return ResponseEntity.status(HttpStatus.OK).body(slideService.findById(id)); 
     }
 }

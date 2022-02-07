@@ -65,6 +65,6 @@ public class SlideServiceImpl implements SlideService {
 
   public SlideDTO findById(String id) {
     Slide slide = slideRepository.findById(id).get();
-    return slideMapper.toSlideDTO(slide);
+    return slideMapper.toSlideDTO(slide); 
   }
 }

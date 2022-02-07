@@ -16,6 +16,6 @@ public interface SlideService {
 	
 	List<Slide> findAllDefined();
   
-  SlideDTO findById(String id);
+  SlideDTO findById(String id); 
 
 }
