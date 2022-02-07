@@ -24,10 +24,14 @@ public class OrganizationMapper {
     dto.setAboutUsText(organization.getAboutUsText());
 
     Contact contact = organization.getContact();
-    dto.setFacebookUrl(contact.getFacebookUrl());
-    dto.setLinkedinUrl(contact.getLinkedinUrl());
-    dto.setInstagramUrl(contact.getInstagramUrl());
-    dto.setTimestamps(organization.getTimestamps());
+
+    if (contact != null) {
+      dto.setFacebookUrl(contact.getFacebookUrl());
+      dto.setLinkedinUrl(contact.getLinkedinUrl());
+      dto.setInstagramUrl(contact.getInstagramUrl());
+      dto.setTimestamps(organization.getTimestamps());
+    }
+
 
     return dto;
   }
@@ -49,7 +53,7 @@ public class OrganizationMapper {
     return org;
   }
 
-  
+
   public OrganizationPublicDTO organizationEntity2DTO(Organization org,
       List<SlidePublicDTO> slideDTOS) {
     OrganizationPublicDTO orgDTO = new OrganizationPublicDTO();
@@ -59,10 +63,15 @@ public class OrganizationMapper {
     orgDTO.setAddress(org.getAddress());
     orgDTO.setPhone(org.getPhone());
 
-     Contact contact = org.getContact();
-    orgDTO.setFacebookUrl(contact.getFacebookUrl());
-    orgDTO.setLinkedinUrl(contact.getLinkedinUrl());
-    orgDTO.setInstagramUrl(contact.getInstagramUrl());
+    Contact contact = org.getContact();
+
+    if (contact != null) {
+      orgDTO.setFacebookUrl(contact.getFacebookUrl());
+      orgDTO.setLinkedinUrl(contact.getLinkedinUrl());
+      orgDTO.setInstagramUrl(contact.getInstagramUrl());
+    }
+
+
     for (SlidePublicDTO slideDTO : slideDTOS) {
 
       orgDTO.addSlides(slideDTO);
