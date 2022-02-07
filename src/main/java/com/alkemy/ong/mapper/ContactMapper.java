@@ -26,4 +26,5 @@ public class ContactMapper {
         contact.setMessage(contactDTO.getMessage());
         return contact;
     }
+
 }
