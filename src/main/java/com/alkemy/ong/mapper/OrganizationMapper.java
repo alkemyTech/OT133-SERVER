@@ -66,6 +66,7 @@ public class OrganizationMapper {
     for (SlidePublicDTO slideDTO : slideDTOS) {
 
       orgDTO.addSlides(slideDTO);
+
     }
 
     return orgDTO;

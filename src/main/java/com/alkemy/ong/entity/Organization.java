@@ -19,6 +19,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
+
         @Table(name = "organizations")
         @SQLDelete(sql = "UPDATE organizations SET soft_delete = true WHERE id=?")
         @Where(clause = "soft_delete=false")
@@ -61,6 +62,7 @@ public class Organization extends PersistentEntity {
 
         @Column(name = "aboutUsText", length = 250)
         private String aboutUsText;
+
 
         
 }
