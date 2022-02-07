@@ -68,15 +68,23 @@ public class SlideController {
     
     @GetMapping()
     @PreAuthorize("hasAuthority('ROL_ADMIN')")
-    public ResponseEntity<List<Slide>> findAllDefined(){
-    	try {
-	    	List<Slide> listImage = StreamSupport
-	    			.stream(slideService.findAllDefined().spliterator(), false)
-	    			.collect(Collectors.toList());
-	    	return new ResponseEntity(listImage, HttpStatus.OK);
-		} catch (BadRequestException ex) {
-			return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
-		}
-
+    public ResponseEntity<List<Slide>> findAllDefined() {
+      try {
+        List<Slide> listImage = StreamSupport
+          .stream(slideService.findAllDefined().spliterator(), false)
+          .collect(Collectors.toList());
+        return new ResponseEntity(listImage, HttpStatus.OK);
+      } catch (BadRequestException ex) {
+        return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+      }
+    }
+      
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROL_ADMIN')")
+    public  ResponseEntity<SlideDTO> findById(@PathVariable String id){
+        if (slideService.findById(id) == null) {
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+      return ResponseEntity.status(HttpStatus.OK).body(slideService.findById(id));
     }
 }

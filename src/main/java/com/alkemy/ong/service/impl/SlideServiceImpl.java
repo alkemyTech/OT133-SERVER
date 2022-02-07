@@ -3,7 +3,9 @@ package com.alkemy.ong.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.entity.Slide;
+import com.alkemy.ong.entity.Testimonial;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.service.SlideService;
 
@@ -60,4 +62,9 @@ public class SlideServiceImpl implements SlideService {
 	public List<Slide> findAllDefined() {
 		return slideRepository.findAllDefined();
 	}
+
+  public SlideDTO findById(String id) {
+    Slide slide = slideRepository.findById(id).get();
+    return slideMapper.toSlideDTO(slide);
+  }
 }
