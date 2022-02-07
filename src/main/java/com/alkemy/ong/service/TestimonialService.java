@@ -1,5 +1,6 @@
 package com.alkemy.ong.service;
 
+import javax.persistence.EntityNotFoundException;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.entity.Testimonial;
 import com.alkemy.ong.mapper.TestimonialMapper;
@@ -36,6 +37,18 @@ public class TestimonialService {
   // --------------------------------------------------------------------------------------------
   // Update
   // --------------------------------------------------------------------------------------------
+
+  public TestimonialDTO update(String id, TestimonialDTO dto) {
+
+    Testimonial testimonial =
+        testimonialRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+    testimonial.setName(dto.getName());
+    testimonial.setContent(dto.getImage());
+    testimonial.setImage(dto.getImage());
+
+    return testimonialMapper.toDTO(testimonialRepository.save(testimonial));
+  }
 
   // --------------------------------------------------------------------------------------------
   // Delete
