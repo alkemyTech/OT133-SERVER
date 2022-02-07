@@ -5,7 +5,7 @@ import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationPublicDTO;
 import com.alkemy.ong.dto.SlidePublicDTO;
 import com.alkemy.ong.entity.Organization;
-import com.alkemy.ong.entity.contact.Contact;
+import com.alkemy.ong.entity.contact.SocialLinks;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,7 +23,7 @@ public class OrganizationMapper {
     dto.setWelcomeText(organization.getWelcomeText());
     dto.setAboutUsText(organization.getAboutUsText());
 
-    Contact contact = organization.getContact();
+    SocialLinks contact = organization.getContact();
 
     if (contact != null) {
       dto.setFacebookUrl(contact.getFacebookUrl());
@@ -46,8 +46,8 @@ public class OrganizationMapper {
     org.setWelcomeText(dto.getWelcomeText());
     org.setAboutUsText(dto.getAboutUsText());
 
-    Contact contact =
-        new Contact(dto.getFacebookUrl(), dto.getLinkedinUrl(), dto.getInstagramUrl());
+    SocialLinks contact =
+        new SocialLinks(dto.getFacebookUrl(), dto.getLinkedinUrl(), dto.getInstagramUrl());
     org.setContact(contact);
 
     return org;
@@ -63,7 +63,7 @@ public class OrganizationMapper {
     orgDTO.setAddress(org.getAddress());
     orgDTO.setPhone(org.getPhone());
 
-    Contact contact = org.getContact();
+    SocialLinks contact = org.getContact();
 
     if (contact != null) {
       orgDTO.setFacebookUrl(contact.getFacebookUrl());
