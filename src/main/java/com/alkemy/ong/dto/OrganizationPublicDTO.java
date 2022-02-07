@@ -15,6 +15,7 @@ public class OrganizationPublicDTO {
 
   private Integer phone;
   
+  
   private String facebookUrl;
   
   private String linkedinUrl;

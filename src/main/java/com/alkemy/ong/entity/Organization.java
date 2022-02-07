@@ -62,4 +62,5 @@ public class Organization extends PersistentEntity {
         @Column(name = "aboutUsText", length = 250)
         private String aboutUsText;
 
+        
 }

@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, String>{
 	
+    
 	@Query("SELECT p.name, p.image, p.phone, p.address, p.contact.facebookUrl, p.contact.linkedinUrl, p.contact.instagramUrl FROM Organization p")
 	public Iterable<Organization> readAllDefined();
 	

@@ -49,6 +49,7 @@ public class OrganizationMapper {
     return org;
   }
 
+  
   public OrganizationPublicDTO organizationEntity2DTO(Organization org,
       List<SlidePublicDTO> slideDTOS) {
     OrganizationPublicDTO orgDTO = new OrganizationPublicDTO();
