@@ -19,6 +19,9 @@ public class OrganizationMapper {
     memberDTO.setImage(member.getImage());
     memberDTO.setAddress(member.getAddress());
     memberDTO.setPhone(member.getPhone());
+    memberDTO.setFacebookUrl(member.getFacebookUrl());
+    memberDTO.setInstagramUrl(member.getInstagramUrl());
+    memberDTO.setLinkedinUrl(member.getLinkedinUrl());
     for (SlidePublicDTO slideDTO:slideDTOS) {
       memberDTO.addSlides(slideDTO);
     }
