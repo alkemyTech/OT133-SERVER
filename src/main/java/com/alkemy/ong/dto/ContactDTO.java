@@ -18,4 +18,5 @@ public class ContactDTO {
     private Long phone;
     private String message;
     private LocalDateTime timestamps;
+
 }

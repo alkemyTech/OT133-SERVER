@@ -1,5 +1,9 @@
 package com.alkemy.ong.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,4 +29,20 @@ public class ContactServiceImpl implements ContactService{
         ContactDTO contactResponse = mapper.contact2DTO(contact);
         return contactResponse;
     }
+    
+
+	@Override
+	public Optional<List<ContactDTO>> getAll() {
+		List<Contact> contactList = this.repository.findAll();
+		if(contactList.isEmpty()) {
+			return Optional.empty();
+		}else {
+			return Optional.of(
+						contactList.stream().
+						map(contact -> this.mapper.contact2DTO(contact)).
+						collect(Collectors.toList())
+					);
+		}
+	}
+
 }
