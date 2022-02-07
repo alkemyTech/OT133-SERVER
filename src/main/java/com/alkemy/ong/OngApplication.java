@@ -44,7 +44,7 @@ public class OngApplication implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
-    /*if (rolRepository.count() == 0) {
+    if (rolRepository.count() == 0) {
       // Creacion rol Admin
       Rol rolAdmin = new Rol();
       rolAdmin.setName(Roles.ROL_ADMIN);
@@ -143,10 +143,9 @@ public class OngApplication implements CommandLineRunner {
       slide3.setOrganization(organizationRepository.findById(id2).get());
       slide3.setText("Texto de slide 6");
       slideRepository.save(slide3);
-
-    }*/
-    
-	  Contact contactOne = new Contact();
+      
+      
+       Contact contactOne = new Contact();
 	  contactOne.setEmail("primerContact@mail.com");
 	  contactOne.setMessage("Welcome first contact");
 	  contactOne.setPhone(433233445L);
@@ -162,10 +161,8 @@ public class OngApplication implements CommandLineRunner {
 	  
 	  this.contactRepository.save(contactOne);
 	  this.contactRepository.save(contactTwo);
-	  
-	  
-	  
 
+    }
 
   }
 
