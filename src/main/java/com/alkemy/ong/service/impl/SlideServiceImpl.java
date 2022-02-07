@@ -1,5 +1,6 @@
 package com.alkemy.ong.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.alkemy.ong.entity.Slide;
@@ -8,6 +9,8 @@ import com.alkemy.ong.service.SlideService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alkemy.ong.dto.SlideDTO;
 import com.alkemy.ong.mapper.SlideMapper;
 
@@ -50,5 +53,11 @@ public class SlideServiceImpl implements SlideService {
 		Slide slideSave = this.slideMapper.toSlide(slideDTO, optSlide.get());
 		return Optional.of(this.slideMapper.toSlideDTO(this.slideRepository.save(slideSave)));
 
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Slide> findAllDefined() {
+		return slideRepository.findAllDefined();
 	}
 }
