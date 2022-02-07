@@ -51,11 +51,10 @@ public class MemberController {
   }
   
   @PostMapping
-  //@PreAuthorize("hasAuthority('ROL_ADMIN')")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
   public ResponseEntity<Object> createMember(@Validated @RequestBody MemberDTO memberDTO) throws MemberException, IOException{
-        // Errores - name sea string , not null - image not null
     try{
-      MemberDTO member = memberService.save(memberDTO);  // ? Exception name not null, empty or blank - Expeption image nt null
+      MemberDTO member = memberService.save(memberDTO); 
       return ResponseEntity.status(HttpStatus.CREATED).body(member);
     } catch ( Exception e){
       return ResponseEntity.status(HttpStatus.CONFLICT).body("Exception: " + e.getLocalizedMessage());
