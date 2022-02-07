@@ -28,7 +28,13 @@ public class MemberServiceImpl implements MemberService {
   // Create
   // --------------------------------------------------------------------------------------------
   
-
+  @Override
+  public MemberDTO save(MemberDTO memberDTO){
+      Member member = memberMapper.memberDTO2Entity(memberDTO);
+      memberRepository.save(member);
+      MemberDTO memberResponse = memberMapper.menberEntity2DTO(member);
+      return memberResponse;
+  }
   // --------------------------------------------------------------------------------------------
   // Read
   // --------------------------------------------------------------------------------------------

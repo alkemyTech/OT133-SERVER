@@ -4,6 +4,9 @@ import com.alkemy.ong.entity.*;
 import com.alkemy.ong.entity.member.Member;
 import com.alkemy.ong.enums.Roles;
 import com.alkemy.ong.repository.*;
+
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -35,6 +38,8 @@ public class OngApplication implements CommandLineRunner {
   private OrganizationRepository organizationRepository;
   @Autowired
   private SlideRepository slideRepository;
+  @Autowired
+  private ContactRepository contactRepository;
 
   @Override
   public void run(String... args) throws Exception {
@@ -138,6 +143,24 @@ public class OngApplication implements CommandLineRunner {
       slide3.setOrganization(organizationRepository.findById(id2).get());
       slide3.setText("Texto de slide 6");
       slideRepository.save(slide3);
+      
+      
+       Contact contactOne = new Contact();
+	  contactOne.setEmail("primerContact@mail.com");
+	  contactOne.setMessage("Welcome first contact");
+	  contactOne.setPhone(433233445L);
+	  contactOne.setName("Jon Doe");
+	  contactOne.setTimestamps(LocalDateTime.now());
+	  
+	  Contact contactTwo = new Contact();
+	  contactTwo.setEmail("segundoContact@mail.com");
+	  contactTwo.setMessage("Welcome second contact");
+	  contactTwo.setPhone(40003456L);
+	  contactTwo.setName("Juan Diaz");
+	  contactTwo.setTimestamps(LocalDateTime.now());
+	  
+	  this.contactRepository.save(contactOne);
+	  this.contactRepository.save(contactTwo);
 
     }
 
