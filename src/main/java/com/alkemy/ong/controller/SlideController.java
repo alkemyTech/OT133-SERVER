@@ -36,7 +36,7 @@ public class SlideController {
     private SlideService slideService;
 
 
-    @PreAuthorize("hasAuthority('ROL_ADMIN')")
+    @PreAuthorize("hasRole('ROL_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deleteSlide(@PathVariable String id){
         Map<String, Object> response = new HashMap<>();
@@ -51,7 +51,7 @@ public class SlideController {
     }
 
     
-    @PreAuthorize("hasAuthority('ROL_ADMIN')")
+    @PreAuthorize("hasRole('ROL_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateSlide(@Validated @RequestBody SlideDTO slideDTO, @PathVariable UUID id){
     	Map<String, Object> response = new HashMap<>();
@@ -67,7 +67,7 @@ public class SlideController {
     }
     
     @GetMapping()
-    @PreAuthorize("hasAuthority('ROL_ADMIN')")
+    @PreAuthorize("hasRole('ROL_ADMIN')")
     public ResponseEntity<List<Slide>> findAllDefined() {
       try {
         List<Slide> listImage = StreamSupport
@@ -80,7 +80,7 @@ public class SlideController {
     }
       
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROL_ADMIN')")
+    @PreAuthorize("hasRole('ROL_ADMIN')")
     public  ResponseEntity<SlideDTO> findById(@PathVariable String id){
         if (slideService.findById(id) == null) {
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
