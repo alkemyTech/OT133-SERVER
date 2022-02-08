@@ -59,7 +59,7 @@ public class SlideServiceImpl implements SlideService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Slide> findAllDefined() {
+	public Iterable<Slide> findAllDefined() {
 		return slideRepository.findAllDefined();
 	}
 
