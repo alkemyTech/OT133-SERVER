@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alkemy.ong.service.images.ImageUploader;
+
 import com.alkemy.ong.service.images.ImageUploaderService;
 
 import java.io.File;

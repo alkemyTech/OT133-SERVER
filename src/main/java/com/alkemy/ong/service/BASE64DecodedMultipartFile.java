@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.entity.ContentType;
 import org.springframework.web.multipart.MultipartFile;
 
