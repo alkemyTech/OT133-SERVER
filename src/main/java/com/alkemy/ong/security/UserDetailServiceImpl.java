@@ -1,14 +1,10 @@
 package com.alkemy.ong.security;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import com.alkemy.ong.entity.User;
-import com.alkemy.ong.service.UserDAO;
 import com.alkemy.ong.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,10 +34,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
     boolean accountNonLocked = true;
 
     // Se agregan los roles del usuario.
-    List<GrantedAuthority> authorities = user.getRoles()
-			.stream()
-			.map(rol -> new SimpleGrantedAuthority(rol.getName().name()))
-			.collect(Collectors.toList());
+    List<GrantedAuthority> authorities = user.getRoles().stream()
+        .map(rol -> new SimpleGrantedAuthority(rol.getName().name())).collect(Collectors.toList());
 
     return new org.springframework.security.core.userdetails.User(user.getEmail(),
         user.getPassword(), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
