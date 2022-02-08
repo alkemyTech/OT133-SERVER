@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,12 +18,11 @@ public class ImageUploaderService {
   @Autowired
   @Qualifier("AmazonS3")
   private ImageUploader uploader;
-
   // --------------------------------------------------------------------------------------------
   // Public
   // --------------------------------------------------------------------------------------------
 
-  public String uploadImage(String path, MultipartFile file) {
+  public String uploadImage(MultipartFile file) {
 
     // Verifico la integridad del archivo.
     verifyFile(file);
@@ -32,7 +32,7 @@ public class ImageUploaderService {
 
     // Subo al service
     try {
-      return uploader.upload(path, file.getOriginalFilename(), Optional.of(metadata),
+      return uploader.upload(file.getOriginalFilename(), Optional.of(metadata),
           file.getInputStream());
     } catch (IOException e) {
       throw new IllegalStateException(e);

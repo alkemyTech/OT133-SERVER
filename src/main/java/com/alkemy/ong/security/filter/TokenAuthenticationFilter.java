@@ -58,7 +58,7 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
     String issuer = request.getRequestURL().toString();
 
     // Generating Tokens
-    String accesToken = tokenValidator.generateTokenForUser(user, TEN_MINUTES * 3, issuer, true);
+    String accesToken = tokenValidator.generateTokenForUser(user, TEN_MINUTES * 100, issuer, true);
     String refreshToken = tokenValidator.generateTokenForUser(user, TEN_MINUTES * 6, issuer, false);
 
 

@@ -12,5 +12,7 @@ public interface SlideService {
 	Optional<SlideDTO> update(SlideDTO slideDTO,String id);
 	
 	void deleteSlide(String id) throws Exception;
+	
+	public SlideDTO saveSlide(SlideDTO slide) throws Exception;
 
 }
