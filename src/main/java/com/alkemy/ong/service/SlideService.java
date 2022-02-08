@@ -15,4 +15,9 @@ public interface SlideService {
 	
 	public SlideDTO saveSlide(SlideDTO slide) throws Exception;
 
+	Iterable<Slide> findAllDefined();
+  
+  SlideDTO findById(String id); 
+
+
 }

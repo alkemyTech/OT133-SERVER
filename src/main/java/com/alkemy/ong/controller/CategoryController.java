@@ -1,21 +1,15 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.dto.CategoryDTO;
-import com.alkemy.ong.exception.CategoryException;
-import com.alkemy.ong.service.CategoryService;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
-import javax.validation.Valid;
-
+import com.alkemy.ong.dto.CategoryDTO;
+import com.alkemy.ong.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,58 +24,58 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    @Autowired
-    CategoryService categoryService;
+  @Autowired
+  CategoryService categoryService;
 
-    @PostMapping
-    public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO category) throws Exception {
-       
-        try {
-            CategoryDTO categorySaved = categoryService.create(category);
-            return ResponseEntity.status(HttpStatus.CREATED).body(categorySaved);
-        } catch (Exception e) {
-        System.out.println(e);
-		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
-        }
+  @PostMapping
+  public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO category) throws Exception {
 
-    }
-    
-    @PreAuthorize("ROL_ADMIN")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-        if (categoryService.findById(id) == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        categoryService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    try {
+      CategoryDTO categorySaved = categoryService.create(category);
+      return ResponseEntity.status(HttpStatus.CREATED).body(categorySaved);
+    } catch (Exception e) {
+      System.out.println(e);
+      return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryDetails(@PathVariable String id) {
-        CategoryDTO categoryDetails = categoryService.findCategoryById(id);
-        if (categoryDetails == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(categoryDetails);
-    }
-    
-    
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROL_ADMIN')")
-    public ResponseEntity<?> updateCategory(@Validated @RequestBody CategoryDTO categoryDTO,
-    										@PathVariable UUID id){
-    	
-    	Map<String, Object> response = new HashMap<>();
-    	
-    	Optional<CategoryDTO> optCategoryDTO = this.categoryService.updateCategory(categoryDTO, id);
+  }
 
-    	if(!optCategoryDTO.isPresent()) {
-    		response.put("Error", String.format("Category with ID %s not found.", id));
-			return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
-    	}else {
-    		response.put("ok", optCategoryDTO);
-    		return ResponseEntity.ok(response);
-    	}
+  @PreAuthorize("ROL_ADMIN")
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable String id) {
+    if (categoryService.findById(id) == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+    categoryService.delete(id);
+    return ResponseEntity.status(HttpStatus.OK).build();
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<CategoryDTO> getCategoryDetails(@PathVariable String id) {
+    CategoryDTO categoryDetails = categoryService.findCategoryById(id);
+    if (categoryDetails == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(categoryDetails);
+  }
+
+
+  @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
+  public ResponseEntity<?> updateCategory(@Validated @RequestBody CategoryDTO categoryDTO,
+      @PathVariable UUID id) {
+
+    Map<String, Object> response = new HashMap<>();
+
+    Optional<CategoryDTO> optCategoryDTO = this.categoryService.updateCategory(categoryDTO, id);
+
+    if (!optCategoryDTO.isPresent()) {
+      response.put("Error", String.format("Category with ID %s not found.", id));
+      return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    } else {
+      response.put("ok", optCategoryDTO);
+      return ResponseEntity.ok(response);
+    }
+  }
 
 }

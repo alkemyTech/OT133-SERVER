@@ -1,29 +1,84 @@
 package com.alkemy.ong.mapper;
 
-
+import java.util.List;
+import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationPublicDTO;
 import com.alkemy.ong.dto.SlidePublicDTO;
 import com.alkemy.ong.entity.Organization;
-
+import com.alkemy.ong.entity.contact.SocialLinks;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class OrganizationMapper {
 
-  public OrganizationPublicDTO organizationEntity2DTO(Organization member, List<SlidePublicDTO> slideDTOS) {
-    OrganizationPublicDTO memberDTO = new OrganizationPublicDTO();
+  public OrganizationDTO toDTO(Organization organization) {
 
-    memberDTO.setName(member.getName());
-    memberDTO.setImage(member.getImage());
-    memberDTO.setAddress(member.getAddress());
-    memberDTO.setPhone(member.getPhone());
-    for (SlidePublicDTO slideDTO:slideDTOS) {
-      memberDTO.addSlides(slideDTO);
+    OrganizationDTO dto = new OrganizationDTO();
+
+    dto.setName(organization.getName());
+    dto.setImage(organization.getImage());
+    dto.setAddress(organization.getAddress());
+    dto.setPhone(organization.getPhone());
+    dto.setEmail(organization.getEmail());
+    dto.setWelcomeText(organization.getWelcomeText());
+    dto.setAboutUsText(organization.getAboutUsText());
+
+    SocialLinks contact = organization.getContact();
+
+    if (contact != null) {
+      dto.setFacebookUrl(contact.getFacebookUrl());
+      dto.setLinkedinUrl(contact.getLinkedinUrl());
+      dto.setInstagramUrl(contact.getInstagramUrl());
+      dto.setTimestamps(organization.getTimestamps());
     }
-    
-    return memberDTO;
+
+
+    return dto;
+  }
+
+  public Organization toEntity(OrganizationDTO dto) {
+    Organization org = new Organization();
+    org.setName(dto.getName());
+    org.setImage(dto.getImage());
+    org.setAddress(dto.getAddress());
+    org.setPhone(dto.getPhone());
+    org.setEmail(dto.getEmail());
+    org.setWelcomeText(dto.getWelcomeText());
+    org.setAboutUsText(dto.getAboutUsText());
+
+    SocialLinks contact =
+        new SocialLinks(dto.getFacebookUrl(), dto.getLinkedinUrl(), dto.getInstagramUrl());
+    org.setContact(contact);
+
+    return org;
+  }
+
+
+  public OrganizationPublicDTO organizationEntity2DTO(Organization org,
+      List<SlidePublicDTO> slideDTOS) {
+    OrganizationPublicDTO orgDTO = new OrganizationPublicDTO();
+
+    orgDTO.setName(org.getName());
+    orgDTO.setImage(org.getImage());
+    orgDTO.setAddress(org.getAddress());
+    orgDTO.setPhone(org.getPhone());
+
+    SocialLinks contact = org.getContact();
+
+    if (contact != null) {
+      orgDTO.setFacebookUrl(contact.getFacebookUrl());
+      orgDTO.setLinkedinUrl(contact.getLinkedinUrl());
+      orgDTO.setInstagramUrl(contact.getInstagramUrl());
+    }
+
+
+    for (SlidePublicDTO slideDTO : slideDTOS) {
+
+      orgDTO.addSlides(slideDTO);
+
+    }
+
+    return orgDTO;
   }
 
 }

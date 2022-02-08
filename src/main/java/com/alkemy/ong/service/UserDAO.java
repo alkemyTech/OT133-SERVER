@@ -1,7 +1,5 @@
 package com.alkemy.ong.service;
 
-import java.lang.reflect.Field;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import com.alkemy.ong.entity.Rol;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
 
 @Service
 public class UserDAO {
