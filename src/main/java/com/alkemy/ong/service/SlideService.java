@@ -15,5 +15,7 @@ public interface SlideService {
 	void deleteSlide(String id) throws Exception;
 	
 	List<Slide> findAllDefined();
+  
+  SlideDTO findById(String id); 
 
 }

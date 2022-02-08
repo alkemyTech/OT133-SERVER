@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-public class Contact {
+public class SocialLinks {
 
   @Column(name = "facebook_url")
   private String facebookUrl;

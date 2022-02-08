@@ -32,7 +32,7 @@ public class OrganizationServiceImp implements OrganizationService {
   @Override
   public List<OrganizationPublicDTO> readAllDefined() {
     List<OrganizationPublicDTO> listOrganizationPublicDTOS = new ArrayList<>();
-    try {
+    
       //ordenando por id de forma descendente  5 4 ...
       List<Organization> organizationList = organizationRepository.findTopById();
       
@@ -53,9 +53,7 @@ public class OrganizationServiceImp implements OrganizationService {
         listOrganizationPublicDTOS.add(organizationPublicDTOS);
         
       }
-    } catch (Exception e) {
-      System.out.println("Error Service: " + e);
-    }
+   
     
     return listOrganizationPublicDTOS;
   }

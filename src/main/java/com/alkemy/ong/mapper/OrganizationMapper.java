@@ -5,7 +5,7 @@ import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationPublicDTO;
 import com.alkemy.ong.dto.SlidePublicDTO;
 import com.alkemy.ong.entity.Organization;
-import com.alkemy.ong.entity.contact.Contact;
+import com.alkemy.ong.entity.contact.SocialLinks;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,11 +23,15 @@ public class OrganizationMapper {
     dto.setWelcomeText(organization.getWelcomeText());
     dto.setAboutUsText(organization.getAboutUsText());
 
-    Contact contact = organization.getContact();
-    dto.setFacebookUrl(contact.getFacebookUrl());
-    dto.setLinkedinUrl(contact.getLinkedinUrl());
-    dto.setInstagramUrl(contact.getInstagramUrl());
-    dto.setTimestamps(organization.getTimestamps());
+    SocialLinks contact = organization.getContact();
+
+    if (contact != null) {
+      dto.setFacebookUrl(contact.getFacebookUrl());
+      dto.setLinkedinUrl(contact.getLinkedinUrl());
+      dto.setInstagramUrl(contact.getInstagramUrl());
+      dto.setTimestamps(organization.getTimestamps());
+    }
+
 
     return dto;
   }
@@ -42,26 +46,39 @@ public class OrganizationMapper {
     org.setWelcomeText(dto.getWelcomeText());
     org.setAboutUsText(dto.getAboutUsText());
 
-    Contact contact =
-        new Contact(dto.getFacebookUrl(), dto.getLinkedinUrl(), dto.getInstagramUrl());
+    SocialLinks contact =
+        new SocialLinks(dto.getFacebookUrl(), dto.getLinkedinUrl(), dto.getInstagramUrl());
     org.setContact(contact);
 
     return org;
   }
 
-  public OrganizationPublicDTO organizationEntity2DTO(Organization member,
-      List<SlidePublicDTO> slideDTOS) {
-    OrganizationPublicDTO memberDTO = new OrganizationPublicDTO();
 
-    memberDTO.setName(member.getName());
-    memberDTO.setImage(member.getImage());
-    memberDTO.setAddress(member.getAddress());
-    memberDTO.setPhone(member.getPhone());
-    for (SlidePublicDTO slideDTO : slideDTOS) {
-      memberDTO.addSlides(slideDTO);
+  public OrganizationPublicDTO organizationEntity2DTO(Organization org,
+      List<SlidePublicDTO> slideDTOS) {
+    OrganizationPublicDTO orgDTO = new OrganizationPublicDTO();
+
+    orgDTO.setName(org.getName());
+    orgDTO.setImage(org.getImage());
+    orgDTO.setAddress(org.getAddress());
+    orgDTO.setPhone(org.getPhone());
+
+    SocialLinks contact = org.getContact();
+
+    if (contact != null) {
+      orgDTO.setFacebookUrl(contact.getFacebookUrl());
+      orgDTO.setLinkedinUrl(contact.getLinkedinUrl());
+      orgDTO.setInstagramUrl(contact.getInstagramUrl());
     }
 
-    return memberDTO;
+
+    for (SlidePublicDTO slideDTO : slideDTOS) {
+
+      orgDTO.addSlides(slideDTO);
+
+    }
+
+    return orgDTO;
   }
 
 }
