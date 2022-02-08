@@ -58,12 +58,13 @@ public class MemberServiceImpl implements MemberService {
   // --------------------------------------------------------------------------------------------
 
   public MemberDTO update (String id, MemberDTO memberDTO) {
-    MemberDTO dto = this.findById(id);
-    Member member = memberMapper.memberDTO2Entity(dto);
-    memberRepository.save(member);
-    MemberDTO request = memberMapper.menberEntity2DTO(member);
+    Member member = memberRepository.findById(id).get();
+    Member memberUpdate = memberMapper.memberDTO2Entity(memberDTO, member);
+    memberRepository.save(memberUpdate);
+    MemberDTO request = memberMapper.menberEntity2DTO(memberUpdate);
     return request;
   }
+  
 
   // --------------------------------------------------------------------------------------------
   // Delete
