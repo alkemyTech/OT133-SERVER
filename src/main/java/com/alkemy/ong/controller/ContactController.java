@@ -48,10 +48,10 @@ public class ContactController {
 		
 		Optional<List<ContactDTO>> contactsDTO = this.contactService.getAll();
 		
-		if(contactsDTO.isEmpty()) {
-			response.put("Error","Contact list is empty.");
-			return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
-		}
+		//if(contactsDTO.isEmpty()) {
+		//	response.put("Error","Contact list is empty.");
+		//	return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+		//}
 		
 		response.put("ok", contactsDTO.get());
 		return ResponseEntity.ok(response);
