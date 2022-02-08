@@ -46,7 +46,6 @@ public class SlideMapper {
   }
   
 	public Slide slideDTOtoEntity(SlideDTO slideDTO) {
-		System.out.println(slideDTO.toString());
 		Slide slide=new Slide();
 		slide.setImageUrl(slideDTO.getImageUrl());
 		slide.setOrderNumber(slideDTO.getOrderNumber());
