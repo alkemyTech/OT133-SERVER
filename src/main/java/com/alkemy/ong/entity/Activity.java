@@ -1,5 +1,6 @@
 package com.alkemy.ong.entity;
 
+import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -29,5 +30,9 @@ public class Activity extends PersistentEntity {
 
     @Column(name = "image", nullable = false)
     private String image;
+
+    public Activity(String id, String name, String content, String image, Timestamp from, boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }
