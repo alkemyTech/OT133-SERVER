@@ -5,7 +5,10 @@ import java.util.*;
 
 import com.alkemy.ong.dto.ContactDTO;
 import com.alkemy.ong.exception.ContactException;
+import com.alkemy.ong.sendgrid.config.EmailRequest;
+import com.alkemy.ong.sendgrid.config.EmailService;
 import com.alkemy.ong.service.ContactService;
+import com.sendgrid.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,18 +18,43 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/contacts")
+@RequestMapping("/auth/contacts")
 public class ContactController {
 	
     
     @Autowired
     private ContactService contactService;
+    
+    @Autowired
+    EmailService emailService;
 
     @PostMapping
     public ResponseEntity<?> createContact(@Validated @RequestBody ContactDTO contactDTO) throws ContactException, IOException{
         try{
             ContactDTO contact = contactService.save(contactDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(contact);
+            
+            EmailRequest emailRequest = new EmailRequest();
+            emailRequest.setTo(contactDTO.getEmail());
+            emailRequest.setSubject("Your contact form is registered successfully");
+            emailRequest.setBody("Hi "+ contactDTO.getName() + 
+            		", we are very happy that you are part of Somos Mas\nThanks for you contact.");
+            
+            EmailRequest emailConsulta = new EmailRequest();
+            emailConsulta.setTo("alkemysomosmas@gmail.com");
+            emailConsulta.setSubject("Consult Contact: " + contactDTO.getEmail());
+            emailConsulta.setBody(contactDTO.getMessage());
+            
+
+            Response response = emailService.sendMail(emailRequest);
+            emailService.sendMail(emailConsulta);
+            
+        	if(response.getStatusCode() == 200 || response.getStatusCode() == 202) {
+        		return ResponseEntity.status(HttpStatus.OK)
+        				.body(contact);
+        	}else {
+        		return new ResponseEntity<>("Failed to sent", HttpStatus.NOT_FOUND);
+        	}
+            
         } catch ( Exception e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Exception: " + e.getLocalizedMessage());
         }
