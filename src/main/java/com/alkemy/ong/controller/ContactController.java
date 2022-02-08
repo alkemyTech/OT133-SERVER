@@ -18,7 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth/contacts")
+@RequestMapping("/contacts")
 public class ContactController {
 	
     
@@ -29,6 +29,7 @@ public class ContactController {
     EmailService emailService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> createContact(@Validated @RequestBody ContactDTO contactDTO) throws ContactException, IOException{
         try{
             ContactDTO contact = contactService.save(contactDTO);
