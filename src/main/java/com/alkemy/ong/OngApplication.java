@@ -13,6 +13,7 @@ import com.alkemy.ong.entity.Slide;
 import com.alkemy.ong.entity.User;
 import com.alkemy.ong.entity.member.Member;
 import com.alkemy.ong.enums.Roles;
+
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.ContactRepository;
 import com.alkemy.ong.repository.MemberRepository;
@@ -20,14 +21,13 @@ import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.repository.RolRepository;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -191,5 +191,6 @@ public class OngApplication implements CommandLineRunner {
     }
 
   }
+
 
 }

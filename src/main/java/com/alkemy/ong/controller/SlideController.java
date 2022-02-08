@@ -10,7 +10,12 @@ import java.util.stream.StreamSupport;
 import com.alkemy.ong.dto.SlideDTO;
 import com.alkemy.ong.entity.Slide;
 import com.alkemy.ong.service.SlideService;
+
+
+import org.springframework.http.HttpStatus;
+
 import com.amazonaws.services.apigateway.model.BadRequestException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +24,17 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.validation.annotation.Validated;
+
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/slides")
 public class SlideController {
-
+  
   @Autowired
   private SlideService slideService;
 
@@ -81,6 +97,20 @@ public class SlideController {
     if (slideService.findById(id) == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-    return ResponseEntity.status(HttpStatus.OK).body(slideService.findById(id));
+     return ResponseEntity.status(HttpStatus.OK).body(slideService.findById(id));
   }
+
+    
+    @PostMapping
+    public ResponseEntity<?> createNewSlide(@RequestBody SlideDTO request) throws Exception {
+  	  try {
+  		    SlideDTO response = slideService.saveSlide(request);
+  		    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  	} catch (Exception e) {
+  			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getLocalizedMessage());
+  	}
+}
+
+ 
+
 }

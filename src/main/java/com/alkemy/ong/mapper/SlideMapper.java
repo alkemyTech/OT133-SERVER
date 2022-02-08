@@ -44,5 +44,15 @@ public class SlideMapper {
     }
     return slideDTOS;
   }
+  
+	public Slide slideDTOtoEntity(SlideDTO slideDTO) {
+		Slide slide=new Slide();
+		slide.setImageUrl(slideDTO.getImageUrl());
+		slide.setOrderNumber(slideDTO.getOrderNumber());
+		slide.setOrganization(slideDTO.getOrganization());
+		slide.setText(slideDTO.getText());
+	
+		return slide;
+	}
 	
 }

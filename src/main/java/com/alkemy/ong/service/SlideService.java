@@ -13,8 +13,11 @@ public interface SlideService {
 	
 	void deleteSlide(String id) throws Exception;
 	
+	public SlideDTO saveSlide(SlideDTO slide) throws Exception;
+
 	Iterable<Slide> findAllDefined();
   
   SlideDTO findById(String id); 
+
 
 }

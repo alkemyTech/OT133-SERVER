@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface ImageUploader {
 
-  public String upload(String path, String fileName, Optional<Map<String, String>> metadata,
+  public String upload(String fileName, Optional<Map<String, String>> metadata,
       InputStream inputStream);
 }

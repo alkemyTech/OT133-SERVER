@@ -11,6 +11,10 @@ import org.springframework.stereotype.Repository;
 public interface SlideRepository extends JpaRepository<Slide, String> {
   List<Slide> findAllByOrganization(Organization id);
 
+  @Query(value="SELECT * FROM slides order by timestamps desc Limit 1", nativeQuery=true)
+  Slide findLast();
+  
   @Query("SELECT x.imageUrl, x.orderNumber FROM Slide x")
   public List<Slide> findAllDefined();
 }
+
