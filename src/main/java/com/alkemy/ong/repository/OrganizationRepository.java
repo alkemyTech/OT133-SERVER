@@ -20,4 +20,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Stri
   @Query("SELECT o FROM Organization o ORDER BY o.id DESC")
   List<Organization> findTopById();
 
+  public Organization findByName(String name);
+
 }
