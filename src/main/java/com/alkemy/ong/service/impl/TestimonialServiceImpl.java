@@ -1,14 +1,14 @@
 package com.alkemy.ong.service.impl;
 
+import javax.persistence.EntityNotFoundException;
 import com.alkemy.ong.dto.TestimonialDTO;
+import com.alkemy.ong.dto.TestimonialIDDTO;
 import com.alkemy.ong.entity.Testimonial;
 import com.alkemy.ong.mapper.TestimonialMapper;
 import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.service.TestimonialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityNotFoundException;
 
 @Service
 public class TestimonialServiceImpl implements TestimonialService {
@@ -23,9 +23,10 @@ public class TestimonialServiceImpl implements TestimonialService {
   // Create
   // --------------------------------------------------------------------------------------------
 
-  public TestimonialDTO create(TestimonialDTO dto) {
+  public TestimonialIDDTO create(TestimonialDTO dto) {
     Testimonial testimonial = testimonialRepository.save(testimonialMapper.toEntity(dto));
-    return testimonialMapper.toDTO(testimonial);
+
+    return new TestimonialIDDTO(testimonial.getId(), testimonialMapper.toDTO(testimonial));
   }
 
   // --------------------------------------------------------------------------------------------
@@ -43,10 +44,11 @@ public class TestimonialServiceImpl implements TestimonialService {
 
   public TestimonialDTO update(String id, TestimonialDTO dto) {
 
-    Testimonial testimonial = testimonialRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    Testimonial testimonial =
+        testimonialRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
     testimonial.setName(dto.getName());
-    testimonial.setContent(dto.getImage());
+    testimonial.setContent(dto.getContent());
     testimonial.setImage(dto.getImage());
 
     return testimonialMapper.toDTO(testimonialRepository.save(testimonial));
