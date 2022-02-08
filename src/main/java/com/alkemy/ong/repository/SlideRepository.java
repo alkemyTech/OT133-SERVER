@@ -12,6 +12,6 @@ import java.util.List;
 public interface SlideRepository extends JpaRepository<Slide, String> {
   List<Slide> findAllByOrganization(Organization id);
   
-  @Query("SELECT x.imageUrl, x.orderNumber FROM Slide x")
-  public List<Slide> findAllDefined(); 
+  @Query("SELECT c.imageUrl, c.orderNumber FROM Slide c")
+  public Iterable<Slide> findAllDefined(); 
 }

@@ -1,6 +1,5 @@
 package com.alkemy.ong.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.alkemy.ong.dto.SlideDTO;
@@ -14,7 +13,7 @@ public interface SlideService {
 	
 	void deleteSlide(String id) throws Exception;
 	
-	List<Slide> findAllDefined();
+	Iterable<Slide> findAllDefined();
   
   SlideDTO findById(String id); 
 
