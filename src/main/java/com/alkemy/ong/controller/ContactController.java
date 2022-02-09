@@ -29,7 +29,7 @@ public class ContactController {
     EmailService emailService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROL_USER')")
     public ResponseEntity<?> createContact(@Validated @RequestBody ContactDTO contactDTO) throws ContactException, IOException{
         try{
             ContactDTO contact = contactService.save(contactDTO);

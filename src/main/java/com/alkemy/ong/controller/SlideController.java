@@ -48,7 +48,7 @@ public class SlideController {
   private SlideService slideService;
 
 
-  @PreAuthorize("hasRole('ROL_ADMIN')")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Map<String, Object>> deleteSlide(@PathVariable String id) {
     Map<String, Object> response = new HashMap<>();
