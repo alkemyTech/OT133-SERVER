@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Table(name = "activities")
 @SQLDelete(sql = "UPDATE activities SET soft_delete = true WHERE id=?")
@@ -21,13 +20,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Activity extends PersistentEntity {
 
-    @Column(name = "name", nullable = false)
-    private String name;
+  @Column(name = "name", nullable = false)
+  private String name;
 
-    @Column(name = "content", nullable = false)
-    private String content;
+  @Column(name = "content", nullable = false)
+  private String content;
 
-    @Column(name = "image", nullable = false)
-    private String image;
+  @Column(name = "image", nullable = false)
+  private String image;
 
 }
