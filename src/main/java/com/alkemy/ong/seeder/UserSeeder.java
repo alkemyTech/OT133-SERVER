@@ -45,16 +45,16 @@ public class UserSeeder implements CommandLineRunner {
     createUserIfNotExists("null", "mull", "alkemy".concat(ALKEMY), "admin");
 
     // Normal Users
-    createUserIfNotExists("null", "null", "admin".concat(MAIL), "admin");
-    createUserIfNotExists("Juan", "Lopez", "admin", Roles.ROL_USER);
-    createUserIfNotExists("Agustin", "Leyes", "admin", Roles.ROL_USER);
-    createUserIfNotExists("Tomas", "Sanchez", "admin", Roles.ROL_USER);
-    createUserIfNotExists("Juan", "Rodriguez", "admin", Roles.ROL_USER);
-    createUserIfNotExists("Mauro", "Dell", "admin", Roles.ROL_USER);
-    createUserIfNotExists("Muriel", "Correa", "admin", Roles.ROL_USER);
-    createUserIfNotExists("Ricardo", "Ledesma", "admin", Roles.ROL_USER);
-    createUserIfNotExists("Rodrigo", "Caro", "admin", Roles.ROL_USER);
-    createUserIfNotExists("null", "mull", "alkemy".concat(MAIL), "admin");
+    createUserIfNotExists("null", "null", "user".concat(MAIL), "user");
+    createUserIfNotExists("Juan", "Lopez", "user", Roles.ROL_USER);
+    createUserIfNotExists("Agustin", "Leyes", "user", Roles.ROL_USER);
+    createUserIfNotExists("Tomas", "Sanchez", "user", Roles.ROL_USER);
+    createUserIfNotExists("Juan", "Rodriguez", "user", Roles.ROL_USER);
+    createUserIfNotExists("Mauro", "Dell", "user", Roles.ROL_USER);
+    createUserIfNotExists("Muriel", "Correa", "user", Roles.ROL_USER);
+    createUserIfNotExists("Ricardo", "Ledesma", "user", Roles.ROL_USER);
+    createUserIfNotExists("Rodrigo", "Caro", "user", Roles.ROL_USER);
+    createUserIfNotExists("null", "mull", "alkemy".concat(MAIL), "user");
 
   }
 
