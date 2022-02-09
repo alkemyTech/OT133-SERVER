@@ -1,33 +1,24 @@
 package com.alkemy.ong;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import javax.transaction.Transactional;
 import com.alkemy.ong.entity.Category;
 import com.alkemy.ong.entity.Contact;
 import com.alkemy.ong.entity.Organization;
-import com.alkemy.ong.entity.Rol;
 import com.alkemy.ong.entity.Slide;
-import com.alkemy.ong.entity.User;
 import com.alkemy.ong.entity.member.Member;
-import com.alkemy.ong.enums.Roles;
-
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.ContactRepository;
 import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
-import com.alkemy.ong.repository.RolRepository;
 import com.alkemy.ong.repository.SlideRepository;
-import com.alkemy.ong.repository.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -36,12 +27,6 @@ public class OngApplication implements CommandLineRunner {
   public static void main(String[] args) {
     SpringApplication.run(OngApplication.class, args);
   }
-
-  @Autowired
-  private RolRepository rolRepository;
-
-  @Autowired
-  private UserRepository userRepository;
 
   @Autowired
   private CategoryRepository categoryRepository;
@@ -56,14 +41,6 @@ public class OngApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-
-    // Roles
-    createRolIfNotExists(Roles.ROL_ADMIN, "User with all privileges and authorities");
-    createRolIfNotExists(Roles.ROL_USER, "User with no privileges nor authorities");
-
-    // Users
-    createAdminIfNotExists("admin@alkemy.org", "admin");
-
     // Categories
     createCategoryIfNotExists("A");
     createCategoryIfNotExists("B");
@@ -102,36 +79,6 @@ public class OngApplication implements CommandLineRunner {
       this.contactRepository.save(contactTwo);
     }
 
-  }
-
-  @Transactional
-  private Rol createRolIfNotExists(Roles roleName, String description) {
-
-    Rol rol = rolRepository.findByName(roleName);
-
-    if (Objects.isNull(rol)) {
-      rol = rolRepository.save(new Rol(roleName, description));
-    }
-
-    return rol;
-  }
-
-  @Transactional
-  private User createAdminIfNotExists(String email, String password) {
-
-    User user = userRepository.findByEmail(email).orElseGet(() -> {
-
-      User newUser = new User();
-      newUser.setEmail(email);
-      newUser.setPassword(new BCryptPasswordEncoder().encode(password));
-      newUser.setFirstName("Admin");
-      newUser.setLastName("Admin");
-      newUser.setRoles(Arrays.asList(rolRepository.findByName(Roles.ROL_ADMIN)));
-
-      return userRepository.save(newUser);
-    });
-
-    return user;
   }
 
   @Transactional
