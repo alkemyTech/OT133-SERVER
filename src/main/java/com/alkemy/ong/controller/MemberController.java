@@ -51,7 +51,7 @@ public class MemberController {
   }
   
   @PostMapping
-  @PreAuthorize("hasAuthority('ROL_ADMIN')")
+  @PreAuthorize("hasAuthority('ROL_USER')")
   public ResponseEntity<Object> createMember(@Validated @RequestBody MemberDTO memberDTO) throws MemberException, IOException{
     try{
       MemberDTO member = memberService.save(memberDTO); 
