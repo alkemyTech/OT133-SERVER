@@ -4,6 +4,9 @@ import com.alkemy.ong.dto.NewDTO;
 import com.alkemy.ong.entity.News;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Component
 public class NewMapper {
@@ -25,5 +28,13 @@ public class NewMapper {
     dto.setCategoryId(news.getCategoryId());
     dto.setTimestamps(news.getTimestamps());
     return dto;
+  }
+  
+  public List<NewDTO> entityList2newDTOList (List<News> newsList){
+    List<NewDTO> dtos = new ArrayList<>();
+    for (News news: newsList ) {
+      dtos.add(this.entity2newDTO(news));
+    }
+    return dtos;
   }
 }

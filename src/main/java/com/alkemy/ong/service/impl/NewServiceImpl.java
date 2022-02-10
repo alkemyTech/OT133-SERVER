@@ -6,11 +6,19 @@ import com.alkemy.ong.mapper.NewMapper;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.service.NewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class NewServiceImpl implements NewService {
 
+  private static final int PAGE_SIZE = 10;
+  
 	@Autowired
 	NewMapper newMapper;
 
@@ -34,4 +42,13 @@ public class NewServiceImpl implements NewService {
 	public boolean existsById(String id) {
 		return newsRepository.existsById(id);
 	}
+
+  @Override
+  public List<NewDTO> getAllByPage(Integer page) {
+    Pageable paging = PageRequest.of(page, PAGE_SIZE);
+    Page<News> pageNews = newsRepository.findAll(paging);
+    List<News> news = pageNews.getContent();
+    List<NewDTO> dtos = newMapper.entityList2newDTOList(news);
+    return dtos;
+  }
 }
