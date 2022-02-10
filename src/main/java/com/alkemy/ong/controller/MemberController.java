@@ -10,9 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import javax.websocket.server.PathParam;
 
 import java.io.IOException;
 import java.util.*;
@@ -60,6 +58,23 @@ public class MemberController {
       return ResponseEntity.status(HttpStatus.CONFLICT).body("Exception: " + e.getLocalizedMessage());
     }
   }
+  
+  
+  @GetMapping("/page/{page}")
+  public ResponseEntity<?> getPaginated(@PathVariable Integer page){
+	  Map<String, Object> response = new HashMap<>();
+	  if(page > 0) {
+		 response.put("url previus", String.format("localhost:8080/members/page/%d", page - 1 ));
+	  }
+	  
+	  if(!this.memberService.getPaginated(page + 1).isEmpty()) {
+			 response.put("url next", String.format("localhost:8080/members/page/%d", page + 1 ));
+	  }
+	  
+	  response.put("ok", this.memberService.getPaginated(page));
+	  return ResponseEntity.ok(response);
+  }
+  
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MemberException.class)
