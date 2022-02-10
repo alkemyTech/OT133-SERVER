@@ -1,9 +1,9 @@
 package com.alkemy.ong.controller;
 
+import com.alkemy.ong.dto.CommentDTO;
 import com.alkemy.ong.entity.Comment;
 import com.alkemy.ong.service.CommentService;
 
-;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
