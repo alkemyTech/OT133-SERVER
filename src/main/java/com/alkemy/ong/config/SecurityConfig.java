@@ -1,5 +1,6 @@
-package com.alkemy.ong.security;
+package com.alkemy.ong.config;
 
+import com.alkemy.ong.security.UserDetailServiceImpl;
 import com.alkemy.ong.security.filter.TokenAuthenticationFilter;
 import com.alkemy.ong.security.filter.TokenAuthorizationFilter;
 import com.alkemy.ong.security.token.TokenValidator;
@@ -24,6 +25,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+  private static final String[] AUTH_WHITELIST = {
+      // -- Swagger UI v2
+      "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
+      "/configuration/security", "/swagger-ui.html", "/webjars/**",
+      // -- Swagger UI v3 (OpenAPI)
+      "/v3/api-docs/**", "/swagger-ui/**",
+      // other public endpoints of your API may be appended to this array
+      "/auth/**"};
+
+
   @Autowired
   private UserDetailServiceImpl userDetailsService;
 
@@ -47,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     // Permitir todo en /**/auth/**
-    http.authorizeRequests().antMatchers("/auth/**").permitAll().anyRequest()
+    http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().anyRequest()
         // El Resto de las rutas, requeriran autenticación
         .authenticated();
 
