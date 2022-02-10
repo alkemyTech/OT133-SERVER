@@ -38,7 +38,7 @@ public class CommentController {
     }
     
     
-    
+    @PreAuthorize("hasAuthority('ROL_USER')")
     @PostMapping
 	public ResponseEntity<?> create(@Validated @RequestBody CommentDTO commentDTO) {
 		Map<String, Object> response = new HashMap<>();
