@@ -17,7 +17,7 @@ import java.util.Objects;
 @Service
 public class MemberServiceImpl implements MemberService {
 
-	private static final int PAGE_SIZE = 5;
+	private static final int PAGE_SIZE = 10;
 	
   // --------------------------------------------------------------------------------------------
   // Autowireds
