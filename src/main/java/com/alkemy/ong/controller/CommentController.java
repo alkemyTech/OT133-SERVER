@@ -24,15 +24,15 @@ import java.util.stream.StreamSupport;
 public class CommentController extends BaseController {
 
     @Autowired
-    private CommentService conmmentService;
+    private CommentService commentService;
     
     @PreAuthorize("hasAuthority('ROL_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
-        if (conmmentService.findById(id) == null) {
+        if (commentService.findById(id) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        conmmentService.delete(id);
+        commentService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
