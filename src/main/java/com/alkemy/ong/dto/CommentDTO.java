@@ -1,5 +1,6 @@
 package com.alkemy.ong.dto;
 
+
 import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
@@ -21,4 +22,5 @@ public class CommentDTO {
 	
 	@NotBlank(message = "No es un valor aceptable")
 	private String newId;
+
 }

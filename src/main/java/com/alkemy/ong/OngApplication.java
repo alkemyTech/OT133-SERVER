@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Objects;
 import javax.transaction.Transactional;
 import com.alkemy.ong.entity.Category;
+import com.alkemy.ong.entity.Comment;
 import com.alkemy.ong.entity.Contact;
 import com.alkemy.ong.entity.Organization;
 import com.alkemy.ong.entity.Slide;
 import com.alkemy.ong.entity.member.Member;
 import com.alkemy.ong.repository.CategoryRepository;
+import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.ContactRepository;
 import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.repository.OrganizationRepository;
@@ -38,6 +40,7 @@ public class OngApplication implements CommandLineRunner {
   private SlideRepository slideRepository;
   @Autowired
   private ContactRepository contactRepository;
+  @Autowired CommentRepository commentRepository;
 
   @Override
   public void run(String... args) throws Exception {
@@ -59,7 +62,11 @@ public class OngApplication implements CommandLineRunner {
     createSlideIfNotExists("NoNameB");
     createSlideIfNotExists("NoNameB");
     createSlideIfNotExists("NoNameB");
-
+    
+    // Comment
+    createCommentIfNotExists("NoBodyA");
+    createCommentIfNotExists("NoBodyB");
+    
     if (contactRepository.count() == 0) {
       Contact contactOne = new Contact();
       contactOne.setEmail("primerContact@mail.com");
@@ -139,5 +146,17 @@ public class OngApplication implements CommandLineRunner {
 
   }
 
+  @Transactional
+  private void createCommentIfNotExists(String body) {
+
+    Comment comment = commentRepository.findByBody(body);
+
+    if (Objects.isNull(comment)) {
+      comment = new Comment();
+      comment.setBody(body);
+      commentRepository.save(comment);
+    }
+
+  }
 
 }

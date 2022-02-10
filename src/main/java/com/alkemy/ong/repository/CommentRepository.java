@@ -7,7 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.*;
 
 public interface CommentRepository extends JpaRepository<Comment, String> {
+
+    public Comment findByBody(String body);
     
     @Query("SELECT x.body FROM Comment x")
     public List<Comment> findAllBody();
+
 }

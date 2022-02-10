@@ -1,5 +1,4 @@
 package com.alkemy.ong.mapper;
-
 import org.springframework.stereotype.Component;
 
 import com.alkemy.ong.dto.CommentDTO;
@@ -20,4 +19,5 @@ public class CommentMapper {
 	public CommentDTO toCommentDTO(Comment comment) {
 		return new CommentDTO(comment.getUserId(),comment.getBody(),comment.getNewsId());
 	}
+
 }
