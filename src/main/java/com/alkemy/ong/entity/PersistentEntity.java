@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,16 +29,18 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class PersistentEntity implements Serializable {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "id", updatable = false, nullable = false)
-    private String id;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
+  @Column(name = "id", updatable = false, nullable = false)
+  @ApiModelProperty(notes = "An unique UUID for database indetity")
+  private String id;
 
-    @CreatedDate
-    @Column(name = "timestamps", columnDefinition = "TIMESTAMP")
-    private LocalDateTime timestamps;
+  @CreatedDate
+  @Column(name = "timestamps", columnDefinition = "TIMESTAMP")
+  @ApiModelProperty(notes = "Timestamp of creation")
+  private LocalDateTime timestamps;
 
-    @Column(name = "soft_delete")
-    private boolean softDelete = Boolean.FALSE;
+  @Column(name = "soft_delete")
+  private boolean softDelete = Boolean.FALSE;
 }
