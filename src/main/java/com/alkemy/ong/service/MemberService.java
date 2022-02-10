@@ -14,4 +14,6 @@ public interface MemberService {
   List<MemberDTO> listAllMember();
 
   MemberDTO save(MemberDTO memberDTO);
+  
+  List<MemberDTO> getPaginated(Integer page);
 }
