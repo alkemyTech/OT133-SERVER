@@ -15,6 +15,7 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentRepository repository;
     
+    @Override
     public List<Comment> findAllBody(){
         return repository.findAllBody();
     }

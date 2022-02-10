@@ -8,6 +8,6 @@ import java.util.*;
 
 public interface CommentRepository extends JpaRepository<Comment, String> {
     
-    @Query("SELECT x.body FROM comments x")
+    @Query("SELECT x.body FROM Comment x")
     public List<Comment> findAllBody();
 }
