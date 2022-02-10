@@ -6,13 +6,19 @@ import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class MemberServiceImpl implements MemberService {
 
+	private static final int PAGE_SIZE = 10;
+	
   // --------------------------------------------------------------------------------------------
   // Autowireds
   // --------------------------------------------------------------------------------------------
@@ -53,6 +59,18 @@ public class MemberServiceImpl implements MemberService {
     List<MemberDTO>memberDTOS=memberMapper.MemberlistMember2listDTO(memberList);
     return memberDTOS;
     }
+   
+	@Override
+	public List<MemberDTO> getPaginated(Integer page) {
+		if (Objects.isNull(page)) {
+			return this.memberRepository.findAll().stream().map(this.memberMapper::menberEntity2DTO)
+					.collect(Collectors.toList());
+		}
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+		return this.memberRepository.findAll(pageable).getContent().stream().map(this.memberMapper::menberEntity2DTO)
+				.collect(Collectors.toList());
+	}
+   
   // --------------------------------------------------------------------------------------------
   // Update
   // --------------------------------------------------------------------------------------------
@@ -74,4 +92,6 @@ public class MemberServiceImpl implements MemberService {
     Member member = memberRepository.findById(id).get();
     memberRepository.delete(member);
   }
+
+
 }
