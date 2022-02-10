@@ -1,12 +1,17 @@
 package com.alkemy.ong.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,6 +81,39 @@ public class CategoryController {
       response.put("ok", optCategoryDTO);
       return ResponseEntity.ok(response);
     }
+  }
+  
+  /***
+   * Se crea una lista y se le pasa la lista del service con los datos del pageable que se recibe, 
+   * el size se le pasa 10 ya que es un requerimiento.
+   * Luego por medio del PageImpl pasa la lista a Page.
+   * Nos aseguramos que no cargue paginas con sin contenido, si esta vacía devuelve la url de la pagina anterior. 
+   * @author Mauro
+   */
+  @GetMapping
+  @PreAuthorize("hasAuthority('ROL_USER')")
+  public ResponseEntity<?> findAllPage(Pageable pageable){
+  	
+  	int page = pageable.getPageNumber();
+  	final int size = 10;
+  	
+  	List<CategoryDTO> lista = categoryService.findAllPage(PageRequest.of(page, size));
+  	
+  	Page<CategoryDTO> pages = new PageImpl<CategoryDTO>(lista, pageable, lista.size());
+  	/***
+  	 * Valores positivos
+  	 */
+  	if(page < 0) {
+  		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+  	  			.body("localhost:8080/categories/pageable?page=0");
+  	}
+
+  	if(page >= 0 && (pages.getNumberOfElements() != 0)) {
+  		return ResponseEntity.ok().body(pages);
+  	}
+
+  	return ResponseEntity.status(HttpStatus.NOT_FOUND)
+  			.body("localhost:8080/categories/?page="+ pages.previousPageable().getPageNumber());
   }
 
 }
