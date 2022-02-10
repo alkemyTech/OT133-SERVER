@@ -11,4 +11,8 @@ public interface CommentService {
     
     Optional<CommentDTO> create(CommentDTO commentDTO);
 
+    CommentDTO findById(String id);
+
+    void delete(String id);
+
 }
