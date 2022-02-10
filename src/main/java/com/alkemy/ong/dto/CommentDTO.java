@@ -1,26 +1,26 @@
 package com.alkemy.ong.dto;
 
-import com.alkemy.ong.entity.News;
-import com.alkemy.ong.entity.User;
-import java.time.LocalDateTime;
+
+import javax.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class CommentDTO {
-    
-    private User user;
-    
-    private String userId;
-    
-    private String body;
-    
-    private News news;
-    
-    private String newsId;
-    
-    LocalDateTime timestamps;
 
-    
+	@NotBlank(message = "No es un valor aceptable")
+	private String userId;
+	
+	@NotBlank(message = "No es un valor aceptable")
+	private String body;
+	
+	@NotBlank(message = "No es un valor aceptable")
+	private String newId;
+
 }
