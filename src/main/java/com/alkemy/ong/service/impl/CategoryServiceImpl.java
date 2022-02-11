@@ -1,7 +1,10 @@
 package com.alkemy.ong.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.entity.Category;
 import com.alkemy.ong.exception.CategoryException;
@@ -9,6 +12,8 @@ import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -74,4 +79,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
   }
+  	/***
+  	 * Lo que se hace es pasarle al obj Pageable result el número de pagina y el tamaño del pageable que se recibe como argumento.
+  	 * De esta manera retornamos por medio del respository la lista convertida en Entity a DTO
+  	 * @author Mauro
+  	 */
+	@Override
+	public List<CategoryDTO> findAllPage(Pageable pageable) {
+		
+		Pageable result = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+		
+		return categoryRepository.findAll(result).getContent().stream().map(this.categoryMapper::categoryEntity2DTO)
+				.collect(Collectors.toList());
+	}
 }

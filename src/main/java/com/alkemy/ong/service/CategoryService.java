@@ -1,7 +1,10 @@
 package com.alkemy.ong.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.data.domain.Pageable;
 
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.exception.CategoryException;
@@ -19,4 +22,6 @@ public interface CategoryService {
     void delete(String id);
     
     Optional<CategoryDTO> updateCategory(CategoryDTO categoryDTO, UUID id);
+    
+    List<CategoryDTO> findAllPage(Pageable pageable);
 }
