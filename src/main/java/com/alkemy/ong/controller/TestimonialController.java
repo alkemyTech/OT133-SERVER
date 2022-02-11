@@ -1,7 +1,10 @@
 package com.alkemy.ong.controller;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialIDDTO;
 import com.alkemy.ong.service.TestimonialService;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+
 @RestController
 @RequestMapping("/testimonials")
 public class TestimonialController extends BaseController {
@@ -36,9 +40,31 @@ public class TestimonialController extends BaseController {
   // --------------------------------------------------------------------------------------------
 
   @GetMapping(produces = "application/json")
-  public ResponseEntity<List<TestimonialDTO>> read(@RequestParam(required = false) Integer page) {
+  public ResponseEntity<?> read(@RequestParam(required = false) Integer page) {
 
-    return ResponseEntity.ok(testimonialService.read(page));
+    List<TestimonialDTO> currentPage = testimonialService.read(page);
+    Map<String, Object> responseData = new HashMap<>();
+
+    if (Objects.isNull(page)) {
+      return ResponseEntity.ok(currentPage);
+    }
+
+    boolean hasNext = !testimonialService.read(page + 1).isEmpty();
+    String currentContextPath = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
+
+    if (hasNext) {
+      String nextPath = String.format("/testimonials?page=%d", page + 1);
+      responseData.put("next", currentContextPath.concat(nextPath));
+    }
+
+    if (page > 0) {
+      String previousPath = String.format("/testimonials?page=%d", page - 1);
+      responseData.put("previous", currentContextPath.concat(previousPath));
+    }
+
+    responseData.put("content", currentPage);
+
+    return ResponseEntity.ok(responseData);
   }
 
   // --------------------------------------------------------------------------------------------
