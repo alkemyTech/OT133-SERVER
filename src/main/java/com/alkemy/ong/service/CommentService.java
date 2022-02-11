@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.alkemy.ong.dto.CommentDTO;
 import com.alkemy.ong.entity.Comment;
+import com.alkemy.ong.exception.CommentException;
 
 public interface CommentService {
 
@@ -14,5 +15,6 @@ public interface CommentService {
     CommentDTO findById(String id);
 
     void delete(String id);
-
+    
+    List<CommentDTO> getAllComments(String id) throws CommentException;
 }
