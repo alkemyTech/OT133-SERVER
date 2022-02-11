@@ -6,12 +6,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import com.alkemy.ong.dto.CategoryDTO;
+import com.alkemy.ong.entity.Category;
 import com.alkemy.ong.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.LinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/categories")
@@ -100,20 +104,25 @@ public class CategoryController {
   	List<CategoryDTO> lista = categoryService.findAllPage(PageRequest.of(page, size));
   	
   	Page<CategoryDTO> pages = new PageImpl<CategoryDTO>(lista, pageable, lista.size());
+  	
   	/***
   	 * Valores positivos
   	 */
   	if(page < 0) {
   		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-  	  			.body("localhost:8080/categories/pageable?page=0");
+  	  			.body(ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()
+  	  					+"/categories/?page=0");
   	}
 
   	if(page >= 0 && (pages.getNumberOfElements() != 0)) {
   		return ResponseEntity.ok().body(pages);
   	}
-
+  	
+  	
   	return ResponseEntity.status(HttpStatus.NOT_FOUND)
-  			.body("localhost:8080/categories/?page="+ pages.previousPageable().getPageNumber());
+  			.body(ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()
+  					+"/categories/?page="+pages.previousPageable().getPageNumber());
   }
+
 
 }
