@@ -7,6 +7,9 @@ import java.util.Optional;
 import java.util.UUID;
 import com.alkemy.ong.dto.CategoryDTO;
 import com.alkemy.ong.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,96 +33,126 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("/categories")
 public class CategoryController {
 
-  @Autowired
-  CategoryService categoryService;
+    @Autowired
+    CategoryService categoryService;
 
-  @PostMapping
-  public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO category) throws Exception {
+    @PostMapping
+    @Operation(summary = "Create Category")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201",
+                description = "Category created")
+        ,
+      @ApiResponse(responseCode = "403",
+                description = "Forbidden, " + "you can not access")
+    })
+    public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO category) throws Exception {
 
-    try {
-      CategoryDTO categorySaved = categoryService.create(category);
-      return ResponseEntity.status(HttpStatus.CREATED).body(categorySaved);
-    } catch (Exception e) {
-      System.out.println(e);
-      return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
+        try {
+            CategoryDTO categorySaved = categoryService.create(category);
+            return ResponseEntity.status(HttpStatus.CREATED).body(categorySaved);
+        } catch (Exception e) {
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
+        }
+
     }
 
-  }
-
-  @PreAuthorize("ROL_ADMIN")
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable String id) {
-    if (categoryService.findById(id) == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    @Operation(summary = "Delete Category")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204",
+                description = "Category deleted")
+        ,
+      @ApiResponse(responseCode = "403",
+                description = "Forbidden, " + "you can not access")
+        ,
+      @ApiResponse(responseCode = "404",
+                description = "Category not found")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        if (categoryService.findById(id) == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        categoryService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
-    categoryService.delete(id);
-    return ResponseEntity.status(HttpStatus.OK).build();
-  }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<CategoryDTO> getCategoryDetails(@PathVariable String id) {
-    CategoryDTO categoryDetails = categoryService.findCategoryById(id);
-    if (categoryDetails == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDTO> getCategoryDetails(@PathVariable String id) {
+        CategoryDTO categoryDetails = categoryService.findCategoryById(id);
+        if (categoryDetails == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(categoryDetails);
     }
-    return ResponseEntity.status(HttpStatus.OK).body(categoryDetails);
-  }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROL_ADMIN')")
+    @Operation(summary = "Update Category")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+                description = "Action carried " + "out successfully")
+        ,
+      @ApiResponse(responseCode = "403",
+                description = "Forbidden, " + "you can not access")
+        ,
+      @ApiResponse(responseCode = "404",
+                description = "Category not found")
+    })
+    public ResponseEntity<?> updateCategory(@Validated @RequestBody CategoryDTO categoryDTO,
+            @PathVariable UUID id) {
 
-  @PutMapping("/{id}")
-  @PreAuthorize("hasAuthority('ROL_ADMIN')")
-  public ResponseEntity<?> updateCategory(@Validated @RequestBody CategoryDTO categoryDTO,
-      @PathVariable UUID id) {
+        Map<String, Object> response = new HashMap<>();
 
-    Map<String, Object> response = new HashMap<>();
+        Optional<CategoryDTO> optCategoryDTO = this.categoryService.updateCategory(categoryDTO, id);
 
-    Optional<CategoryDTO> optCategoryDTO = this.categoryService.updateCategory(categoryDTO, id);
-
-    if (!optCategoryDTO.isPresent()) {
-      response.put("Error", String.format("Category with ID %s not found.", id));
-      return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    } else {
-      response.put("ok", optCategoryDTO);
-      return ResponseEntity.ok(response);
+        if (!optCategoryDTO.isPresent()) {
+            response.put("Error", String.format("Category with ID %s not found.", id));
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        } else {
+            response.put("ok", optCategoryDTO);
+            return ResponseEntity.ok(response);
+        }
     }
-  }
-  
-  /***
-   * Se crea una lista y se le pasa la lista del service con los datos del pageable que se recibe, 
-   * el size se le pasa 10 ya que es un requerimiento.
-   * Luego por medio del PageImpl pasa la lista a Page.
-   * Nos aseguramos que no cargue paginas con sin contenido, si esta vacía devuelve la url de la pagina anterior. 
-   * @author Mauro
-   */
-  @GetMapping
-  @PreAuthorize("hasAuthority('ROL_USER')")
-  public ResponseEntity<?> findAllPage(Pageable pageable){
-  	
-  	int page = pageable.getPageNumber();
-  	final int size = 10;
-  	
-  	List<CategoryDTO> lista = categoryService.findAllPage(PageRequest.of(page, size));
-  	
-  	Page<CategoryDTO> pages = new PageImpl<CategoryDTO>(lista, pageable, lista.size());
-  	
-  	/***
-  	 * Valores positivos
-  	 */
-  	if(page < 0) {
-  		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-  	  			.body(ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()
-  	  					+"/categories/?page=0");
-  	}
 
-  	if(page >= 0 && (pages.getNumberOfElements() != 0)) {
-  		return ResponseEntity.ok().body(pages);
-  	}
-  	
-  	
-  	return ResponseEntity.status(HttpStatus.NOT_FOUND)
-  			.body(ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()
-  					+"/categories/?page="+pages.previousPageable().getPageNumber());
-  }
+    /**
+     * *
+     * Se crea una lista y se le pasa la lista del service con los datos del
+     * pageable que se recibe, el size se le pasa 10 ya que es un requerimiento.
+     * Luego por medio del PageImpl pasa la lista a Page. Nos aseguramos que no
+     * cargue paginas con sin contenido, si esta vacía devuelve la url de la
+     * pagina anterior.
+     *
+     * @author Mauro
+     */
+    @GetMapping
+    @PreAuthorize("hasAuthority('ROL_USER')")
+    public ResponseEntity<?> findAllPage(Pageable pageable) {
 
+        int page = pageable.getPageNumber();
+        final int size = 10;
+
+        List<CategoryDTO> lista = categoryService.findAllPage(PageRequest.of(page, size));
+
+        Page<CategoryDTO> pages = new PageImpl<CategoryDTO>(lista, pageable, lista.size());
+
+        /**
+         * *
+         * Valores positivos
+         */
+        if (page < 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()
+                            + "/categories/?page=0");
+        }
+
+        if (page >= 0 && (pages.getNumberOfElements() != 0)) {
+            return ResponseEntity.ok().body(pages);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()
+                        + "/categories/?page=" + pages.previousPageable().getPageNumber());
+    }
 
 }
