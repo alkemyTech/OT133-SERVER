@@ -74,7 +74,7 @@ public class CommentController extends BaseController {
        List<CommentDTO>commentDTOList=commentService.getAllComments(id);
        return (ResponseEntity.status(HttpStatus.OK).body(commentDTOList));
      }catch (CommentException e){
-       return (ResponseEntity.status(HttpStatus.OK).body(e.getMessage()));
+       return (ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()));
      }
   }
 
