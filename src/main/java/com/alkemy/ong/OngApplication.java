@@ -66,6 +66,9 @@ public class OngApplication implements CommandLineRunner {
     // Comment
     createCommentIfNotExists("NoBodyA");
     createCommentIfNotExists("NoBodyB");
+    createCommentIfNotExists("NoBodyC");
+    createCommentIfNotExists("NoBodyD");
+    
     
     if (contactRepository.count() == 0) {
       Contact contactOne = new Contact();

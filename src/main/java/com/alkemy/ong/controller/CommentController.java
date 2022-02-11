@@ -1,5 +1,6 @@
 package com.alkemy.ong.controller;
 
+import com.alkemy.ong.exception.CommentException;
 import com.alkemy.ong.service.CommentService;
 import com.alkemy.ong.dto.CommentDTO;
 import com.alkemy.ong.entity.Comment;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -26,7 +29,7 @@ public class CommentController extends BaseController {
     @Autowired
     private CommentService commentService;
     
-    @PreAuthorize("hasAuthority('ROL_ADMIN')")
+   @PreAuthorize("hasAuthority('ROL_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         if (commentService.findById(id) == null) {
@@ -64,5 +67,15 @@ public class CommentController extends BaseController {
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(commentSaved);
 	}
+
+  @GetMapping("/posts/{id}/comments")
+  public ResponseEntity<?> findAll(@PathVariable("id") String id) throws CommentException {
+     try {
+       List<CommentDTO>commentDTOList=commentService.getAllComments(id);
+       return (ResponseEntity.status(HttpStatus.OK).body(commentDTOList));
+     }catch (CommentException e){
+       return (ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()));
+     }
+  }
 
 }
