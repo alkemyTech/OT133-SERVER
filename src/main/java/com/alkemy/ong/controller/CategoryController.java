@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import com.alkemy.ong.dto.CategoryDTO;
+import com.alkemy.ong.messages.DocumentationMessages;
 import com.alkemy.ong.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,13 +38,13 @@ public class CategoryController {
     CategoryService categoryService;
 
     @PostMapping
-    @Operation(summary = "Create Category")
+    @Operation(summary = DocumentationMessages.CATEGORY_CONTROLLER_SUMMARY_CREATE)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201",
-                description = "Category created")
+                description = DocumentationMessages.CATEGORY_CONTROLLER_RESPONSE_201_DESCRIPTION)
         ,
       @ApiResponse(responseCode = "403",
-                description = "Forbidden, " + "you can not access")
+                description = DocumentationMessages.CATEGORY_CONTROLLER_RESPONSE_403_DESCRIPTION)
     })
     public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO category) throws Exception {
 
@@ -57,18 +58,18 @@ public class CategoryController {
 
     }
 
-    @Operation(summary = "Delete Category")
+    @DeleteMapping("/{id}")
+    @Operation(summary = DocumentationMessages.CATEGORY_CONTROLLER_SUMMARY_DELETE)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204",
-                description = "Category deleted")
+                description = DocumentationMessages.CATEGORY_CONTROLLER_RESPONSE_204_DESCRIPTION)
         ,
       @ApiResponse(responseCode = "403",
-                description = "Forbidden, " + "you can not access")
+                description = DocumentationMessages.CATEGORY_CONTROLLER_RESPONSE_403_DESCRIPTION)
         ,
       @ApiResponse(responseCode = "404",
-                description = "Category not found")
+                description = DocumentationMessages.CATEGORY_CONTROLLER_RESPONSE_404_DESCRIPTION)
     })
-    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         if (categoryService.findById(id) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -88,16 +89,16 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROL_ADMIN')")
-    @Operation(summary = "Update Category")
+    @Operation(summary = DocumentationMessages.CATEGORY_CONTROLLER_SUMMARY_UPDATE)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200",
-                description = "Action carried " + "out successfully")
+                description = DocumentationMessages.CATEGORY_CONTROLLER_RESPONSE_200_DESCRIPTION)
         ,
       @ApiResponse(responseCode = "403",
-                description = "Forbidden, " + "you can not access")
+                description = DocumentationMessages.CATEGORY_CONTROLLER_RESPONSE_403_DESCRIPTION)
         ,
       @ApiResponse(responseCode = "404",
-                description = "Category not found")
+                description = DocumentationMessages.CATEGORY_CONTROLLER_RESPONSE_404_DESCRIPTION)
     })
     public ResponseEntity<?> updateCategory(@Validated @RequestBody CategoryDTO categoryDTO,
             @PathVariable UUID id) {
