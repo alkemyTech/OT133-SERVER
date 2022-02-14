@@ -110,6 +110,7 @@ public class DocumentationMessages {
 
     public static final String MEMBER_CONTROLLER_RESPONSE_404_DESCRIPTION = "Member not found";
     
+    public static final String MEMBER_CONTROLLER_RESPONSE_409_DESCRIPTION = "Internal conflict.";
     //NEWS
     
     public static final String NEWS_CONTROLLER = "News Controller";
