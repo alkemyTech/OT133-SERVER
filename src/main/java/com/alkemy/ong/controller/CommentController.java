@@ -2,6 +2,7 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.exception.CommentException;
 import com.alkemy.ong.service.CommentService;
+import com.alkemy.ong.dto.CommentBodyDTO;
 import com.alkemy.ong.dto.CommentDTO;
 import com.alkemy.ong.entity.Comment;
 import com.alkemy.ong.service.CommentService;
@@ -38,21 +39,6 @@ public class CommentController extends BaseController {
         commentService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-    @GetMapping
-    @PreAuthorize("hasAuthority('ROL_ADMIN')")
-    public ResponseEntity<Object> getAll(){
-        try {
-            List<Comment> comments = StreamSupport.stream(commentService.findAllBody().spliterator(), false).
-            collect(Collectors.toList());
-            return ResponseEntity.ok(comments);
-        } catch (Exception e){
-            Map<String, Object> response = new HashMap<>();
-            response.put("Exception: " + e.getLocalizedMessage(), HttpStatus.CONFLICT);
-            return ResponseEntity.badRequest().body(response);
-        }
-        
-    }
     
     
     @PreAuthorize("hasAuthority('ROL_USER')")
@@ -78,4 +64,27 @@ public class CommentController extends BaseController {
      }
   }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROL_USER') or hasAuthority('ROL_ADMIN')")
+    public ResponseEntity<?> modifyComment(@PathVariable String id, @RequestBody CommentDTO commentModifications){
+        Integer status = commentService.validateUser(id);
+        if(HttpStatus.valueOf(status).equals(HttpStatus.OK)){ 
+            CommentDTO commentUpdated = commentService.updateComment(commentModifications, id);
+            return ResponseEntity.ok(commentUpdated);
+        } else return ResponseEntity.status(status).body("Exception");
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAuthority('ROL_ADMIN')")
+    public ResponseEntity<Object> bringAll(){
+        try {
+            List<CommentBodyDTO> comments = commentService.bringCommentsBodies();
+            return ResponseEntity.ok(comments);
+        } catch (Exception e){
+            Map<String, Object> response = new HashMap<>();
+            response.put("Exception: " + e.getLocalizedMessage(), HttpStatus.CONFLICT);
+            return ResponseEntity.badRequest().body(response);
+        }
+        
+    }
 }

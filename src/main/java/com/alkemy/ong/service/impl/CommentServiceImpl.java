@@ -5,11 +5,14 @@ import java.util.List;
 
 import com.alkemy.ong.entity.Comment;
 import com.alkemy.ong.entity.News;
+import com.alkemy.ong.entity.Rol;
+import com.alkemy.ong.enums.Roles;
 import com.alkemy.ong.exception.CategoryException;
 import com.alkemy.ong.exception.CommentException;
 import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.service.CommentService;
+import com.alkemy.ong.dto.CommentBodyDTO;
 import com.alkemy.ong.dto.CommentDTO;
 import com.alkemy.ong.mapper.CommentMapper;
 import com.alkemy.ong.service.NewService;
@@ -17,7 +20,10 @@ import com.alkemy.ong.service.UserService;
 
 import java.util.Optional;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,11 +47,6 @@ public class CommentServiceImpl implements CommentService {
 
   @Autowired
   private NewsRepository newsRepository;
-
-  @Override
-  public List<Comment> findAllBody() {
-    return repository.findAllBody();
-  }
 
   @Override
   public Optional<CommentDTO> create(CommentDTO commentDTO) {
@@ -88,7 +89,51 @@ public class CommentServiceImpl implements CommentService {
       }
       return commentDTOList;
     }
+
+    @Override
+    public CommentDTO updateComment(CommentDTO commentDTO, String id){
+        Comment comment = commentRepository.getById(id);
+        comment.setBody(commentDTO.getBody());
+        commentRepository.save(comment);
+        CommentDTO response = commentMapper.toCommentDTO(comment);
+        return response;
+    }
+
+    @Override
+    public Integer validateUser(String commentId){
+
+        if(commentRepository.existsById(commentId)){
+
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+
+            List<Rol> roles = userService.getByEmail(securityContext.getAuthentication().getName()).get().getRoles();
+            for(Rol rol : roles){
+                if (rol.getName().equals(Roles.ROL_ADMIN))
+                    return HttpStatus.SC_OK;
+            }
+
+            String userId = userService.getByEmail(securityContext.getAuthentication().getName() /* EMAIL */).get().getId();
+            Comment comment = commentRepository.getById(commentId);
+            if(comment.getUserId().equals(userId)) {
+                return HttpStatus.SC_OK;
+            } 
+
+            return HttpStatus.SC_FORBIDDEN; //403
+
+        }
+
+        return HttpStatus.SC_NOT_FOUND; //404
+    }
   
+    @Override
+    public List<CommentBodyDTO> bringCommentsBodies(){
+        List<Comment> comments = repository.findAll();
+        List<CommentBodyDTO> commentsBodies = new ArrayList<>();
+        for (Comment c : comments){
+            commentsBodies.add(commentMapper.commentToBody(c));
+        }
+        return commentsBodies;
+    }
 
 
 }
