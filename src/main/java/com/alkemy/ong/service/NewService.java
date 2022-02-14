@@ -8,11 +8,13 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface NewService {
-    NewDTO save(NewDTO dto);
+  NewDTO save(NewDTO dto);
 
-	News getById(String id);
-	
-	boolean existsById(String id);
+  News getById(String id);
+
+  boolean existsById(String id);
 
   List<NewDTO> getAllByPage(Integer page);
+
+  void delete(String id);
 }
