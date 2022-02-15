@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -108,7 +110,7 @@ public class TestimonialController extends BaseController {
     @ApiResponse(responseCode = "200",
     description = DocumentationMessages.TESTIMONIAL_CONTROLLER_RESPONSE_200_DESCRIPTION),
   })
-  public ResponseEntity<TestimonialDTO> update(@PathVariable String id,
+  public ResponseEntity<TestimonialDTO> update(@Parameter(description = "Id of the testimonial to modify")@PathVariable String id,
       @Validated @RequestBody TestimonialDTO testimonial) {
     return ResponseEntity.ok(testimonialService.update(id, testimonial));
   }
@@ -126,7 +128,7 @@ public class TestimonialController extends BaseController {
     @ApiResponse(responseCode = "400",
     description = DocumentationMessages.TESTIMONIAL_CONTROLLER_RESPONSE_400_DESCRIPTION)
   })
-  public ResponseEntity<Void> delete(@PathVariable String id) {
+  public ResponseEntity<Void> delete(@Parameter(description = "Id of the testimonial to delete")@PathVariable String id) {
     if (testimonialService.findById(id) == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
