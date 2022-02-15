@@ -18,30 +18,30 @@ import java.util.List;
 public class NewServiceImpl implements NewService {
 
   private static final int PAGE_SIZE = 10;
-  
-	@Autowired
-	NewMapper newMapper;
 
-	@Autowired
-	NewsRepository newsRepository;
+  @Autowired
+  NewMapper newMapper;
 
-	public NewDTO save(NewDTO dto) {
-		News news = newMapper.newDTO2Entity(dto);
-		News newSave = newsRepository.save(news);
-		NewDTO result = newMapper.entity2newDTO(newSave);
-		return result;
+  @Autowired
+  NewsRepository newsRepository;
 
-	}
+  public NewDTO save(NewDTO dto) {
+    News news = newMapper.newDTO2Entity(dto);
+    News newSave = newsRepository.save(news);
+    NewDTO result = newMapper.entity2newDTO(newSave);
+    return result;
 
-	@Override
-	public News getById(String id) {
-		return newsRepository.getById(id);
-	}
+  }
 
-	@Override
-	public boolean existsById(String id) {
-		return newsRepository.existsById(id);
-	}
+  @Override
+  public News getById(String id) {
+    return newsRepository.getById(id);
+  }
+
+  @Override
+  public boolean existsById(String id) {
+    return newsRepository.existsById(id);
+  }
 
   @Override
   public List<NewDTO> getAllByPage(Integer page) {
@@ -50,5 +50,11 @@ public class NewServiceImpl implements NewService {
     List<News> news = pageNews.getContent();
     List<NewDTO> dtos = newMapper.entityList2newDTOList(news);
     return dtos;
+  }
+
+
+  @Override
+  public void delete(String id) {
+    newsRepository.deleteById(id);
   }
 }
