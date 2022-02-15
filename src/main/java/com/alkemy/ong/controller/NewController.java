@@ -107,13 +107,10 @@ public class NewController {
       description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_404_DESCRIPTION)
   })
   public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody NewDTO newDto){
-    System.out.println(id);
+    
     if(!newService.existsById(id)) {
       return new ResponseEntity<>("No existe", HttpStatus.NOT_FOUND);
     }
-    System.out.println(id);
-    System.out.println(newDto.toString());
-
     News news = newService.getById(id);
     news.setName(newDto.getName());
     news.setImage(newDto.getImage());
