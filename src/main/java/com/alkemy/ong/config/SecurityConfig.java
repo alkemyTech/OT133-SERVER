@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Seteo de session management a stateless
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-    .authorizeRequests().antMatchers(HttpMethod.GET,"/**").hasAuthority("ROL_ADMIN")
+    .authorizeRequests().antMatchers(HttpMethod.GET,"/**").hasAnyAuthority("ROL_ADMIN", "ROL_USER")
     					.antMatchers(HttpMethod.POST, "/**").hasAuthority("ROL_ADMIN")
     					.antMatchers(HttpMethod.PUT, "/**").hasAuthority("ROL_ADMIN")
     					.antMatchers(HttpMethod.DELETE, "/**").hasAuthority("ROL_ADMIN")
