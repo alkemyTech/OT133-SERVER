@@ -16,8 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 
 
 @RestController
@@ -37,10 +39,13 @@ public class NewController {
     @ApiResponse(responseCode = "201",
       description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_201_DESCRIPTION)
     ,
+    @ApiResponse(responseCode = "401",
+      description = "OPSss")
+    ,
     @ApiResponse(responseCode = "403",
       description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_403_DESCRIPTION)
   })
-  public ResponseEntity<NewDTO> save(NewDTO dto) {
+  public ResponseEntity<NewDTO> save(@Valid NewDTO dto) {
     return ResponseEntity.status(HttpStatus.CREATED).body(newService.save(dto));
   }
 
@@ -91,20 +96,23 @@ public class NewController {
       return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
   }
+  
+  
   // actualizacion
   @PutMapping("/{id}")
   @PreAuthorize("hasRole('ROL_ADMIN')")
-  @GetMapping("/page/{page}")
   @Operation(summary = DocumentationMessages.NEWS_CONTROLLER_SUMMARY_UPDATE,description = DocumentationMessages.NEWS_CONTROLLER_SUMMARY_UPDATE_DESCRIPTION)
   @ApiResponses(value = {
     @ApiResponse(responseCode = "404",
       description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_404_DESCRIPTION)
   })
   public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody NewDTO newDto){
-
+    System.out.println(id);
     if(!newService.existsById(id)) {
       return new ResponseEntity<>("No existe", HttpStatus.NOT_FOUND);
     }
+    System.out.println(id);
+    System.out.println(newDto.toString());
 
     News news = newService.getById(id);
     news.setName(newDto.getName());
@@ -116,10 +124,11 @@ public class NewController {
 
     return new ResponseEntity(HttpStatus.OK);
   }
+  
+  
   //delete
   @DeleteMapping("/{id}")
   @PreAuthorize("hasRole('ROL_ADMIN')")
-  @GetMapping("/page/{page}")
   @Operation(summary = DocumentationMessages.NEWS_CONTROLLER_SUMMARY_DELETE,description = DocumentationMessages.NEWS_CONTROLLER_SUMMARY_DELETE_DESCRIPTION)
   @ApiResponses(value = {
     @ApiResponse(responseCode = "200",

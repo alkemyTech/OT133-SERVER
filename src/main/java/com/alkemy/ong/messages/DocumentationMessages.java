@@ -151,11 +151,11 @@ public class DocumentationMessages {
 
   public static final String NEWS_CONTROLLER_RESPONSE_201_DESCRIPTION = "News created";
 
-  public static final String NEWS_CONTROLLER_RESPONSE_204_DESCRIPTION = "News deleted";
+  public static final String NEWS_CONTROLLER_RESPONSE_204_DESCRIPTION = "News deleted ";
 
-  public static final String NEWS_CONTROLLER_RESPONSE_400_DESCRIPTION = "Bad Request";
+  public static final String NEWS_CONTROLLER_RESPONSE_400_DESCRIPTION = "Bad Request ";
 
-  public static final String NEWS_CONTROLLER_RESPONSE_403_DESCRIPTION = "Forbidden";
+  public static final String NEWS_CONTROLLER_RESPONSE_403_DESCRIPTION = "Forbidden ";
 
   public static final String NEWS_CONTROLLER_RESPONSE_404_DESCRIPTION = "Not Found"
     + "you can not access";
