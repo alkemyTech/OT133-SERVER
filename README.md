@@ -2,6 +2,14 @@
 
 ## Docs
 
+### Swagger
+
+To display the Swagger documentation use the endpoint:
+
+```
+/swagger-ui/#
+```
+
 ### Users
 
 | E-mail                    | password |  rol  |
