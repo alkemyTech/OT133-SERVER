@@ -69,14 +69,21 @@ public class TestimonialControllerTest {
 
   @Test
   @WithUserDetails("admin@alkemy.org")
-  void whenGet_andLoggedIn_thenOk() throws Exception {
+  void whenGets_andAdminLoggedIn_thenOk() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get(route))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  @WithUserDetails("user@mail.com")
+  void whenGets_andUserLoggedIn_thenOk() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get(route))
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
   @WithUserDetails("admin@alkemy.org")
-  void wheGet_aValidPage_thenOk() throws Exception {
+  void whenGet_aValidPage_thenOk() throws Exception {
 
     mockMvc.perform(MockMvcRequestBuilders.get(route.concat("?page=0")))
         .andExpect(MockMvcResultMatchers.status().isOk());
