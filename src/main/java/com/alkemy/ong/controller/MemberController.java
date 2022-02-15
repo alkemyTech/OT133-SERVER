@@ -2,13 +2,24 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.MemberDTO;
 import com.alkemy.ong.exception.MemberException;
+import com.alkemy.ong.messages.DocumentationMessages;
 import com.alkemy.ong.service.MemberService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
@@ -24,25 +35,46 @@ public class MemberController {
 
   @PreAuthorize("hasAuthority('ROL_ADMIN')")
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable String id) {
+  @Operation(summary = DocumentationMessages.MEMBER_CONTROLLER_SUMMARY_DELETE)
+  @ApiResponses(value = {
+		  @ApiResponse(responseCode = "204", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_204_DESCRIPTION),
+		  @ApiResponse(responseCode = "403", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_403_DESCRIPTION),
+		  @ApiResponse(responseCode = "404", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_404_DESCRIPTION)
+  })
+  public ResponseEntity<Void> delete(@Parameter(description = "Id of the member to delete.") @PathVariable String id) {
     if (memberService.findById(id) == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
     memberService.delete(id);
-    return ResponseEntity.status(HttpStatus.OK).build();
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
   @PreAuthorize("hasAuthority('ROL_USER')")
   @PutMapping("/{id}")
-  public ResponseEntity<MemberDTO> update(@PathVariable String id, @Valid @RequestBody MemberDTO dto) {
+  @Operation(summary = DocumentationMessages.MEMBER_CONTROLLER_SUMMARY_UPDATE)
+  @ApiResponses(value = {
+		  @ApiResponse(responseCode = "200", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_200_DESCRIPTION),
+		  @ApiResponse(responseCode = "400", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_400_DESCRIPTION),
+		  @ApiResponse(responseCode = "403", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_403_DESCRIPTION),
+		  @ApiResponse(responseCode = "404", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_404_DESCRIPTION)
+  })
+  public ResponseEntity<MemberDTO> update(@Parameter(description = "Id of the member to update.") 
+  											@PathVariable String id, 
+  											@Valid @RequestBody MemberDTO dto) {
+	  
     if (memberService.findById(id) == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
     return ResponseEntity.status(HttpStatus.OK).body(memberService.update(id, dto));
   }
   
   @GetMapping
   @PreAuthorize("hasAuthority('ROL_ADMIN')")
+  @Operation(summary = DocumentationMessages.MEMBER_CONTROLLER_SUMMARY_LIST)
+  @ApiResponses(value = {
+		  @ApiResponse(responseCode = "200", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_200_DESCRIPTION),
+		  @ApiResponse(responseCode = "403", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_403_DESCRIPTION),
+  })
   public ResponseEntity<List<MemberDTO>> listAll(){
     List<MemberDTO> memberList = memberService.listAllMember();
     return ResponseEntity.status(HttpStatus.OK).body(memberList);
@@ -50,6 +82,12 @@ public class MemberController {
   
   @PostMapping
   @PreAuthorize("hasAuthority('ROL_USER')")
+  @Operation(summary = DocumentationMessages.MEMBER_CONTROLLER_SUMMARY_CREATE)
+  @ApiResponses(value = {
+		  @ApiResponse(responseCode = "201", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_201_DESCRIPTION),
+		  @ApiResponse(responseCode = "400", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_400_DESCRIPTION),
+		  @ApiResponse(responseCode = "409", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_409_DESCRIPTION),
+  })
   public ResponseEntity<Object> createMember(@Validated @RequestBody MemberDTO memberDTO) throws MemberException, IOException{
     try{
       MemberDTO member = memberService.save(memberDTO); 
@@ -61,14 +99,21 @@ public class MemberController {
   
   
   @GetMapping("/page/{page}")
-  public ResponseEntity<?> getPaginated(@PathVariable Integer page){
+  @Operation(summary = DocumentationMessages.MEMBER_CONTROLLER_SUMMARY_LIST)
+  @ApiResponses(value = {
+		  @ApiResponse(responseCode = "200", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_200_DESCRIPTION)
+  })
+  public ResponseEntity<?> getPaginated(@Parameter(description = "Page number to get members.", example = "0") 
+  										@PathVariable Integer page){
+	  
 	  Map<String, Object> response = new HashMap<>();
+	  String currentContextPath = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
 	  if(page > 0) {
-		 response.put("url previus", String.format("localhost:8080/members/page/%d", page - 1 ));
+		 response.put("url previus", currentContextPath.concat(String.format("/page/%d", page - 1)));
 	  }
 	  
 	  if(!this.memberService.getPaginated(page + 1).isEmpty()) {
-			 response.put("url next", String.format("localhost:8080/members/page/%d", page + 1 ));
+		  response.put("url next", currentContextPath.concat(String.format("/page/%d", page + 1)));
 	  }
 	  
 	  response.put("ok", this.memberService.getPaginated(page));
