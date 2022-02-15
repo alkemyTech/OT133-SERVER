@@ -6,10 +6,12 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Schema(description = "TestimonialDTO")
 public class TestimonialDTO {
 
@@ -30,4 +32,5 @@ public class TestimonialDTO {
 
   @Schema(description = "Creation date", required = false)
   LocalDateTime timestamps;
+
 }
