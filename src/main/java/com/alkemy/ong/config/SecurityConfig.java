@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,6 +20,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.savedrequest.NullRequestCache;
 
 @Configuration
 @EnableWebSecurity
@@ -40,10 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Value("${security.token.validator-secret}")
   private String tokenSecret;
+  
+  @Autowired
+  private RESTAuthenticationEntryPoint authenticationEntryPoint;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-
+	  try {
     TokenValidator tokenValidator = new TokenValidator(tokenSecret);
 
     // Set Filter URL
@@ -52,21 +57,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     tokenAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
     // Habilita CORS y desactiva CSRF
-    http.cors().and().csrf().disable();
+    http.cors().and()
+    .csrf().disable();
 
     // Seteo de session management a stateless
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+    .authorizeRequests().antMatchers(HttpMethod.GET,"/**").hasAnyAuthority("ROL_ADMIN", "ROL_USER")
+    					.antMatchers(HttpMethod.POST, "/**").hasAuthority("ROL_ADMIN")
+    					.antMatchers(HttpMethod.PUT, "/**").hasAuthority("ROL_ADMIN")
+    					.antMatchers(HttpMethod.DELETE, "/**").hasAuthority("ROL_ADMIN")
+    					.and()
+	.requestCache().requestCache(new NullRequestCache()).and()
+	.httpBasic().authenticationEntryPoint(authenticationEntryPoint).and()
+	.cors().and()
+	.csrf().disable();
+    
+        
     // Permitir todo en /**/auth/**
     http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().anyRequest()
         // El Resto de las rutas, requeriran autenticación
         .authenticated();
 
+    
     // Add JWT Token Authorization filter
     http.addFilterBefore(new TokenAuthorizationFilter(tokenValidator),
         UsernamePasswordAuthenticationFilter.class);
+    
     // Add JWT Token Authentication filter
     http.addFilter(tokenAuthenticationFilter);
+    
+    
+	} catch (Exception ex) {
+		ex.getMessage();
+	}
+
+    
+    
   }
 
   @Override
