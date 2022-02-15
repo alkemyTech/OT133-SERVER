@@ -8,6 +8,7 @@ import java.util.Objects;
 import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.dto.TestimonialIDDTO;
 import com.alkemy.ong.service.TestimonialService;
+import com.alkemy.ong.messages.DocumentationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/testimonials")
 public class TestimonialController extends BaseController {
@@ -40,6 +46,11 @@ public class TestimonialController extends BaseController {
   // --------------------------------------------------------------------------------------------
 
   @GetMapping(produces = "application/json")
+  @Operation(summary = DocumentationMessages.TESTIMONIAL_CONTROLLER_SUMMARY_LIST)
+  @ApiResponses( value = { 
+    @ApiResponse(responseCode = "200",
+    description = DocumentationMessages.TESTIMONIAL_CONTROLLER_RESPONSE_200_DESCRIPTION)
+  })
   public ResponseEntity<?> read(@RequestParam(required = false) Integer page) {
 
     List<TestimonialDTO> currentPage = testimonialService.read(page);
@@ -73,6 +84,11 @@ public class TestimonialController extends BaseController {
 
   @PreAuthorize("hasAuthority('ROL_ADMIN')")
   @PostMapping(produces = "application/json")
+  @Operation(summary = DocumentationMessages.TESTIMONIAL_CONTROLLER_SUMMARY_CREATE)
+  @ApiResponses( value = { 
+    @ApiResponse(responseCode = "201",
+    description = DocumentationMessages.TESTIMONIAL_CONTROLLER_RESPONSE_201_DESCRIPTION),
+  })
   public ResponseEntity<TestimonialDTO> create(@Validated @RequestBody TestimonialDTO testimonial) {
 
     TestimonialIDDTO dtoObj = testimonialService.create(testimonial);
@@ -89,7 +105,12 @@ public class TestimonialController extends BaseController {
 
   @PreAuthorize("hasAuthority('ROL_ADMIN')")
   @PutMapping(path = "/{id}", produces = "application/json")
-  public ResponseEntity<TestimonialDTO> update(@PathVariable String id,
+  @Operation(summary = DocumentationMessages.TESTIMONIAL_CONTROLLER_SUMMARY_UPDATE)
+  @ApiResponses( value = { 
+    @ApiResponse(responseCode = "200",
+    description = DocumentationMessages.TESTIMONIAL_CONTROLLER_RESPONSE_200_DESCRIPTION),
+  })
+  public ResponseEntity<TestimonialDTO> update(@Parameter(description = "Id of the testimonial to modify")@PathVariable String id,
       @Validated @RequestBody TestimonialDTO testimonial) {
     return ResponseEntity.ok(testimonialService.update(id, testimonial));
   }
@@ -100,7 +121,14 @@ public class TestimonialController extends BaseController {
 
   @PreAuthorize("ROL_ADMIN")
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable String id) {
+  @Operation(summary = DocumentationMessages.TESTIMONIAL_CONTROLLER_SUMMARY_DELETE)
+  @ApiResponses( value = { 
+    @ApiResponse(responseCode = "200",
+    description = DocumentationMessages.TESTIMONIAL_CONTROLLER_RESPONSE_200_DESCRIPTION),
+    @ApiResponse(responseCode = "400",
+    description = DocumentationMessages.TESTIMONIAL_CONTROLLER_RESPONSE_400_DESCRIPTION)
+  })
+  public ResponseEntity<Void> delete(@Parameter(description = "Id of the testimonial to delete")@PathVariable String id) {
     if (testimonialService.findById(id) == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
