@@ -10,6 +10,12 @@ To display the Swagger documentation use the endpoint:
 /swagger-ui/#
 ```
 
+You can also access the JSON documentation:
+
+```
+/v2/api-docs
+```
+
 ### Users
 
 | E-mail                    | password |  rol  |
