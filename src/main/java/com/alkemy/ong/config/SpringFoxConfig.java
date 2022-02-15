@@ -1,5 +1,6 @@
 package com.alkemy.ong.config;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -21,8 +22,10 @@ public class SpringFoxConfig {
   @Bean
   public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
-        .securityContexts(Arrays.asList(securityContext())).securitySchemes(Arrays.asList(apiKey()))
-        .select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.any()).build();
+        .ignoredParameterTypes(Principal.class).securityContexts(Arrays.asList(securityContext()))
+        .securitySchemes(Arrays.asList(apiKey())).select()
+        .apis(RequestHandlerSelectors.basePackage("com.alkemy.ong.controller"))
+        .paths(PathSelectors.any()).build();
   }
 
   /**
@@ -32,8 +35,8 @@ public class SpringFoxConfig {
    * @return an API Info object
    */
   private ApiInfo apiInfo() {
-    return new ApiInfo("OT133-Server", "Alkemy 2022", "v1", "urn:tos", null, "MIT LICENSE",
-        "https://mit-license.org/", Collections.emptyList());
+    return new ApiInfo("OT133-Server", "Alkemy 2022", "v1", "urn:tos", ApiInfo.DEFAULT_CONTACT,
+        "MIT LICENSE", "https://mit-license.org/", Collections.emptyList());
   }
 
   /**
