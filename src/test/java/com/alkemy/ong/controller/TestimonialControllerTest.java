@@ -34,11 +34,23 @@ import org.springframework.web.util.NestedServletException;
 @AutoConfigureMockMvc
 public class TestimonialControllerTest {
 
+  // User with ROL_USER
+  private static final String USER_CREDENTIALS = "user@mail.com";
+
+  // User with ROL_ADMIN
+  private static final String ADMIN_CREDENTIALS = "admin@alkemy.org";
+
   // Testimonial endpoint.
   private static final String route = "/testimonials";
 
   // Base URL from current context path.
   private String baseUrl;
+
+  // DTO for tests
+  private TestimonialDTO dto;
+
+  // Jackson mapper to obtain JSON comparissons
+  private ObjectMapper objectMapper;
 
   @MockBean
   private TestimonialRepository testimonialRepository;
@@ -51,10 +63,6 @@ public class TestimonialControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
-
-  private TestimonialDTO dto;
-
-  private ObjectMapper objectMapper;
 
   @BeforeEach
   void setUp() {
@@ -77,21 +85,21 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenGets_andAdminLoggedIn_thenOk() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get(route))
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
-  @WithUserDetails("user@mail.com")
+  @WithUserDetails(USER_CREDENTIALS)
   void whenGets_andUserLoggedIn_thenOk() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get(route))
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenGet_aValidPage_thenOk() throws Exception {
 
     mockMvc.perform(MockMvcRequestBuilders.get(route.concat("?page=0")))
@@ -99,7 +107,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenGet_anInvalidPage_thenIllegalArgumentException() throws Exception {
 
     // An invalid page is less than zero (0).
@@ -118,7 +126,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenGet_aValidPage_and_notZero_then_containsPrevious_and_isOk() throws Exception {
 
     Integer page = 1;
@@ -131,7 +139,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenGet_aValidPage_and_hasNext_then_containsNext_and_isOk() throws Exception {
 
     Integer page = 1;
@@ -147,7 +155,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenGet_aValidPage_and_doesNot_haveNext_then_doesNot_ContainsNext_and_isOk()
       throws Exception {
 
@@ -166,7 +174,7 @@ public class TestimonialControllerTest {
   // --------------------------------------------------------------------------------------------
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenPost_withNameNull_then_isBadRequest() throws Exception {
 
     dto.setName(null);
@@ -179,7 +187,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenPost_withNameEmpty_then_isBadRequest() throws Exception {
 
     dto.setName("");
@@ -192,7 +200,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenPost_withNameBlank_then_isBadRequest() throws Exception {
 
     dto.setName("                                                ");
@@ -205,7 +213,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenPost_withContentNull_then_isBadRequest() throws Exception {
 
     dto.setContent(null);
@@ -218,7 +226,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenPost_withContentEmpty_then_isBadRequest() throws Exception {
 
     dto.setContent("");
@@ -231,7 +239,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenPost_withContentBlank_then_isBadRequest() throws Exception {
 
     dto.setContent("                               ");
@@ -252,7 +260,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("user@mail.com")
+  @WithUserDetails(USER_CREDENTIALS)
   void whenPost_noAdmin_thenForbidden() throws Exception {
     mockMvc
         .perform(MockMvcRequestBuilders.post(route).content(getJSON(dto))
@@ -261,7 +269,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   @Transactional
   void whenPost_aValidDTO_then_isCreated() throws Exception {
 
@@ -279,6 +287,141 @@ public class TestimonialControllerTest {
   }
 
   // --------------------------------------------------------------------------------------------
+  // Update
+  // --------------------------------------------------------------------------------------------
+
+  @Test
+  void whenPut_notLoggedIn_then_isUnauthorized() throws Exception {
+
+    String givenId = "a-test-ID";
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
+            .content(getJSON(dto)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+  }
+
+  @Test
+  @WithUserDetails(USER_CREDENTIALS)
+  void whenPut_noAdmin_then_isForbidden() throws Exception {
+
+    String givenId = "a-test-ID";
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
+            .content(getJSON(dto)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isForbidden());
+  }
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPut_and_doesNotExists_then_isNotFound() throws Exception {
+
+    String givenId = "a-test-ID";
+
+    Mockito.when(testimonialService.update(givenId, dto)).thenThrow(EntityNotFoundException.class);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
+            .content(getJSON(dto)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @Transactional
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPut_aValidDTO_then_isOK() throws Exception {
+
+    String givenId = "a-test-ID";
+
+    Mockito.when(testimonialService.update(givenId, dto)).thenReturn(dto);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
+            .content(getJSON(dto)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.content().string(getJSON(dto)));
+  }
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPut_withNameNull_then_isBadRequest() throws Exception {
+
+    dto.setName(null);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+            .content(getJSON(dto)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPut_withNameEmpty_then_isBadRequest() throws Exception {
+
+    dto.setName("");
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+            .content(getJSON(dto)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPut_withNameBlank_then_isBadRequest() throws Exception {
+
+    dto.setName("                                                 ");
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+            .content(getJSON(dto)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPut_withContentNull_then_isBadRequest() throws Exception {
+
+    dto.setContent(null);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+            .content(getJSON(dto)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPut_withContentEmpty_then_isBadRequest() throws Exception {
+
+    dto.setContent("");
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+            .content(getJSON(dto)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPut_withContentBlank_then_isBadRequest() throws Exception {
+
+    dto.setContent("                                                 ");
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+            .content(getJSON(dto)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
+  // --------------------------------------------------------------------------------------------
   // Delete
   // --------------------------------------------------------------------------------------------
 
@@ -292,7 +435,7 @@ public class TestimonialControllerTest {
   }
 
   @Test
-  @WithUserDetails("user@mail.com")
+  @WithUserDetails(USER_CREDENTIALS)
   void whenDelete_notAdmin_then_isForbidden() throws Exception {
 
     String givenId = "a-test-ID";
@@ -303,20 +446,19 @@ public class TestimonialControllerTest {
 
   @Test
   @Transactional
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenDelete_and_doesNotExist_then_isNotFound() throws Exception {
 
     String givenId = "a-test-ID";
 
     Mockito.doThrow(EntityNotFoundException.class).when(testimonialService).delete(givenId);
-
     mockMvc.perform(MockMvcRequestBuilders.delete(String.format("%s/%s", route, givenId)))
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
   @Transactional
-  @WithUserDetails("admin@alkemy.org")
+  @WithUserDetails(ADMIN_CREDENTIALS)
   void whenDelete_and_exists_then_isOk() throws Exception {
 
     String givenId = "a-test-ID";
