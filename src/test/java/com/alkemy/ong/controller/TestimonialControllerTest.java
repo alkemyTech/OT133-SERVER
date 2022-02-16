@@ -91,7 +91,7 @@ public class TestimonialControllerTest {
 
   @Test
   @WithUserDetails("admin@alkemy.org")
-  void wheGet_anInvalidPage_thenIllegalArgumentException() throws Exception {
+  void whenGet_anInvalidPage_thenIllegalArgumentException() throws Exception {
 
     // An invalid page is less than zero (0).
     Integer invalidPage = -1;
@@ -110,7 +110,7 @@ public class TestimonialControllerTest {
 
   @Test
   @WithUserDetails("admin@alkemy.org")
-  void wheGet_aValidPage_and_notZero_then_containsPrevious_and_isOk() throws Exception {
+  void whenGet_aValidPage_and_notZero_then_containsPrevious_and_isOk() throws Exception {
 
     Integer page = 1;
 
@@ -123,7 +123,7 @@ public class TestimonialControllerTest {
 
   @Test
   @WithUserDetails("admin@alkemy.org")
-  void wheGet_aValidPage_and_hasNext_then_containsNext_and_isOk() throws Exception {
+  void whenGet_aValidPage_and_hasNext_then_containsNext_and_isOk() throws Exception {
 
     Integer page = 1;
 
