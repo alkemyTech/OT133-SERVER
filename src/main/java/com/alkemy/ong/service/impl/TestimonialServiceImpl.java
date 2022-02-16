@@ -80,7 +80,8 @@ public class TestimonialServiceImpl implements TestimonialService {
   // --------------------------------------------------------------------------------------------
 
   public void delete(String id) {
-    Testimonial testimonial = testimonialRepository.findById(id).get();
+    Testimonial testimonial =
+        testimonialRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     testimonialRepository.delete(testimonial);
   }
 
