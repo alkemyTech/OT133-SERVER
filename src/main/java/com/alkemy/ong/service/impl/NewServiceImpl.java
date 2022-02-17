@@ -104,13 +104,13 @@ public class NewServiceImpl implements NewService {
     
     Optional<Category> category = categoryRepository.findById(newDTO.getCategoryId());
     
-    if (newDTO.getName() == null ||newDTO.getName().isEmpty()) {
+    if (newDTO.getName() == null ||newDTO.getName().isEmpty() ||newDTO.getName().equals(" ")) {
       throw new NewException("Name null or empty.");
     }
-    if (newDTO.getContent() == null||newDTO.getContent().isEmpty()) {
+    if (newDTO.getContent() == null||newDTO.getContent().isEmpty() ||newDTO.getContent().equals(" ")) {
       throw new NewException("Content nulo or empty.");
     }
-    if (newDTO.getImage() == null||newDTO.getImage().isEmpty()) {
+    if (newDTO.getImage() == null||newDTO.getImage().isEmpty() ||newDTO.getImage().equals(" ")) {
       throw new NewException("Image null or empty.");
     }
     if ( !category.isPresent()) {

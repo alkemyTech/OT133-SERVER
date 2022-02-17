@@ -44,7 +44,7 @@ public class NewController {
       description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_404_DESCRIPTION)
   })
   public ResponseEntity<?> save(@RequestBody NewDTO dto) {
-    System.out.println(dto.toString());
+    
     try {
       
       NewDTO newDTOS = newService.save(dto);
@@ -114,7 +114,7 @@ public class NewController {
     @ApiResponse(responseCode = "404",
       description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_404_DESCRIPTION)
   })
-  public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody NewDTO newDto) {
+  public ResponseEntity<?> update(@PathVariable("id") String id,@RequestBody NewDTO newDto) {
 
     try {
       NewDTO newDTOS = newService.update(newDto, id);
@@ -137,7 +137,7 @@ public class NewController {
   })
   public ResponseEntity<?> delete(@PathVariable("id") String id){
     if(!newService.existsById(id)) {
-      return new ResponseEntity("No existe", HttpStatus.NOT_FOUND);
+      return new ResponseEntity("The New id does not exist in the database or is incorrect.", HttpStatus.NOT_FOUND);
     }
     newService.delete(id);
     return new ResponseEntity(HttpStatus.OK);
