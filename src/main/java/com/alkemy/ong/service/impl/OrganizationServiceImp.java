@@ -1,5 +1,6 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationPublicDTO;
 import com.alkemy.ong.dto.SlidePublicDTO;
 import com.alkemy.ong.entity.Slide;
@@ -8,13 +9,15 @@ import com.alkemy.ong.mapper.SlideMapper;
 import com.alkemy.ong.repository.SlideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alkemy.ong.entity.Organization;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.OrganizationService;
 
-import java.util.ArrayList;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 @Service
@@ -30,7 +33,7 @@ public class OrganizationServiceImp implements OrganizationService {
   OrganizationMapper organizationMapper;
 
   @Override
-  public List<OrganizationPublicDTO> readAllDefined() {
+  public List<OrganizationPublicDTO> readAllDefinedPublic() {
     List<OrganizationPublicDTO> listOrganizationPublicDTOS = new ArrayList<>();
     
       //ordenando por id de forma descendente  5 4 ...
@@ -68,5 +71,21 @@ public class OrganizationServiceImp implements OrganizationService {
 
     return organizationRepository.existsByEmail(email);
   }
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<OrganizationDTO> readAllDefined() {
+		List<Organization> listOrganization = StreamSupport
+				.stream(organizationRepository.readAllDefined().spliterator(), false)
+				.collect(Collectors.toList());
+		List<OrganizationDTO> returnListDTO = organizationMapper.OrganizationList2DTO(listOrganization);
+		
+		return returnListDTO;
+	}
+
+	@Override
+	public Optional<Organization> findByEmail(String email) {
+		return organizationRepository.findByEmail(email);
+	}
 
 }
