@@ -1,10 +1,7 @@
 package com.alkemy.ong.controller;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
@@ -93,8 +90,7 @@ public class MemberControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get(route.concat("/page/0")))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
-	
-	
+
 	@Test
 	@WithUserDetails(ADMIN_CREDENTIALS)
 	void whenGet_aValidPage_and_notZero_then_containsPrevious_and_isOk() throws Exception {
@@ -112,7 +108,6 @@ public class MemberControllerTest {
 	@Test
 	@WithUserDetails(ADMIN_CREDENTIALS)
 	void whenGet_aValidPage_and_hasNext_then_containsNext_and_isOk() throws Exception {
-
 		Integer page = 1;
 
 		List<MemberDTO> notAnEmptyList = Arrays.asList(this.memberDTO, this.memberDTO, this.memberDTO);
@@ -124,7 +119,6 @@ public class MemberControllerTest {
 				.andExpect(MockMvcResultMatchers.content().string(
 						Matchers.containsString(String.format("\"url next\":\"%s/page/%d\"", baseUrl, page + 1))));
 	}
-
 
 ///////////////////////////////////////////////////////////////////////
 // POST
@@ -173,7 +167,6 @@ public class MemberControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
 	}
-	
 
 	@Test
 	@WithUserDetails(ADMIN_CREDENTIALS)
@@ -190,7 +183,7 @@ public class MemberControllerTest {
 	@WithUserDetails(ADMIN_CREDENTIALS)
 	void whenPost_withImageBlank_then_isBadRequest() throws Exception {
 
-		this.memberDTO.setImage("                               ");
+		this.memberDTO.setImage("                 ");
 
 		mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(this.memberDTO))
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -210,27 +203,23 @@ public class MemberControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isForbidden());
 	}
 
-	
 	@Test
 	@WithUserDetails(ADMIN_CREDENTIALS)
 	void whenPost_Admin_thenConflictInternal() throws Exception {
-		
+
 		Mockito.when(this.memberServiceImpl.save(this.memberDTO)).thenThrow(ConstraintViolationException.class);
 		mockMvc.perform(MockMvcRequestBuilders.post(route).content(this.getJSON(this.memberDTO))
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isConflict());
 	}
-	
-	
+
 	@Test
 	@WithUserDetails(ADMIN_CREDENTIALS)
 	void whenPost_Admin_then_throw_MemberException() throws Exception {
-		
+
 		Mockito.doThrow(MemberException.class).when(this.memberServiceImpl).save(this.memberDTO);
 		mockMvc.perform(MockMvcRequestBuilders.post(route).content(this.getJSON(this.memberDTO))
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
-	
-	
 
 	@Test
 	@Transactional
@@ -243,166 +232,142 @@ public class MemberControllerTest {
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.content().string(getJSON(this.memberDTO)));
 	}
-	
-	
+
 ///////////////////////////////////////////////////////////////////////
 //PUT
 ///////////////////////////////////////////////////////////////////////
 
 	@Test
-	  void whenPut_notLoggedIn_then_isUnauthorized() throws Exception {
+	void whenPut_notLoggedIn_then_isUnauthorized() throws Exception {
+		String givenId = "a-test-ID";
 
-	    String givenId = "a-test-ID";
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
+				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+	}
 
-	    mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isUnauthorized());
-	  }
-	
-	
 	@Test
-	  @WithUserDetails(USER_CREDENTIALS)
-	  void whenPut_noAdmin_then_isForbidden() throws Exception {
+	@WithUserDetails(USER_CREDENTIALS)
+	void whenPut_noAdmin_then_isForbidden() throws Exception {
+		String givenId = "a-test-ID";
 
-	    String givenId = "a-test-ID";
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
+				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isForbidden());
+	}
 
-	    mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isForbidden());
-	  }
-	
-	
 	@Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPut_and_doesNotExists_then_isNotFound() throws Exception {
+	@WithUserDetails(ADMIN_CREDENTIALS)
+	void whenPut_and_doesNotExists_then_isNotFound() throws Exception {
 
-	    String givenId = "a-test-ID";
+		String givenId = "a-test-ID";
 		Mockito.when(this.memberServiceImpl.findById(givenId)).thenReturn(null);
 
-	    mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isNotFound());
-	  }
-	
-	@Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPut_and_doesNotExists_then_EntityNotFoundException() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
+				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isNotFound());
+	}
 
-	    String givenId = "a-test-ID";
+	@Test
+	@WithUserDetails(ADMIN_CREDENTIALS)
+	void whenPut_and_doesNotExists_then_EntityNotFoundException() throws Exception {
+
+		String givenId = "a-test-ID";
 		Mockito.when(this.memberServiceImpl.findById(givenId)).thenReturn(this.memberDTO);
-	    Mockito.when(this.memberServiceImpl.update(givenId, this.memberDTO)).thenThrow(EntityNotFoundException.class);
+		Mockito.when(this.memberServiceImpl.update(givenId, this.memberDTO)).thenThrow(EntityNotFoundException.class);
 
-	    mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isNotFound());
-	  }
-	
-	
-	
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
+				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isNotFound());
+	}
+
 	@Test
-	  @Transactional
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPut_aValidDTO_then_isOK() throws Exception {
+	@Transactional
+	@WithUserDetails(ADMIN_CREDENTIALS)
+	void whenPut_aValidDTO_then_isOK() throws Exception {
 
 		String id = "edf8b161-78cb-4850-8a61-d842def69210";
 		Mockito.when(this.memberServiceImpl.findById(id)).thenReturn(this.memberDTO);
-	    Mockito.when(this.memberServiceImpl.update(id, this.memberDTO)).thenReturn(this.memberDTO);
+		Mockito.when(this.memberServiceImpl.update(id, this.memberDTO)).thenReturn(this.memberDTO);
 
-	    mockMvc
-	        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, id))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isOk())
-	        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.content().string(getJSON(this.memberDTO)));
-	  }
-	
-	
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, id)).content(getJSON(this.memberDTO))
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.content().string(getJSON(this.memberDTO)));
+	}
+
 	@Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPut_withNameNull_then_isBadRequest() throws Exception {
+	@WithUserDetails(ADMIN_CREDENTIALS)
+	void whenPut_withNameNull_then_isBadRequest() throws Exception {
 
-	    this.memberDTO.setName(null);
+		this.memberDTO.setName(null);
 
-	    mockMvc
-	        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-	        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
-	
-	
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+	}
+
 	@Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPut_withNameBlank_then_isBadRequest() throws Exception {
+	@WithUserDetails(ADMIN_CREDENTIALS)
+	void whenPut_withNameBlank_then_isBadRequest() throws Exception {
 
 		this.memberDTO.setName("                       ");
 
-	    mockMvc
-	        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-	        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
-	
-	
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+	}
+
 	@Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPut_withNameEmpty_then_isBadRequest() throws Exception {
+	@WithUserDetails(ADMIN_CREDENTIALS)
+	void whenPut_withNameEmpty_then_isBadRequest() throws Exception {
 
 		this.memberDTO.setName("");
 
-	    mockMvc
-	        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-	        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
-	
-	
-	
-	@Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPut_withImageNull_then_isBadRequest() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+	}
 
-	    this.memberDTO.setImage(null);
-
-	    mockMvc
-	        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-	        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
-	
-	
 	@Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPut_withImageEmpty_then_isBadRequest() throws Exception {
+	@WithUserDetails(ADMIN_CREDENTIALS)
+	void whenPut_withImageNull_then_isBadRequest() throws Exception {
+
+		this.memberDTO.setImage(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+	}
+
+	@Test
+	@WithUserDetails(ADMIN_CREDENTIALS)
+	void whenPut_withImageEmpty_then_isBadRequest() throws Exception {
 
 		this.memberDTO.setImage("");
 
-	    mockMvc
-	        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-	        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
-	
-	
-	
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+	}
+
 	@Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPut_withImageBlank_then_isBadRequest() throws Exception {
+	@WithUserDetails(ADMIN_CREDENTIALS)
+	void whenPut_withImageBlank_then_isBadRequest() throws Exception {
 
 		this.memberDTO.setImage("           ");
 
-	    mockMvc
-	        .perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
-	            .content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
-	        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-	        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
-	
-	
+		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, "ID-ABC"))
+				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+	}
+
 	///////////////////////////////////////////////////////////////////////
 	// DELETE
 	///////////////////////////////////////////////////////////////////////
@@ -440,9 +405,10 @@ public class MemberControllerTest {
 	@WithUserDetails(ADMIN_CREDENTIALS)
 	void whenDelete_and_exists_then_isOk() throws Exception {
 		String id = "edf8b161-78cb-4850-8a61-d842def69210";
-		Mockito.when(this.memberServiceImpl.findById("edf8b161-78cb-4850-8a61-d842def69210")).thenReturn(this.memberDTO);
+		Mockito.when(this.memberServiceImpl.findById("edf8b161-78cb-4850-8a61-d842def69210"))
+				.thenReturn(this.memberDTO);
 
-		this.mockMvc.perform(MockMvcRequestBuilders.delete(route + "/{id}",id))
+		this.mockMvc.perform(MockMvcRequestBuilders.delete(route + "/{id}", id))
 				.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 
@@ -453,6 +419,5 @@ public class MemberControllerTest {
 	private String getJSON(MemberDTO dto) throws JsonProcessingException {
 		return objectMapper.writeValueAsString(dto);
 	}
-	
 
 }
