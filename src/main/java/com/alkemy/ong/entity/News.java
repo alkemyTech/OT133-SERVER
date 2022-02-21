@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "news")
-@SQLDelete(sql = "UPDATE table_product SET soft_delete = true WHERE id=?")
-@FilterDef(name = "deletedProductFilter",
+@SQLDelete(sql = "UPDATE news SET soft_delete = true WHERE id=?")
+@FilterDef(name = "deletedNewsFilter",
     parameters = @ParamDef(name = "isDeleted", type = "boolean"))
-@Filter(name = "deletedProductFilter", condition = "soft_delete = :isDeleted")
+@Filter(name = "deletedNewsFilter", condition = "soft_delete = :isDeleted")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
