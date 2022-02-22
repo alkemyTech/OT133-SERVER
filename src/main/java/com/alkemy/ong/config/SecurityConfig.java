@@ -36,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       // other public endpoints of your API may be appended to this array
       "/auth/**"};
 
+  private static final String[] USER_POST = {"/contacts/**"};
 
   @Autowired
   private UserDetailServiceImpl userDetailsService;
@@ -56,22 +57,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           new TokenAuthenticationFilter(authenticationManagerBean(), tokenValidator);
       tokenAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
+      // Stateless session
+      http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
       // Habilita CORS y desactiva CSRF
       http.cors().and().csrf().disable();
 
-      // Permitir todo en /**/auth/**
-      http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().anyRequest()
-          // El Resto de las rutas, requeriran autenticación
-          .authenticated();
+      // Permitir todo en WHITELIST
+      http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll()
+          .antMatchers(HttpMethod.GET, "/**").hasAnyAuthority("ROL_ADMIN", "ROL_USER")
+          .antMatchers(HttpMethod.POST, USER_POST).hasAnyAuthority("ROL_ADMIN", "ROL_USER")
+          .antMatchers(HttpMethod.POST, "/**").hasAuthority("ROL_ADMIN")
+          .antMatchers(HttpMethod.PUT, "/**").hasAuthority("ROL_ADMIN")
+          .antMatchers(HttpMethod.DELETE, "/**").hasAuthority("ROL_ADMIN").anyRequest()
+          .authenticated().and().requestCache().requestCache(new NullRequestCache()).and()
+          .httpBasic().authenticationEntryPoint(authenticationEntryPoint);
 
-      // Seteo de session management a stateless
-      http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-          .authorizeRequests().antMatchers(HttpMethod.GET, "/**")
-          .hasAnyAuthority("ROL_ADMIN", "ROL_USER").antMatchers(HttpMethod.POST, "/**")
-          .hasAuthority("ROL_ADMIN").antMatchers(HttpMethod.PUT, "/**").hasAuthority("ROL_ADMIN")
-          .antMatchers(HttpMethod.DELETE, "/**").hasAuthority("ROL_ADMIN").and().requestCache()
-          .requestCache(new NullRequestCache()).and().httpBasic()
-          .authenticationEntryPoint(authenticationEntryPoint);
+      // http.authorizeRequests().anyRequest().authenticated();
 
       // Add JWT Token Authorization filter
       http.addFilterBefore(new TokenAuthorizationFilter(tokenValidator),
