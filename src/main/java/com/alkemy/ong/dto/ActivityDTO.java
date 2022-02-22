@@ -1,21 +1,23 @@
 package com.alkemy.ong.dto;
 
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class ActivityDTO {
 
-  @NotNull
+  @NotBlank
   private String name;
 
-  @NotNull
+  @NotBlank
   private String content;
 
-  @NotNull
+  @NotBlank
   private String image;
 
   private String timestamps;
