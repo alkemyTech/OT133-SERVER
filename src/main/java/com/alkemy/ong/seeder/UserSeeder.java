@@ -56,10 +56,12 @@ public class UserSeeder implements CommandLineRunner {
     createUserIfNotExists("Ricardo", "Ledesma", "user", Roles.ROL_USER);
     createUserIfNotExists("Rodrigo", "Caro", "user", Roles.ROL_USER);
     createUserIfNotExists("null", "mull", "alkemy".concat(MAIL), "user");
+
+    // Creación de mods
     createModIfNotExists("JuanMOD", "Acosta", "mod", Roles.ROL_MOD);
     createModIfNotExists("PedroMOD", "Acosta", "mod", Roles.ROL_MOD);
     createModIfNotExists("HomeroMOD", "Acosta", "mod", Roles.ROL_MOD);
-    
+
 
   }
 
@@ -81,12 +83,28 @@ public class UserSeeder implements CommandLineRunner {
         name.concat(lastName).concat(rol.equals(Roles.ROL_ADMIN) ? ALKEMY : MAIL).toLowerCase(),
         password);
   }
-  
-    private User createModIfNotExists(String name, String lastName, String password, Roles rol) {
-    return createUserIfNotExists(name, lastName,
-        name.concat(lastName).concat(rol.equals(Roles.ROL_MOD) ? ALKEMY : MAIL).toLowerCase(),
-        password);
+
+  private User createModIfNotExists(String name, String lastName, String password, Roles rol) {
+
+    String email = name.concat(lastName).concat(MAIL).toLowerCase();
+
+    User user = userRepository.findByEmail(email).orElseGet(() -> {
+
+      User newUser = new User();
+
+      newUser.setEmail(email);
+      newUser.setPassword(new BCryptPasswordEncoder().encode(password));
+      newUser.setFirstName(name);
+      newUser.setLastName(lastName);
+      newUser.setRoles(Arrays.asList(rolRepository.findByName(rol)));
+
+      return userRepository.save(newUser);
+    });
+
+    return user;
+
   }
+
 
   @Transactional
   private User createUserIfNotExists(String name, String lastName, String email, String password) {
