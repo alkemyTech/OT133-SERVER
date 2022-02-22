@@ -89,12 +89,20 @@ public class MemberController {
 		  @ApiResponse(responseCode = "409", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_409_DESCRIPTION),
   })
   public ResponseEntity<Object> createMember(@Validated @RequestBody MemberDTO memberDTO) throws MemberException, IOException{
-    try{
+    /*try{
       MemberDTO member = memberService.save(memberDTO); 
       return ResponseEntity.status(HttpStatus.CREATED).body(member);
     } catch ( Exception e){
       return ResponseEntity.status(HttpStatus.CONFLICT).body("Exception: " + e.getLocalizedMessage());
-    }
+    }*/
+	  try{
+	      MemberDTO member = memberService.save(memberDTO); 
+	      return ResponseEntity.status(HttpStatus.CREATED).body(member);
+	    } catch (MemberException ex){
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Exception: " + this.handleMemberExceptions());
+	    }catch (Exception e){
+	      return ResponseEntity.status(HttpStatus.CONFLICT).body("Exception: " + e.getLocalizedMessage());
+	    }
   }
   
   
@@ -109,11 +117,11 @@ public class MemberController {
 	  Map<String, Object> response = new HashMap<>();
 	  String currentContextPath = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
 	  if(page > 0) {
-		 response.put("url previus", currentContextPath.concat(String.format("/page/%d", page - 1)));
+		 response.put("url previus", currentContextPath.concat(String.format("/members/page/%d", page - 1)));
 	  }
 	  
 	  if(!this.memberService.getPaginated(page + 1).isEmpty()) {
-		  response.put("url next", currentContextPath.concat(String.format("/page/%d", page + 1)));
+		  response.put("url next", currentContextPath.concat(String.format("/members/page/%d", page + 1)));
 	  }
 	  
 	  response.put("ok", this.memberService.getPaginated(page));
