@@ -31,6 +31,7 @@ public class UserSeeder implements CommandLineRunner {
     // Roles
     createRolIfNotExists(Roles.ROL_ADMIN, "User with all privileges and authorities");
     createRolIfNotExists(Roles.ROL_USER, "User with no privileges nor authorities");
+    createRolIfNotExists(Roles.ROL_MOD, "User with no privileges nor authorities");
 
     // Admin Users
     createUserIfNotExists("null", "null", "admin".concat(ALKEMY), "admin");
@@ -55,6 +56,10 @@ public class UserSeeder implements CommandLineRunner {
     createUserIfNotExists("Ricardo", "Ledesma", "user", Roles.ROL_USER);
     createUserIfNotExists("Rodrigo", "Caro", "user", Roles.ROL_USER);
     createUserIfNotExists("null", "mull", "alkemy".concat(MAIL), "user");
+    createModIfNotExists("JuanMOD", "Acosta", "mod", Roles.ROL_MOD);
+    createModIfNotExists("PedroMOD", "Acosta", "mod", Roles.ROL_MOD);
+    createModIfNotExists("HomeroMOD", "Acosta", "mod", Roles.ROL_MOD);
+    
 
   }
 
