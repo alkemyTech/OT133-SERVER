@@ -18,5 +18,4 @@ public interface OrganizationService {
 	Organization save(Organization organization);
 	
 	boolean existsByEmail(String email);
-
 }

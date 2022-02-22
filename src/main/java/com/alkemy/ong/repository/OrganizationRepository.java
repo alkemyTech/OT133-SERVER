@@ -25,5 +25,4 @@ public interface OrganizationRepository extends JpaRepository<Organization, Stri
   List<Organization> findTopById();
 
   public Organization findByName(String name);
-
 }

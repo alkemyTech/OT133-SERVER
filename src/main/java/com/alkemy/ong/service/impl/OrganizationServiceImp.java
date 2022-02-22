@@ -79,7 +79,6 @@ public class OrganizationServiceImp implements OrganizationService {
 				.stream(organizationRepository.readAllDefined().spliterator(), false)
 				.collect(Collectors.toList());
 		List<OrganizationDTO> returnListDTO = organizationMapper.OrganizationList2DTO(listOrganization);
-		
 		return returnListDTO;
 	}
 
