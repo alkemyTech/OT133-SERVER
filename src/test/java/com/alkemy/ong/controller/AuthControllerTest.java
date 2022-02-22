@@ -243,20 +243,4 @@ public class AuthControllerTest extends BaseControllerTest {
 
   }
 
-  @Test
-  void whenLogIn_withBadCredentials_then_isForbidden() throws Exception {
-
-    String password = "password";
-    String form = String.format("email=%s&password=%s", EXAMPLE_MAIL, password);
-
-    Mockito.when(uds.loadUserByUsername(EXAMPLE_MAIL))
-        .thenReturn(new org.springframework.security.core.userdetails.User(EXAMPLE_MAIL, password,
-            true, true, true, true, Collections.emptyList()));
-
-    mockMvc
-        .perform(MockMvcRequestBuilders.post(String.format("%s/%s", route, "login")).content(form)
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-        .andExpect(MockMvcResultMatchers.status().isForbidden());
-
-  }
 }
