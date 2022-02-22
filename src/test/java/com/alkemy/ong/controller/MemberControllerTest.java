@@ -35,7 +35,7 @@ public class MemberControllerTest {
 
 	private static final String USER_CREDENTIALS = "user@mail.com";
 
-	private static final String ADMIN_CREDENTIALS = "invidato@mail.com";
+	private static final String ADMIN_CREDENTIALS = "admin@alkemy.org";
 
 	private static final String route = "/members";
 
@@ -81,6 +81,12 @@ public class MemberControllerTest {
 	@WithUserDetails(ADMIN_CREDENTIALS)
 	void whenGets_andAdminLoggedIn_thenOk() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get(route)).andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	@WithUserDetails(USER_CREDENTIALS)
+	void whenGets_andAdminLoggedIn_then_IsForbidden() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get(route)).andExpect(MockMvcResultMatchers.status().isForbidden());
 	}
 
 	
@@ -290,8 +296,8 @@ public class MemberControllerTest {
 	@Transactional
 	@WithUserDetails(ADMIN_CREDENTIALS)
 	void whenPut_aValidDTO_then_isOK() throws Exception {
-
-		String id = "edf8b161-78cb-4850-8a61-d842def69210";
+		
+		String id = "a-test-ID";
 		Mockito.when(this.memberServiceImpl.findById(id)).thenReturn(this.memberDTO);
 		Mockito.when(this.memberServiceImpl.update(id, this.memberDTO)).thenReturn(this.memberDTO);
 
@@ -409,11 +415,11 @@ public class MemberControllerTest {
 	@Transactional
 	@WithUserDetails(ADMIN_CREDENTIALS)
 	void whenDelete_and_exists_then_isOk() throws Exception {
-		String id = "edf8b161-78cb-4850-8a61-d842def69210";
-		Mockito.when(this.memberServiceImpl.findById("edf8b161-78cb-4850-8a61-d842def69210"))
+
+		Mockito.when(this.memberServiceImpl.findById("a-test-ID"))
 				.thenReturn(this.memberDTO);
 
-		this.mockMvc.perform(MockMvcRequestBuilders.delete(route + "/{id}", id))
+		this.mockMvc.perform(MockMvcRequestBuilders.delete(route + "/{id}", "a-test-ID"))
 				.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 
