@@ -66,10 +66,15 @@ public class MemberControllerTest {
 		this.baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
 		this.objectMapper = new ObjectMapper();
 	}
+	
+	
+///////////////////////////////////////////////////////////////////////
+//GET(PAGE)
+///////////////////////////////////////////////////////////////////////
 
 	@Test
 	void whenGet_andNotLoggedIn_thenUnauthorized() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get(route)).andExpect(MockMvcResultMatchers.status().isUnauthorized());
+		mockMvc.perform(MockMvcRequestBuilders.get(route.concat("/page/0"))).andExpect(MockMvcResultMatchers.status().isUnauthorized());
 	}
 
 	@Test
@@ -78,10 +83,11 @@ public class MemberControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get(route)).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
+	
 	@Test
 	@WithUserDetails(USER_CREDENTIALS)
-	void whenGets_andUserLoggedIn_thenForbidden() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get(route)).andExpect(MockMvcResultMatchers.status().isForbidden());
+	void whenGets_andUserLoggedIn_then_IsOk() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get(route.concat("/page/0"))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
 	@Test
@@ -101,7 +107,7 @@ public class MemberControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.content().string(
-						Matchers.containsString(String.format("\"url previus\":\"%s/page/%d\"", baseUrl, page - 1))));
+						Matchers.containsString(String.format("\"url previus\":\"%s%s/page/%d\"", baseUrl, route, page - 1))));
 
 	}
 
@@ -117,7 +123,7 @@ public class MemberControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.content().string(
-						Matchers.containsString(String.format("\"url next\":\"%s/page/%d\"", baseUrl, page + 1))));
+						Matchers.containsString(String.format("\"url next\":\"%s%s/page/%d\"", baseUrl, route, page + 1))));
 	}
 
 ///////////////////////////////////////////////////////////////////////
@@ -249,7 +255,7 @@ public class MemberControllerTest {
 	@Test
 	@WithUserDetails(USER_CREDENTIALS)
 	void whenPut_noAdmin_then_isForbidden() throws Exception {
-		String givenId = "a-test-ID";
+		String givenId = "edf8b161-78cb-4850-8a61-d842def69210";
 
 		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
 				.content(getJSON(this.memberDTO)).contentType(MediaType.APPLICATION_JSON))
