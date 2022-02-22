@@ -81,6 +81,12 @@ public class UserSeeder implements CommandLineRunner {
         name.concat(lastName).concat(rol.equals(Roles.ROL_ADMIN) ? ALKEMY : MAIL).toLowerCase(),
         password);
   }
+  
+    private User createModIfNotExists(String name, String lastName, String password, Roles rol) {
+    return createUserIfNotExists(name, lastName,
+        name.concat(lastName).concat(rol.equals(Roles.ROL_MOD) ? ALKEMY : MAIL).toLowerCase(),
+        password);
+  }
 
   @Transactional
   private User createUserIfNotExists(String name, String lastName, String email, String password) {
