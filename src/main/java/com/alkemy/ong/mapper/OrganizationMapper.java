@@ -1,5 +1,6 @@
 package com.alkemy.ong.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationPublicDTO;
@@ -80,5 +81,12 @@ public class OrganizationMapper {
 
     return orgDTO;
   }
-
+  
+  public List<OrganizationDTO> OrganizationList2DTO(List<Organization> ongList){
+	  List<OrganizationDTO> result = new ArrayList<>();
+	  ongList.forEach(ong ->{
+		  result.add(toDTO(ong));
+	  });
+	  return result;
+  }
 }
