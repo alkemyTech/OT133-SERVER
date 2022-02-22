@@ -89,7 +89,7 @@ public class OrganizationController {
 	}
 
   }
-  @GetMapping("/public")
+  @GetMapping("/public/all")
   public ResponseEntity<List<Organization>> readAll() throws Exception{
 	  try {	
 	    return new ResponseEntity(organizationService.readAll(), HttpStatus.OK);
