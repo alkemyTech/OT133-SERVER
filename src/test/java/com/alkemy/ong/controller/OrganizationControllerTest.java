@@ -27,8 +27,6 @@ import com.alkemy.ong.service.OrganizationService;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class OrganizationControllerTest {
-	
-	private static final String USER_CREDENTIALS = "user@mail.com";
 
 	  private static final String ADMIN_CREDENTIALS = "maurodell@alkemy.org";
 
@@ -40,28 +38,22 @@ public class OrganizationControllerTest {
 	  OrganizationController organizationController;
 	  
 	  private String baseUrl;
-	  private OrganizationDTO organizationDTO;
+	  
 	  private Organization organization;
 	  
 	  private ObjectMapper objectMapper;
+	  
 	  @MockBean
 	  private OrganizationRepository organizationRepository;
+	  
 	  @MockBean
 	  private OrganizationService organizationService;
+	  
 	  @Autowired
 	  private MockMvc mockMvc;
 
 	  @BeforeEach
-	  void setUp() {
-		  organizationDTO = new OrganizationDTO();
-		  organizationDTO.setName("Fuerza");
-		  organizationDTO.setEmail("fuerza@gmail.com");
-		  organizationDTO.setPhone(2365236);
-		  organizationDTO.setImage("img/nueva.jpg");
-		  organizationDTO.setAddress("Callao 325");
-		  organizationDTO.setAboutUsText("Sobre nosotros");
-		  organizationDTO.setWelcomeText("Bienvenidos");
-		  
+	  void setUp() {		  
 		  organization = new Organization();
 		  organization.setName("Fuerza");
 		  organization.setEmail("fuerza@gmail.com");
@@ -76,16 +68,9 @@ public class OrganizationControllerTest {
 		  objectMapper = new ObjectMapper();
 	  }
 
-	  // --------------------------------------------------------------------------------------------
-	  // Get
-	  // --------------------------------------------------------------------------------------------
-
-	  @Test
-	  void whenGet_andNotLoggedIn_thenUnauthorized() throws Exception {
-	    mockMvc.perform(MockMvcRequestBuilders.get(route2))
-	    .andExpect(MockMvcResultMatchers.status().isUnauthorized());
-	  }
-
+	  /***
+	   * Get
+	   */
 	  @Test
 	  @WithUserDetails(ADMIN_CREDENTIALS)
 	  void whenGets_andAdminLoggedIn_thenOk() throws Exception {
@@ -93,12 +78,6 @@ public class OrganizationControllerTest {
 	    .andExpect(MockMvcResultMatchers.status().isOk());
 	  }
 
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenGets_andUserLoggedIn_thenForbidden() throws Exception {
-	    mockMvc.perform(MockMvcRequestBuilders.get(route2))
-	    .andExpect(MockMvcResultMatchers.status().isForbidden());
-	  }
 
 	  @Test
 	  @WithUserDetails(ADMIN_CREDENTIALS)
@@ -107,28 +86,13 @@ public class OrganizationControllerTest {
 	      .andExpect(MockMvcResultMatchers.status().isOk());
 	  }
 
-	  // --------------------------------------------------------------------------------------------
-	  // Post
-	  // --------------------------------------------------------------------------------------------
-
-	  @Test
-	  void whenPost_notLoggedIn_thenUnauthorized() throws Exception {
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	      .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isUnauthorized());
-	  }
-
-	  @Test
-	  void whenPost_User_thenConflictInternal() throws Exception {
-
-	    Mockito.when(organizationService.save(organization)).thenThrow(ConstraintViolationException.class);
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	      .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isConflict());
-	  }
-
+	  /***
+	   * Post
+	   */
 	  @Test
 	  @Transactional
 	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_User_aValidDTO_then_isCreated() throws Exception {
+	  void whenPost_Admin_aValid_then_isCreated() throws Exception {
 	    Mockito.when(organizationService.save(organization)).thenReturn(organization);
 
 	    mockMvc
@@ -207,17 +171,6 @@ public class OrganizationControllerTest {
 
 	  @Test
 	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_withPhoneNull_then_isBadRequest() throws Exception {
-
-		  organization.setPhone(-1);
-
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
-
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
 	  void whenPost_withMessageNull_then_isBadRequest() throws Exception {
 
 		  organization.setImage(null);
@@ -237,22 +190,11 @@ public class OrganizationControllerTest {
 	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
 	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
 	  }
-
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_withMessageBlank_then_isBadRequest() throws Exception {
-
-		  organization.setImage("                 ");
-
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
-
-	  // --------------------------------------------------------------------------------------------
-	  // Internal Methods
-	  // --------------------------------------------------------------------------------------------
-
+	  
+	  
+	  /***
+	   * Internal Methods
+	   */
 	  private String getJSON(Organization organization) throws JsonProcessingException {
 	    return objectMapper.writeValueAsString(organization);
 	  }
