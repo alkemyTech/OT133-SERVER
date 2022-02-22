@@ -271,9 +271,8 @@ public class MemberControllerTest {
 	@Test
 	@WithUserDetails(ADMIN_CREDENTIALS)
 	void whenPut_and_doesNotExists_then_EntityNotFoundException() throws Exception {
-
 		String givenId = "a-test-ID";
-		//Mockito.when(this.memberServiceImpl.findById(givenId)).thenReturn(this.memberDTO);
+
 		Mockito.when(this.memberServiceImpl.update(givenId, this.memberDTO)).thenThrow(EntityNotFoundException.class);
 
 		mockMvc.perform(MockMvcRequestBuilders.put(String.format("%s/%s", route, givenId))
