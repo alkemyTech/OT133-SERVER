@@ -1,5 +1,6 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.OrganizationDTO;
 import com.alkemy.ong.dto.OrganizationPublicDTO;
 import com.alkemy.ong.dto.SlidePublicDTO;
 import com.alkemy.ong.entity.Slide;
@@ -13,8 +14,9 @@ import com.alkemy.ong.entity.Organization;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.OrganizationService;
 
-import java.util.ArrayList;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 @Service
@@ -68,5 +70,19 @@ public class OrganizationServiceImp implements OrganizationService {
 
     return organizationRepository.existsByEmail(email);
   }
+
+@Override
+public List<OrganizationDTO> readAll() {
+	List<Organization> listOrganization = StreamSupport
+			.stream(organizationRepository.readAllDefined().spliterator(), false)
+			.collect(Collectors.toList());
+	List<OrganizationDTO> returnListDTO = organizationMapper.OrganizationList2DTO(listOrganization);
+	return returnListDTO;
+}
+
+@Override
+public Optional<Organization> findByEmail(String email) {
+	return organizationRepository.findByEmail(email);
+}
 
 }
