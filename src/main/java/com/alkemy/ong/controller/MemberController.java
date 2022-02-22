@@ -49,7 +49,7 @@ public class MemberController {
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
-  @PreAuthorize("hasAuthority('ROL_USER')")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
   @PutMapping("/{id}")
   @Operation(summary = DocumentationMessages.MEMBER_CONTROLLER_SUMMARY_UPDATE)
   @ApiResponses(value = {
@@ -81,7 +81,7 @@ public class MemberController {
   }
   
   @PostMapping
-  @PreAuthorize("hasAuthority('ROL_USER')")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
   @Operation(summary = DocumentationMessages.MEMBER_CONTROLLER_SUMMARY_CREATE)
   @ApiResponses(value = {
 		  @ApiResponse(responseCode = "201", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_201_DESCRIPTION),
@@ -89,12 +89,6 @@ public class MemberController {
 		  @ApiResponse(responseCode = "409", description = DocumentationMessages.MEMBER_CONTROLLER_RESPONSE_409_DESCRIPTION),
   })
   public ResponseEntity<Object> createMember(@Validated @RequestBody MemberDTO memberDTO) throws MemberException, IOException{
-    /*try{
-      MemberDTO member = memberService.save(memberDTO); 
-      return ResponseEntity.status(HttpStatus.CREATED).body(member);
-    } catch ( Exception e){
-      return ResponseEntity.status(HttpStatus.CONFLICT).body("Exception: " + e.getLocalizedMessage());
-    }*/
 	  try{
 	      MemberDTO member = memberService.save(memberDTO); 
 	      return ResponseEntity.status(HttpStatus.CREATED).body(member);
