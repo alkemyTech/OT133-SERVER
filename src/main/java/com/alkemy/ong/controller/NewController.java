@@ -2,6 +2,7 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.NewDTO;
 import com.alkemy.ong.entity.News;
+import com.alkemy.ong.exception.NewException;
 import com.alkemy.ong.mapper.NewMapper;
 import com.alkemy.ong.messages.DocumentationMessages;
 import com.alkemy.ong.service.NewService;
@@ -39,16 +40,20 @@ public class NewController {
     @ApiResponse(responseCode = "201",
       description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_201_DESCRIPTION)
     ,
-    @ApiResponse(responseCode = "401",
-      description = "OPSss")
-    ,
-    @ApiResponse(responseCode = "403",
-      description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_403_DESCRIPTION)
+    @ApiResponse(responseCode = "404",
+      description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_404_DESCRIPTION)
   })
-  public ResponseEntity<NewDTO> save(@Valid NewDTO dto) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(newService.save(dto));
-  }
+  public ResponseEntity<?> save(@RequestBody NewDTO dto) {
+    
+    try {
+      
+      NewDTO newDTOS = newService.save(dto);
+      return ResponseEntity.status(HttpStatus.CREATED).body(newDTOS);
 
+    } catch (NewException e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    } 
+  }
   //detalle por id
   @PreAuthorize("hasAuthority('ROL_ADMIN')")
   @GetMapping("/{id}")
@@ -100,51 +105,42 @@ public class NewController {
   
   // actualizacion
   @PutMapping("/{id}")
-  @PreAuthorize("hasRole('ROL_ADMIN')")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
   @Operation(summary = DocumentationMessages.NEWS_CONTROLLER_SUMMARY_UPDATE,description = DocumentationMessages.NEWS_CONTROLLER_SUMMARY_UPDATE_DESCRIPTION)
-  @ApiResponses(value = {
-    @ApiResponse(responseCode = "404",
-      description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_404_DESCRIPTION)
-  })
-  public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody NewDTO newDto){
-    
-    if(!newService.existsById(id)) {
-      return new ResponseEntity<>("No existe", HttpStatus.NOT_FOUND);
-    }
-    News news = newService.getById(id);
-    news.setName(newDto.getName());
-    news.setImage(newDto.getImage());
-    news.setContent(newDto.getContent());
-
-    NewDTO newDTO = newMapper.entity2newDTO(news);
-    newService.save(newDTO);
-
-    return new ResponseEntity(HttpStatus.OK);
-  }
-  
-  
-  //delete
-  @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('ROL_ADMIN')")
-  @Operation(summary = DocumentationMessages.NEWS_CONTROLLER_SUMMARY_DELETE,description = DocumentationMessages.NEWS_CONTROLLER_SUMMARY_DELETE_DESCRIPTION)
   @ApiResponses(value = {
     @ApiResponse(responseCode = "200",
       description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_200_DESCRIPTION)
     ,
-    @ApiResponse(responseCode = "204",
-      description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_204_DESCRIPTION)
+    @ApiResponse(responseCode = "404",
+      description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_404_DESCRIPTION)
+  })
+  public ResponseEntity<?> update(@PathVariable("id") String id,@RequestBody NewDTO newDto) {
+
+    try {
+      NewDTO newDTOS = newService.update(newDto, id);
+      return ResponseEntity.status(HttpStatus.OK).body(newDTOS);
+    } catch (NewException e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+  }
+  
+  //delete
+  @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
+  @Operation(summary = DocumentationMessages.NEWS_CONTROLLER_SUMMARY_DELETE,description = DocumentationMessages.NEWS_CONTROLLER_SUMMARY_DELETE_DESCRIPTION)
+  @ApiResponses(value = {
+    @ApiResponse(responseCode = "200",
+      description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_200_DESCRIPTION)
     ,
     @ApiResponse(responseCode = "404",
       description = DocumentationMessages.NEWS_CONTROLLER_RESPONSE_404_DESCRIPTION)
   })
   public ResponseEntity<?> delete(@PathVariable("id") String id){
     if(!newService.existsById(id)) {
-      return new ResponseEntity("No existe", HttpStatus.NOT_FOUND);
+      return new ResponseEntity("The New id does not exist in the database or is incorrect.", HttpStatus.NOT_FOUND);
     }
     newService.delete(id);
     return new ResponseEntity(HttpStatus.OK);
   }
-
-
 
 }
