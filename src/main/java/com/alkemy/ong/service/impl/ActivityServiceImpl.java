@@ -3,7 +3,9 @@ package com.alkemy.ong.service.impl;
 import java.util.Optional;
 
 import com.alkemy.ong.dto.ActivityDTO;
+import com.alkemy.ong.dto.TestimonialDTO;
 import com.alkemy.ong.entity.Activity;
+import com.alkemy.ong.entity.Testimonial;
 import com.alkemy.ong.exception.ActivityException;
 import com.alkemy.ong.mapper.ActivityMapper;
 import com.alkemy.ong.repository.ActivityRepository;
@@ -20,42 +22,9 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	public ActivityDTO createActivity(ActivityDTO activityDTO) throws Exception {
-		verifyActivity(activityDTO);
 		Activity newActivity = activityMapper.activityDTO2Entity(activityDTO);
-
 		Activity savedActivity = activityRepository.save(newActivity);
-		// System.out.println("activitiDToControlador " +
-		// savedActivity.getTimestamps());
 		return activityMapper.activityEntity2DTO(savedActivity);
-	}
-
-	@Override
-	public void verifyActivity(ActivityDTO activityDTO) throws ActivityException {
-		
-		validateActivityForUpdate(activityDTO);
-		if (activityDTO.getTimestamps() == null||activityDTO.getName().isEmpty()) {
-			throw new ActivityException("Timestamps null or empty");
-		}
-
-	}
-
-	@Override
-	public void validateActivityForUpdate(ActivityDTO activityDTO) throws ActivityException{
-		if (activityDTO.getName() == null ||activityDTO.getName().isEmpty()) {
-			throw new ActivityException("Name null or empty");
-		}
-		if (activityDTO.getContent() == null||activityDTO.getName().isEmpty()) {
-			throw new ActivityException("Content nulo or empty");
-		}
-		if (activityDTO.getImage() == null||activityDTO.getName().isEmpty()) {
-			throw new ActivityException("Image null or empty");
-		}
-	}
-
-	@Override
-	public boolean activityExists(String id){
-		Optional<Activity> activity = activityRepository.findById(id);
-		return activity.isPresent();
 	}
 
 	@Override
@@ -71,4 +40,8 @@ public class ActivityServiceImpl implements ActivityService {
 		} return null;
 	}
 
+  public ActivityDTO findById(String id) {
+    Activity activity = activityRepository.findById(id).get();
+    return activityMapper.activityEntity2DTO(activity);
+  }
 }

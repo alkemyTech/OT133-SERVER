@@ -20,15 +20,15 @@ public class ActivityController {
 	@Autowired
 	private ActivityService activityService;
 
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
 	@PostMapping
-	public ResponseEntity<ActivityDTO> createActivity(@RequestBody ActivityDTO request){
+	public ResponseEntity<ActivityDTO> createActivity(@Validated @RequestBody ActivityDTO request){
 		try {
-		activityService.verifyActivity(request);
 			ActivityDTO response = activityService.createActivity(request);
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 		} catch (Exception e) {
 			System.out.println(e);
-		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
 		
 		}
 
@@ -38,13 +38,12 @@ public class ActivityController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateActivity(@PathVariable String id, @Validated @RequestBody ActivityDTO activity){
 		try{
-			if(activityService.activityExists(id)){ 
-				activityService.validateActivityForUpdate(activity);
+			  if(activityService.findById(id) != null){
 				ActivityDTO activityUpdated = activityService.updateActivity(id, activity);
 				return ResponseEntity.ok(activityUpdated);
-			} else { 
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Activity not found by the given id");
-			}
+			  } else { 
+			  return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Activity not found by the given id");
+			  }
 		} catch (Exception e){
 			System.out.println(e);
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Exception happened: " + e.getLocalizedMessage());
