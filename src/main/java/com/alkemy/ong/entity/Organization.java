@@ -9,8 +9,10 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import com.alkemy.ong.entity.contact.SocialLinks;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +21,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "organizations")
 @SQLDelete(sql = "UPDATE organizations SET soft_delete = true WHERE id=?")
-@Where(clause = "soft_delete=false")
+@FilterDef(name = "deletedOrganizationFilter",
+    parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedOrganizationFilter", condition = "soft_delete = :isDeleted")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor

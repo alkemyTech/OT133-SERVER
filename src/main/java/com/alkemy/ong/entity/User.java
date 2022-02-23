@@ -9,8 +9,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,8 +20,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
-@SQLDelete(sql = "UPDATE users SET soft_delete = true WHERE id = ?")
-@Where(clause = "soft_delete = false")
+@SQLDelete(sql = "UPDATE users SET soft_delete = true WHERE id=?")
+@FilterDef(name = "deletedUserFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedUserFilter", condition = "soft_delete = :isDeleted")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
