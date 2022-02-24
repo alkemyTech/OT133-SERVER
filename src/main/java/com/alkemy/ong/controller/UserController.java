@@ -38,7 +38,7 @@ public class UserController {
   private UserService userService;
 
   @GetMapping
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
   public ResponseEntity<List<User>> listAll() {
     try {
       List<User> users = StreamSupport.stream(userService.listAll().spliterator(), false)
