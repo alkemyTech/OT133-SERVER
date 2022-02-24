@@ -1,10 +1,12 @@
 package com.alkemy.ong.entity.member;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import com.alkemy.ong.entity.PersistentEntity;
+import com.alkemy.ong.entity.contact.SocialLinks;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
@@ -18,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "members")
 @SQLDelete(sql = "UPDATE members SET soft_delete = true WHERE id=?")
 @FilterDef(name = "deletedMemberFilter",
-        parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+    parameters = @ParamDef(name = "isDeleted", type = "boolean"))
 @Filter(name = "deletedMemberFilter", condition = "soft_delete = :isDeleted")
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -26,24 +28,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Member extends PersistentEntity {
 
-    @Column(name = "name", nullable = false)
-    @NotNull(message = "El nombre no puede ser nulo")
-    private String name;
+  @Column(name = "name", nullable = false)
+  @NotNull(message = "El nombre no puede ser nulo")
+  private String name;
 
-    @Column(name = "facebook_url")
-    private String facebookUrl;
+  @Embedded
+  SocialLinks socialLinks;
 
-    @Column(name = "instagram_url")
-    private String instagramUrl;
+  @Column(name = "image", nullable = false)
+  @NotNull(message = "La imagen no puede ser nula")
+  private String image;
 
-    @Column(name = "linkedin_url")
-    private String linkedinUrl;
-
-    @Column(name = "image", nullable = false)
-    @NotNull(message = "La imagen no puede ser nula")
-    private String image;
-
-    @Column(name = "description")
-    private String description;
+  @Column(name = "description")
+  private String description;
 
 }
