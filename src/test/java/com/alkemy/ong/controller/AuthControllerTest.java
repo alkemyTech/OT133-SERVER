@@ -7,6 +7,7 @@ import com.alkemy.ong.security.UserDetailServiceImpl;
 import com.alkemy.ong.security.exception.UserAlreadyExistsException;
 import com.alkemy.ong.security.payload.SignupRequest;
 import com.alkemy.ong.service.UserDAO;
+import com.alkemy.ong.service.impl.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,11 +31,16 @@ public class AuthControllerTest extends BaseControllerTest {
 
   private static final String EXAMPLE_MAIL = "example@mail.com";
 
+  private static final String ME_PATH = "/auth/me";
+
   @Autowired
   private MockMvc mockMvc;
 
   @MockBean
   private UserRepository userRepository;
+
+  @MockBean
+  private UserServiceImpl userService;
 
   @MockBean
   private UserDAO userDAO;
@@ -243,4 +249,29 @@ public class AuthControllerTest extends BaseControllerTest {
 
   }
 
+  // --------------------------------------------------------------------------------------------
+  // Me
+  // --------------------------------------------------------------------------------------------
+
+  @Test
+  void whenMe_withNoHeader_then_isBadRequest() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get(ME_PATH))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  void whenMe_withHeader_invalidToken_then_isUnauthorized() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get(ME_PATH).header("Authorization", "Bearer token"))
+        .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+  }
+
+
+  @Test
+  void whenMe_withValidToken_then_isOk() throws Exception {
+
+    String headerValue = "Valid token";
+    Mockito.when(userService.getUserDetails(headerValue)).thenReturn(null);
+    mockMvc.perform(MockMvcRequestBuilders.get(ME_PATH).header("Authorization", headerValue))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
 }
