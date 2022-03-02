@@ -38,7 +38,7 @@ public class UserController {
   private UserService userService;
 
   @GetMapping
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
   public ResponseEntity<List<User>> listAll() {
     try {
       List<User> users = StreamSupport.stream(userService.listAll().spliterator(), false)
@@ -53,13 +53,18 @@ public class UserController {
   @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteUser(@PathVariable String id) throws UserException, IOException {
     Map<String, Object> response = new HashMap<>();
-    if (userService.userExists(id)) {
+    try {
+      if (userService.userExists(id)) {
       userService.deleteUser(id);
       response.put("User eliminado", "Id: " + id);
       return ResponseEntity.ok(response);
+      } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(handleUserNotFoundExceptions());
+      }
+    } catch (Exception e){
+      response.put("Problem to ejecute process", HttpStatus.CONFLICT);
+      return ResponseEntity.ok().body(response);
     }
-    response.put("Problem to ejecute process", HttpStatus.CONFLICT);
-    return ResponseEntity.ok().body(response);
   }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
