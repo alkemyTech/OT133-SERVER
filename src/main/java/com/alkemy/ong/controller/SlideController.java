@@ -63,7 +63,7 @@ public class SlideController {
   }
 
 
-  @PreAuthorize("hasRole('ROL_ADMIN')")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<?> updateSlide(@Validated @RequestBody SlideDTO slideDTO,
       @PathVariable UUID id) {
@@ -80,7 +80,7 @@ public class SlideController {
   }
 
   @GetMapping()
-  @PreAuthorize("hasRole('ROL_ADMIN')")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
   public ResponseEntity<List<Slide>> findAllDefined() {
     try {
       List<Slide> listImage = StreamSupport
@@ -92,9 +92,9 @@ public class SlideController {
   }
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('ROL_ADMIN')")
+  @PreAuthorize("hasAuthority('ROL_ADMIN')")
   public ResponseEntity<SlideDTO> findById(@PathVariable String id) {
-    if (slideService.findById(id) == null) {
+    if (slideService.findById(id).getText() == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
      return ResponseEntity.status(HttpStatus.OK).body(slideService.findById(id));
