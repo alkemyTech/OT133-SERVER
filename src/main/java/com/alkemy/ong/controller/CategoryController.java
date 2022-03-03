@@ -72,7 +72,7 @@ public class CategoryController {
     })
     public ResponseEntity<Void> delete(@PathVariable String id) {
         if (categoryService.findById(id) == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         categoryService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();

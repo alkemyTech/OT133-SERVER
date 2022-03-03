@@ -140,11 +140,11 @@
               <version>0.8.4</version>
               <configuration>
                 <excludes>
-                  <exclude>src/main/java/com/alkemy/ong/entity/*</exclude>
                   <exclude>**/entity/** </exclude>
                   <exclude>**/dto/* </exclude>
                   <exclude>**/service/** </exclude>
                   <exclude>**/mapper/** </exclude>
+                  <exclude>**/security/** </exclude>
                 </excludes>
               </configuration>
 

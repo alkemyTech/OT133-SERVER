@@ -17,186 +17,303 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.ConstraintViolationException;
 
-import com.alkemy.ong.dto.OrganizationDTO;
+import java.util.*;
+
 import com.alkemy.ong.entity.Organization;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.OrganizationService;
+
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class OrganizationControllerTest {
 
-	  private static final String ADMIN_CREDENTIALS = "maurodell@alkemy.org";
+  private static final String ADMIN_CREDENTIALS = "maurodell@alkemy.org";
 
-	  private static final String route = "/organization/public";
-	  
-	  private static final String route2 = "/organization/public/all";
-	  
-	  @Autowired
-	  OrganizationController organizationController;
-	  
-	  private String baseUrl;
-	  
-	  private Organization organization;
-	  
-	  private ObjectMapper objectMapper;
-	  
-	  @MockBean
-	  private OrganizationRepository organizationRepository;
-	  
-	  @MockBean
-	  private OrganizationService organizationService;
-	  
-	  @Autowired
-	  private MockMvc mockMvc;
+  private static final String route = "/organization/public";
 
-	  @BeforeEach
-	  void setUp() {		  
-		  organization = new Organization();
-		  organization.setName("Fuerza");
-		  organization.setEmail("fuerza@gmail.com");
-		  organization.setPhone(2365236);
-		  organization.setImage("img/nueva.jpg");
-		  organization.setAddress("Callao 325");
-		  organization.setAboutUsText("Sobre nosotros");
-		  organization.setWelcomeText("Bienvenidos");
+  private static final String route2 = "/organization/public/all";
 
-	    
-		  baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
-		  objectMapper = new ObjectMapper();
-	  }
+  @Autowired
+  OrganizationController organizationController;
 
-	  /***
-	   * Get
-	   */
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenGets_andAdminLoggedIn_thenOk() throws Exception {
-	    mockMvc.perform(MockMvcRequestBuilders.get(route2))
-	    .andExpect(MockMvcResultMatchers.status().isOk());
-	  }
+  private String baseUrl;
+
+  private Organization organization;
+
+  private ObjectMapper objectMapper;
+
+  @MockBean
+  private OrganizationRepository organizationRepository;
+
+  @MockBean
+  private OrganizationService organizationService;
+
+  @Autowired
+  private MockMvc mockMvc;
+
+  @BeforeEach
+  void setUp() {
+    organization = new Organization();
+    organization.setName("Fuerza");
+    organization.setEmail("fuerza@gmail.com");
+    organization.setPhone(2365236);
+    organization.setImage("img/nueva.jpg");
+    organization.setAddress("Callao 325");
+    organization.setAboutUsText("Sobre nosotros");
+    organization.setWelcomeText("Bienvenidos");
 
 
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenGet_AllContact_thenOk() throws Exception {
-	    mockMvc.perform(MockMvcRequestBuilders.get(route2))
-	      .andExpect(MockMvcResultMatchers.status().isOk());
-	  }
+    baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
+    objectMapper = new ObjectMapper();
+  }
 
-	  /***
-	   * Post
-	   */
-	  @Test
-	  @Transactional
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_Admin_aValid_then_isCreated() throws Exception {
-	    Mockito.when(organizationService.save(organization)).thenReturn(organization);
+  /***
+   * Get
+   */
 
-	    mockMvc
-	      .perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON))
-	      .andExpect(MockMvcResultMatchers.status().isCreated())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-	      .andExpect(MockMvcResultMatchers.content().string(getJSON(organization)));
-	  }
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void readAllDefinedTest() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get(route))
+      .andExpect(MockMvcResultMatchers.status().isOk());
+  }
 
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_withNameNull_then_isBadRequest() throws Exception {
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenGets_andAdminLoggedIn_thenOk() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get(route2))
+      .andExpect(MockMvcResultMatchers.status().isOk());
+  }
 
-  		organization.setName(null);
 
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenGet_AllContact_thenBadRequest() throws Exception {
 
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_withNameEmpty_then_isBadRequest() throws Exception {
+    when(organizationService.readAll()).thenThrow(java.lang.ClassCastException.class);
 
-		organization.setName("");
+    mockMvc.perform(MockMvcRequestBuilders.get(route2))
+      .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
 
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
+  /***
+   * Post
+   */
+  @Test
+  @Transactional
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_Admin_aValid_then_isCreated() throws Exception {
+    Mockito.when(organizationService.save(organization)).thenReturn(organization);
 
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_withNameBlank_then_isBadRequest() throws Exception {
+    mockMvc
+      .perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+        .contentType(MediaType.APPLICATION_JSON))
+      .andExpect(MockMvcResultMatchers.status().isCreated())
+      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(MockMvcResultMatchers.content().string(getJSON(organization)));
+  }
 
-		organization.setName("                                                ");
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withNameNull_then_isBadRequest() throws Exception {
 
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
+    organization.setName(null);
 
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_withEmailNull_then_isBadRequest() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
+      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
 
-		organization.setEmail(null);
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withNameEmpty_then_isBadRequest() throws Exception {
 
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
+    organization.setName("");
 
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_withEmailEmpty_then_isBadRequest() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
+      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
 
-		  organization.setEmail("");
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withNameBlank_then_isBadRequest() throws Exception {
 
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
+    organization.setName("                                                ");
 
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_withEmailBlank_then_isBadRequest() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
+      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
 
-		  organization.setEmail("                 ");
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withEmailNull_then_isBadRequest() throws Exception {
 
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
+    organization.setEmail(null);
 
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_withMessageNull_then_isBadRequest() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
+      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
 
-		  organization.setImage(null);
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withEmailEmpty_then_isBadRequest() throws Exception {
 
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
+    organization.setEmail("");
 
-	  @Test
-	  @WithUserDetails(ADMIN_CREDENTIALS)
-	  void whenPost_withMessageEmpty_then_isBadRequest() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
+      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
 
-		  organization.setImage("");
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withEmailBlank_then_isBadRequest() throws Exception {
 
-	    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
-	        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
-	      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-	  }
-	  
-	  
-	  /***
-	   * Internal Methods
-	   */
-	  private String getJSON(Organization organization) throws JsonProcessingException {
-	    return objectMapper.writeValueAsString(organization);
-	  }
-	  
+    organization.setEmail("                 ");
+
+    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
+      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withMessageNull_then_isBadRequest() throws Exception {
+
+    organization.setImage(null);
+
+    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
+      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withMessageEmpty_then_isBadRequest() throws Exception {
+
+    organization.setImage("");
+
+    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+        .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest())
+      .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+  }
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withPhoneIncorrect_then_isBadRequest() throws Exception {
+
+    organization.setPhone(-1);
+
+    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+      .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+  }
+
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPut_withEmailExist_then_isBadRequest() throws Exception {
+
+    organization.setEmail(ADMIN_CREDENTIALS);
+
+    when(organizationService.existsByEmail(ADMIN_CREDENTIALS)).thenReturn(true);
+    mockMvc.perform(MockMvcRequestBuilders.post(route).content(getJSON(organization))
+      .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+  }
+
+
+
+
+
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPut_withUpdate_then_isOk() throws Exception {
+
+    organization.setEmail(ADMIN_CREDENTIALS);
+
+    mockMvc.perform(MockMvcRequestBuilders.put(route+"/{email}",ADMIN_CREDENTIALS).content(getJSON(organization))
+      .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isNotFound());
+
+  }
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withMessageEmpty_then_isBadRequest74asd56asasdasa() throws Exception {
+
+
+    when(organizationService.findByEmail(organization.getEmail())).thenReturn(Optional.of(organization));
+
+    mockMvc.perform(MockMvcRequestBuilders.put(route+"/{email}",organization.getEmail()).content(getJSON(organization))
+      .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated());
+
+  }
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPost_withExceptionEmail_then_isNotFound() throws Exception {
+
+
+    when(organizationService.findByEmail(ADMIN_CREDENTIALS)).thenThrow(RuntimeException.class);
+
+
+    mockMvc.perform(MockMvcRequestBuilders.put(route+"/{email}",ADMIN_CREDENTIALS).content(getJSON(organization))
+      .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whendelete_withEmailNotPresent_then_isNotFound() throws Exception {
+
+    organization.setEmail(ADMIN_CREDENTIALS);
+
+    mockMvc.perform(MockMvcRequestBuilders.put(route+"/delete/{email}",ADMIN_CREDENTIALS).content(getJSON(organization))
+      .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isNotFound());
+
+  }
+
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whendelete_withDelete_then_isOk() throws Exception {
+
+
+    when(organizationService.findByEmail(organization.getEmail())).thenReturn(Optional.of(organization));
+
+    mockMvc.perform(MockMvcRequestBuilders.put(route+"/delete/{email}",organization.getEmail()).content(getJSON(organization))
+      .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated());
+
+  }
+
+
+
+  @Test
+  @WithUserDetails(ADMIN_CREDENTIALS)
+  void whenPosdelete() throws Exception {
+
+
+    when(organizationService.findByEmail(ADMIN_CREDENTIALS)).thenThrow(RuntimeException.class);
+
+
+    mockMvc.perform(MockMvcRequestBuilders.put(route+"/delete/{email}",ADMIN_CREDENTIALS).content(getJSON(organization))
+      .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+
+
+
+
+  /***
+   * Internal Methods
+   */
+  private String getJSON(Organization organization) throws JsonProcessingException {
+    return objectMapper.writeValueAsString(organization);
+  }
+
 }

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -170,14 +171,14 @@ class CategoryControllerTest {
   void getByIdWithIdIncorrect() throws Exception {
 
     CategoryDTO request = CategoryMock.createCategoryDTOMock();
-    
+    Mockito.when(categoryServiceImpl.findById("2680043c-f3a7-44b0-94f3-1cbf6254cd52")).thenReturn(null);
   
-    String idIncorect = "2680043c-f3a7-44b0-94f3-1cbf6254cd52";
+    String idIncorect = "";
     ResultActions result = mockMvc.perform(get(PATH + "/{id}", idIncorect)
       .contentType(MediaType.APPLICATION_JSON)
       .content(toJson(request)));
 
-    result.andExpect(status().isNotFound());
+    result.andExpect(status().isForbidden());
 
   }
 
