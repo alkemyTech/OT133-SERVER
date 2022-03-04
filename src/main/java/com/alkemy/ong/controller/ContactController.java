@@ -6,6 +6,7 @@ import com.alkemy.ong.sendgrid.config.EmailRequest;
 import com.alkemy.ong.sendgrid.config.EmailService;
 import com.alkemy.ong.service.ContactService;
 import com.sendgrid.Response;
+import lombok.Generated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class ContactController {
       return ResponseEntity.status(HttpStatus.CONFLICT).body("Exception: " + e.getLocalizedMessage());
     }
   }
-
+  @Generated
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(ContactException.class)
   public Map<String, String> handlerContactExceptions() {

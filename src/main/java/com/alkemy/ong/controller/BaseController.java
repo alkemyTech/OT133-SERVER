@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
+
+import lombok.Generated;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,7 +27,8 @@ public abstract class BaseController {
         });
         return errors;
     }
-
+    
+    @Generated
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public Map<String, String> handleConstraintValidationException(
